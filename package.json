@@ -1,0 +1,44 @@
+{
+  "name": "obsidian",
+  "title": "Obsidian",
+  "description": "",
+  "icon": "command-icon.png",
+  "author": "marcjulian",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "index",
+      "title": "Open in Obsidian",
+      "subtitle": "",
+      "description": "Open any note in Obsidian",
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "vaultPath",
+          "type": "textfield",
+          "placeholder": "path/to/vault",
+          "title": "Path to Vault",
+          "required": true,
+          "description": "Specify the path to your own vault"
+        }
+      ]
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.25.1"
+  },
+  "devDependencies": {
+    "@types/node": "~16.10.0",
+    "@types/react": "^17.0.28",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "react-devtools": "^4.19.2",
+    "typescript": "^4.4.3"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop"
+  }
+}
