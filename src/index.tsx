@@ -1,4 +1,4 @@
-import { Detail, List, ListItem, ActionPanel, OpenAction, getLocalStorageItem, setLocalStorageItem, Form, print, PushAction, clearLocalStorage, SubmitFormAction, getPreferenceValues } from "@raycast/api";
+import { Detail, List, ListItem, ActionPanel, OpenAction, getLocalStorageItem, setLocalStorageItem, Form, print, PushAction, clearLocalStorage, SubmitFormAction, getPreferenceValues, LocalStorageValue, CopyToClipboardAction, PasteAction } from "@raycast/api";
 import { useEffect, useState } from "react";
 const fs = require("fs")
 const path = require("path")
@@ -7,6 +7,7 @@ const path = require("path")
 interface Note{
   title: string;
   content: string;
+  desc: string;
   key: number;
   url: string;
   error?: Error;
@@ -17,109 +18,111 @@ interface Preferences{
 }
 
 
-const getAllFiles = function(dirPath: string, arrayOfFiles: Array<string>) {
+const getFilesHelp = function(dirPath: string, arrayOfFiles: Array<string>) {
   let files = fs.readdirSync(dirPath)
 
   arrayOfFiles = arrayOfFiles || []
 
   files.forEach(function(file: string) {
     if (fs.statSync(dirPath + "/" + file).isDirectory()) {
-      arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles)
+      arrayOfFiles = getFilesHelp(dirPath + "/" + file, arrayOfFiles)
     } else {
       if (file.endsWith(".md") && !dirPath.includes(".obsidian")){
         arrayOfFiles.push(path.join(dirPath, "/", file))
       }
     }
   })
-
   return arrayOfFiles
 }
 
+function getFiles(){
+  const pref: Preferences = getPreferenceValues();
+  let vaultPath = pref.vaultPath
+  const files = getFilesHelp(vaultPath.toString(), [])
+  return files;
+}
 
-async function getNotes(){
-  let vaultPath = await getLocalStorageItem("vaultPath")
+function NoteJSON(files: Array<string>){
+  let notes: Note[] = [];
+
+  let key = 0;
+  for (let f of files){
   
-  let notes_: Note[] = []
-  if (vaultPath != undefined){
-    const files = getAllFiles(vaultPath.toString(), [])
-    let key = 0
-    files.forEach(function(file: string){
-
-      key += 1;
-      let comp = file.split("/");
+      key++;
+      let comp = f.split("/");
       let f_name = comp.pop();
       let name = "default";
       if (f_name){
         name = f_name.split(".md")[0];
       }
-      
+      let content = fs.readFileSync(f,'utf8') as string;
+      let note = {
+        "title": name,
+        "content": content,
+        "desc": "Open in Obsidian or copy with cmd + enter",
+        "key": key,
+        "url": "obsidian://open?path=" + encodeURIComponent(f)
+      }
+      notes.push(note)
+    }
+  return JSON.stringify(notes);
+}
 
-      notes_.push({title: name, content: "Open", key: key, url: "obsidian://open?path=" + encodeURIComponent(file)})
-    });
-  }
-  return notes_
+async function saveNoteJSON(json: string){
+  await setLocalStorageItem("notes", json);
+}
+
+async function readSavedNotes(){
+  let json = await getLocalStorageItem("notes") as string;
+  return JSON.parse(json);
 }
 
 
-
 function searchList(notes: Note[]){
-  
   return (
     <List>
       {notes.map((note) => (
-        <List.Item title={note.title} subtitle={note.content.substring(0, 50)} key={note.key} actions={
+        <List.Item title={note.title} subtitle={note.desc} key={note.key} actions={
           <ActionPanel>
             <OpenAction title="Open in Obsidian" target={note.url}></OpenAction>
+            <CopyToClipboardAction
+              title="Copy note content"
+              content={note.content}
+              shortcut={{ modifiers: ["opt"], key: "c"}}
+            />
+            <PasteAction 
+              title="Paste note content" 
+              content={note.content} 
+              shortcut={{ modifiers: ["opt"], key: "v"}}
+            />
           </ActionPanel>
         }/>
       ))}
     </List>
-
     )
-
 }
-
-
 
 export default function Command() {
 
-  const pref: Preferences = getPreferenceValues();
-  let vaultPath = pref.vaultPath
+  const [notes, setNotes] = useState<Note[]>([]);
+  
+  
+  useEffect(() => {
+    async function fetch() {
+      
+      let files = getFiles();
+      let json = NoteJSON(files);
 
-  let notes_: Note[] = [] 
+      //let notes = await readSavedNotes();
+      //await saveNoteJSON(json);
+      
+      setNotes(JSON.parse(json));
+      //setNotes(notes);
+      
+    }
+    fetch();
+  }, []);
 
-  const files = getAllFiles(vaultPath.toString(), [])
-  let key = 0
-  files.forEach(function(file: string){
-
-    key += 1;
-    let comp = file.split("/");
-    let f_name = comp.pop();
-    let name = "default";
-    if (f_name){
-      name = f_name.split(".md")[0];
-    }    
-
-    notes_.push({title: name, content: "Open", key: key, url: "obsidian://open?path=" + encodeURIComponent(file)})
-  });
-
-
-  const [notes, setNotes] = useState<Note[]>(notes_);
-
-
-  // useEffect(() => {
-  //   async function fetchFiles() {
-  //     try {
-  //       const notes = await getNotes();
-  //       setNotes(notes);
-  //     } catch (error) {
-  //       setNotes([{title: "Error", content: "Error", key:-1, url: "no", error: error instanceof Error ? error : new Error("Something went wrong") }])
-  //     }
-  //   }
-  //   fetchFiles();
-  // }, []);
-
-  return searchList(notes_)
-
- 
+  return searchList(notes)
+   
 }
