@@ -1,4 +1,4 @@
-import { Detail, List, ListItem, ActionPanel, OpenAction, getLocalStorageItem, setLocalStorageItem, Form, print, PushAction, clearLocalStorage, SubmitFormAction, getPreferenceValues, LocalStorageValue, CopyToClipboardAction, PasteAction } from "@raycast/api";
+import { Detail, List, ListItem, ActionPanel, OpenAction, getLocalStorageItem, setLocalStorageItem, Form, print, PushAction, clearLocalStorage, SubmitFormAction, getPreferenceValues, LocalStorageValue, CopyToClipboardAction, PasteAction, OpenWithAction } from "@raycast/api";
 import { useEffect, useState } from "react";
 const fs = require("fs")
 const path = require("path")
@@ -9,6 +9,7 @@ interface Note{
   content: string;
   desc: string;
   key: number;
+  path: string;
   url: string;
   error?: Error;
 }
@@ -61,6 +62,7 @@ function NoteJSON(files: Array<string>){
         "content": content,
         "desc": "Open in Obsidian or copy with cmd + enter",
         "key": key,
+        "path": f,
         "url": "obsidian://open?path=" + encodeURIComponent(f)
       }
       notes.push(note)
@@ -84,7 +86,10 @@ function searchList(notes: Note[]){
       {notes.map((note) => (
         <List.Item title={note.title} subtitle={note.desc} key={note.key} actions={
           <ActionPanel>
-            <OpenAction title="Open in Obsidian" target={note.url}></OpenAction>
+            <OpenAction 
+              title="Open in Obsidian" 
+              target={note.url}
+            />
             <CopyToClipboardAction
               title="Copy note content"
               content={note.content}
