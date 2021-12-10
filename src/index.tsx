@@ -1,9 +1,7 @@
-import { Detail, List, ListItem, ActionPanel, OpenAction, getLocalStorageItem, setLocalStorageItem, Form, print, PushAction, clearLocalStorage, SubmitFormAction, getPreferenceValues, LocalStorageValue, CopyToClipboardAction, PasteAction, OpenWithAction } from "@raycast/api";
-import { copyFileSync } from "fs";
+import { List, ActionPanel, OpenAction, getPreferenceValues, CopyToClipboardAction, PasteAction } from "@raycast/api";
 import { useEffect, useState } from "react";
 const fs = require("fs")
 const path = require("path")
-
 
 interface Note{
   title: string;
@@ -16,43 +14,38 @@ interface Preferences{
   excludedFolders: string;
 }
 
-
 function isValidFile(file: string, exFolders:Array<string>){
   for (let folder of exFolders){
     if (file.includes(folder)){
-      return false
+      return false;
     }
   }
   return true;
 }
 
 const getFilesHelp = function(dirPath: string, exFolders: Array<string>, arrayOfFiles: Array<string>) {
-  let files = fs.readdirSync(dirPath)
-
-  arrayOfFiles = arrayOfFiles || []
-  
+  let files = fs.readdirSync(dirPath);
+  arrayOfFiles = arrayOfFiles || [];
     files.forEach(function(file: string) {
-
       let next = fs.statSync(dirPath + "/" + file);
         if (next.isDirectory()) {
-          arrayOfFiles = getFilesHelp(dirPath + "/" + file, exFolders, arrayOfFiles)
+          arrayOfFiles = getFilesHelp(dirPath + "/" + file, exFolders, arrayOfFiles);
         } else {
           if (file.endsWith(".md") && !dirPath.includes(".obsidian") && isValidFile(dirPath, exFolders)){
-            arrayOfFiles.push(path.join(dirPath, "/", file))
+            arrayOfFiles.push(path.join(dirPath, "/", file));
           }
         }
   })
-
-  return arrayOfFiles
+  return arrayOfFiles;
 }
 
 function getFiles(){
   const pref: Preferences = getPreferenceValues();
-  let vaultPath = pref.vaultPath
+  let vaultPath = pref.vaultPath;
   let exFolders = prefExcludedFolders();
 
   const files = getFilesHelp(vaultPath.toString(), exFolders, []);
-  return files
+  return files;
 }
 
 function prefExcludedFolders(){
@@ -60,6 +53,9 @@ function prefExcludedFolders(){
   let foldersString = pref.excludedFolders;
   if (foldersString){
     let folders = foldersString.split(",");
+    for(let i = 0; i < folders.length; i++){
+      folders[i] = folders[i].trim();
+    }
     return folders;
   }else{
     return [];
@@ -82,18 +78,30 @@ function noteJSON(files: Array<string>){
         "title": name,
         "key": ++key,
         "path": f
-      }
-      notes.push(note)
+      };
+      notes.push(note);
     }
   return JSON.stringify(notes);
 }
 
 
-function searchList(notes: Note[]){
+export default function Command() {
+
+  const [notes, setNotes] = useState<Note[]>([]);
+
+  useEffect(() => {
+    async function fetch() {
+      let files = getFiles();
+      let json = noteJSON(files);
+      setNotes(JSON.parse(json));
+    }
+    fetch();
+  }, []);
+
   return (
-    <List>
+    <List isLoading={notes === undefined}>
       {notes.map((note) => (
-        <List.Item title={note.title} subtitle={"Open in Obsidian"} key={note.key} actions={
+        <List.Item title={note.title} key={note.key} actions={
           <ActionPanel>
             <OpenAction 
               title="Open in Obsidian" 
@@ -113,21 +121,5 @@ function searchList(notes: Note[]){
         }/>
       ))}
     </List>
-    )
-}
-
-export default function Command() {
-
-  const [notes, setNotes] = useState<Note[]>([]);
-
-  useEffect(() => {
-    async function fetch() {
-      let files = getFiles();
-      let json = noteJSON(files);
-      setNotes(JSON.parse(json));
-    }
-    fetch();
-  }, []);
-
-  return searchList(notes)   
+    );
 }
