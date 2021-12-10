@@ -1,4 +1,5 @@
 import { Detail, List, ListItem, ActionPanel, OpenAction, getLocalStorageItem, setLocalStorageItem, Form, print, PushAction, clearLocalStorage, SubmitFormAction, getPreferenceValues, LocalStorageValue, CopyToClipboardAction, PasteAction, OpenWithAction } from "@raycast/api";
+import { copyFileSync } from "fs";
 import { useEffect, useState } from "react";
 const fs = require("fs")
 const path = require("path")
@@ -16,7 +17,16 @@ interface Preferences{
 }
 
 
-const getFilesHelp = function(dirPath: string, arrayOfFiles: Array<string>) {
+function isValidFile(file: string, exFolders:Array<string>){
+  for (let folder of exFolders){
+    if (file.includes(folder)){
+      return false
+    }
+  }
+  return true;
+}
+
+const getFilesHelp = function(dirPath: string, exFolders: Array<string>, arrayOfFiles: Array<string>) {
   let files = fs.readdirSync(dirPath)
 
   arrayOfFiles = arrayOfFiles || []
@@ -25,9 +35,9 @@ const getFilesHelp = function(dirPath: string, arrayOfFiles: Array<string>) {
 
       let next = fs.statSync(dirPath + "/" + file);
         if (next.isDirectory()) {
-          arrayOfFiles = getFilesHelp(dirPath + "/" + file, arrayOfFiles)
+          arrayOfFiles = getFilesHelp(dirPath + "/" + file, exFolders, arrayOfFiles)
         } else {
-          if (file.endsWith(".md") && !dirPath.includes(".obsidian")){
+          if (file.endsWith(".md") && !dirPath.includes(".obsidian") && isValidFile(dirPath, exFolders)){
             arrayOfFiles.push(path.join(dirPath, "/", file))
           }
         }
@@ -39,20 +49,10 @@ const getFilesHelp = function(dirPath: string, arrayOfFiles: Array<string>) {
 function getFiles(){
   const pref: Preferences = getPreferenceValues();
   let vaultPath = pref.vaultPath
-
   let exFolders = prefExcludedFolders();
 
-  const files = getFilesHelp(vaultPath.toString(), []);
-  // let filteredFiles = []
-  // for (let file of files){
-  //   for (let folder of exFolders){
-  //     if (!(folder.indexOf(file) !== -1)){
-  //       filteredFiles.push(file);
-  //       console.log(file + "\t" + folder);
-  //     }
-  //   }
-  //}
-  return files;
+  const files = getFilesHelp(vaultPath.toString(), exFolders, []);
+  return files
 }
 
 function prefExcludedFolders(){
@@ -66,7 +66,7 @@ function prefExcludedFolders(){
   }
 }
 
-function NoteJSON(files: Array<string>){
+function noteJSON(files: Array<string>){
   let notes: Note[] = [];
 
   let key = 0;
@@ -123,7 +123,7 @@ export default function Command() {
   useEffect(() => {
     async function fetch() {
       let files = getFiles();
-      let json = NoteJSON(files);
+      let json = noteJSON(files);
       setNotes(JSON.parse(json));
     }
     fetch();
