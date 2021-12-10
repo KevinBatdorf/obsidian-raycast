@@ -1,16 +1,16 @@
 {
   "name": "obsidian",
   "title": "Obsidian",
-  "description": "",
-  "icon": "command-icon.png",
+  "description": "Search, open, copy and paste any note in Obsidian",
+  "icon": "command-icon.tiff",
   "author": "marcjulian",
   "license": "MIT",
   "commands": [
     {
       "name": "index",
-      "title": "Open in Obsidian",
+      "title": "Search in Obsidian",
       "subtitle": "",
-      "description": "Open any note in Obsidian",
+      "description": "Search, open, copy and paste any note in Obsidian",
       "mode": "view",
       "preferences": [
         {
@@ -49,3 +49,4 @@
     "dev": "ray develop"
   }
 }
+
