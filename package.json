@@ -2,7 +2,7 @@
   "name": "obsidian",
   "title": "Obsidian",
   "description": "Search, open, view, copy, paste and edit any note in Obsidian",
-  "icon": "command-icon.tiff",
+  "icon": "command-icon.png",
   "author": "marcjulian",
   "license": "MIT",
   "preferences": [
@@ -22,23 +22,24 @@
       "description": "Specify which folders to exclude (comma seperated)"
     }, {
       "name": "removeYAML",
+      "label": "Hide content",
       "type": "checkbox",
-      "title": "Remove YAML",
+      "title": "Hide YAML",
       "required": false,
-      "description": "Remove YAML frontmatter for copying and viewing notes"
+      "description": "Hide YAML frontmatter for copying and viewing notes"
     }, {
       "name": "removeLinks",
+      "label": "Hide content",
       "type": "checkbox",
-      "title": "Remove Links",
+      "title": "Hide Links",
       "required": false,
-      "description": "Remove links for copying and viewing notes"
+      "description": "Hide links for copying and viewing notes"
     }
   ],
   "commands": [
     {
       "name": "index",
       "title": "Search in Obsidian",
-      "subtitle": "",
       "description": "Search, open, copy and paste any note in Obsidian",
       "mode": "view" 
     }
