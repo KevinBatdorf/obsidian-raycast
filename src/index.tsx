@@ -1,4 +1,4 @@
-import { List, ActionPanel, OpenAction, getPreferenceValues, CopyToClipboardAction, PasteAction } from "@raycast/api";
+import { List, ActionPanel, OpenAction, getPreferenceValues, CopyToClipboardAction, PasteAction, PushAction, Detail, Form, SubmitFormAction, useNavigation, Icon, showToast, ToastStyle } from "@raycast/api";
 import { useEffect, useState } from "react";
 const fs = require("fs")
 const path = require("path")
@@ -12,6 +12,12 @@ interface Note{
 interface Preferences{
   vaultPath: string;
   excludedFolders: string;
+  removeYAML: boolean;
+  removeLinks: boolean;
+}
+
+interface FormValue{
+  content: string;
 }
 
 function isValidFile(file: string, exFolders:Array<string>){
@@ -31,7 +37,7 @@ const getFilesHelp = function(dirPath: string, exFolders: Array<string>, arrayOf
         if (next.isDirectory()) {
           arrayOfFiles = getFilesHelp(dirPath + "/" + file, exFolders, arrayOfFiles);
         } else {
-          if (file.endsWith(".md") && !dirPath.includes(".obsidian") && isValidFile(dirPath, exFolders)){
+          if (file.endsWith(".md") && file !== ".md" && !dirPath.includes(".obsidian") && isValidFile(dirPath, exFolders)){
             arrayOfFiles.push(path.join(dirPath, "/", file));
           }
         }
@@ -84,6 +90,60 @@ function noteJSON(files: Array<string>){
   return JSON.stringify(notes);
 }
 
+function getNoteContent(note: Note){
+  const pref: Preferences = getPreferenceValues();
+
+  let content = fs.readFileSync(note.path,'utf8') as string;
+  if (pref.removeYAML){
+    let yamlHeader = content.match(/---(.|\n)*?---/gm);
+    if (yamlHeader){
+      content = content.replace(yamlHeader[0], "");
+    }
+  }
+  if (pref.removeLinks){
+    content = content.replaceAll("[[", "");
+    content = content.replaceAll("]]", "");
+  }
+  return content;
+}
+
+function NoteQuickLook(props: {note: Note}){
+  let note = props.note;
+  let content = getNoteContent(note);
+  return <Detail markdown={content} />;
+}
+
+
+function NoteForm(props: {note: Note}){
+  let note = props.note;
+  const { pop } = useNavigation();
+
+  function addTextToNote(text:FormValue){
+    fs.appendFileSync(note.path, "\n\n" + text.content);
+    showToast(ToastStyle.Success, "Added text to note")
+    pop();
+  }
+
+  return (
+    <Form 
+      navigationTitle={"Add text to: " + note.title}
+      actions={
+        <ActionPanel>
+          <SubmitFormAction title="Submit" onSubmit={addTextToNote} />
+        </ActionPanel>
+      }
+    >
+      
+      <Form.TextArea 
+        title={"Add text to:\n" + note.title}
+        id="content" 
+        placeholder={"Text"} 
+      />
+
+    </Form>
+  );
+}
+
 
 export default function Command() {
 
@@ -91,6 +151,7 @@ export default function Command() {
 
   useEffect(() => {
     async function fetch() {
+
       let files = getFiles();
       let json = noteJSON(files);
       setNotes(JSON.parse(json));
@@ -103,18 +164,38 @@ export default function Command() {
       {notes.map((note) => (
         <List.Item title={note.title} key={note.key} actions={
           <ActionPanel>
+
+            <PushAction 
+              title="Quick Look" 
+              target={
+                <NoteQuickLook note={note}/>
+              } 
+              icon={Icon.Eye}  
+            />
+
             <OpenAction 
               title="Open in Obsidian" 
               target={"obsidian://open?path=" + encodeURIComponent(note.path)}
             />
+
+            <PushAction 
+              title="Append to note" 
+              target={
+                <NoteForm note={note} />
+              }
+              shortcut={{modifiers: ["cmd", "shift"], key: "a"}}
+              icon={Icon.Pencil}
+            />
+
             <CopyToClipboardAction
               title="Copy note content"
-              content={fs.readFileSync(note.path,'utf8')}
+              content={getNoteContent(note)}
               shortcut={{ modifiers: ["opt"], key: "c"}}
             />
+
             <PasteAction 
               title="Paste note content" 
-              content={fs.readFileSync(note.path,'utf8')} 
+              content={getNoteContent(note)} 
               shortcut={{ modifiers: ["opt"], key: "v"}}
             />
           </ActionPanel>

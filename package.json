@@ -5,30 +5,42 @@
   "icon": "command-icon.tiff",
   "author": "marcjulian",
   "license": "MIT",
+  "preferences": [
+    {
+      "name": "vaultPath",
+      "type": "textfield",
+      "placeholder": "path/to/vault",
+      "title": "Path to Vault",
+      "required": true,
+      "description": "Specify the path to your own vault"
+    },{
+      "name": "excludedFolders",
+      "type": "textfield",
+      "placeholder": "folder1, folder2, ...",
+      "title": "Exclude following folders",
+      "required": false,
+      "description": "Specify which folders to exclude (comma seperated)"
+    }, {
+      "name": "removeYAML",
+      "type": "checkbox",
+      "title": "Remove YAML",
+      "required": false,
+      "description": "Remove YAML frontmatter for copying and viewing notes"
+    }, {
+      "name": "removeLinks",
+      "type": "checkbox",
+      "title": "Remove Links",
+      "required": false,
+      "description": "Remove links for copying and viewing notes"
+    }
+  ],
   "commands": [
     {
       "name": "index",
       "title": "Search in Obsidian",
       "subtitle": "",
       "description": "Search, open, copy and paste any note in Obsidian",
-      "mode": "view",
-      "preferences": [
-        {
-          "name": "vaultPath",
-          "type": "textfield",
-          "placeholder": "path/to/vault",
-          "title": "Path to Vault",
-          "required": true,
-          "description": "Specify the path to your own vault"
-        },{
-          "name": "excludedFolders",
-          "type": "textfield",
-          "placeholder": "folder1, folder2, ...",
-          "title": "Exclude following folders",
-          "required": false,
-          "description": "Specify which folders to exclude (comma seperated)"
-        }
-      ]
+      "mode": "view" 
     }
   ],
   "dependencies": {
