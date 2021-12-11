@@ -1,7 +1,7 @@
 {
   "name": "obsidian",
   "title": "Obsidian",
-  "description": "Search, open, copy and paste any note in Obsidian",
+  "description": "Search, open, view, copy, paste and edit any note in Obsidian",
   "icon": "command-icon.tiff",
   "author": "marcjulian",
   "license": "MIT",
