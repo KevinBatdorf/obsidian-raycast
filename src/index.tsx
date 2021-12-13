@@ -45,11 +45,8 @@ const getFilesHelp = function(dirPath: string, exFolders: Array<string>, arrayOf
   return arrayOfFiles;
 }
 
-function getFiles(){
-  const pref: Preferences = getPreferenceValues();
-  let vaultPath = pref.vaultPath;
+function getFiles(vaultPath: string){
   let exFolders = prefExcludedFolders();
-
   const files = getFilesHelp(vaultPath.toString(), exFolders, []);
   return files;
 }
@@ -147,21 +144,29 @@ function NoteForm(props: {note: Note}){
 
 export default function Command() {
 
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [notes, setNotes] = useState<Note[]>();
 
   useEffect(() => {
     async function fetch() {
+      const pref: Preferences = getPreferenceValues();
+      let vaultPath = pref.vaultPath;
 
-      let files = getFiles();
-      let json = noteJSON(files);
-      setNotes(JSON.parse(json));
+      try {
+        await fs.promises.access(vaultPath + "/.");
+        let files = getFiles(vaultPath);
+        let json = noteJSON(files);
+        setNotes(JSON.parse(json));
+      } catch (error) {
+        showToast(ToastStyle.Failure, "The path set in preferences does not exist.")
+      }
+
     }
     fetch();
   }, []);
 
   return (
     <List isLoading={notes === undefined}>
-      {notes.map((note) => (
+      {notes?.map((note) => (
         <List.Item title={note.title} key={note.key} actions={
           <ActionPanel>
 
