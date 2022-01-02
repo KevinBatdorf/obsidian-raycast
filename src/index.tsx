@@ -14,7 +14,7 @@ import {
   showToast,
   ToastStyle,
 } from "@raycast/api";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import fs from "fs";
 import path from "path";
 
@@ -29,6 +29,12 @@ interface Preferences {
   excludedFolders: string;
   removeYAML: boolean;
   removeLinks: boolean;
+  primaryAction: string;
+}
+
+enum PrimaryAction {
+  QuickLook = "quicklook",
+  OpenInObsidian = "obsidian"
 }
 
 interface FormValue {
@@ -80,7 +86,7 @@ function prefExcludedFolders() {
   }
 }
 
-function noteJSON(files: Array<string>) {
+function loadNotes(files: Array<string>) {
   const notes: Note[] = [];
 
   let key = 0;
@@ -98,8 +104,31 @@ function noteJSON(files: Array<string>) {
     };
     notes.push(note);
   }
-  return JSON.stringify(notes);
+  return notes;
 }
+
+// Trying to make content of notes searchable (bad performance)
+//function keywordsForNote(note: Note){
+  // let words = note.content.split(" ")
+  // let keywords:Array<string> = [];
+  // for(let i = 0; i < words.length; i++){
+  //   let word = words[i];
+  //   if (!keywords.includes(word)){
+  //     keywords.push(word)
+  //   }
+  // }
+  // console.log(keywords.length)
+  // if (keywords.length < 570){
+  // return keywords
+  // }else{
+  //   return []
+  // }
+  // let x = []
+  // for(let i = 0; i < 400; i++){
+  //   x.push("SHORT")
+  // }
+  // return x
+//}
 
 function getNoteContent(note: Note) {
   const pref: Preferences = getPreferenceValues();
@@ -121,7 +150,36 @@ function getNoteContent(note: Note) {
 function NoteQuickLook(props: { note: Note }) {
   const note = props.note;
   const content = getNoteContent(note);
-  return <Detail markdown={content} />;
+  return (
+    <Detail markdown={content} actions={
+      <ActionPanel>
+
+        <OpenAction 
+          title="Open in Obsidian" 
+          target={"obsidian://open?path=" + encodeURIComponent(note.path)}
+        />
+
+        <PushAction
+          title="Append to note"
+          target={<NoteForm note={note} />}
+          shortcut={{ modifiers: ["cmd", "shift"], key: "a" }}
+          icon={Icon.Pencil}
+        />
+
+        <CopyToClipboardAction
+          title="Copy note content"
+          content={getNoteContent(note)}
+          shortcut={{ modifiers: ["opt"], key: "c" }}
+        />
+
+        <PasteAction
+          title="Paste note content"
+          content={getNoteContent(note)}
+          shortcut={{ modifiers: ["opt"], key: "v" }}
+        />
+      </ActionPanel>
+    }/>
+  );
 }
 
 function NoteForm(props: { note: Note }) {
@@ -148,6 +206,43 @@ function NoteForm(props: { note: Note }) {
   );
 }
 
+function mainActions(note: Note){
+  const pref: Preferences = getPreferenceValues();
+  const primaryAction = pref.primaryAction
+
+  const quicklook = (
+    <PushAction 
+      title="Quick Look" 
+      target={<NoteQuickLook 
+      note={note} />} 
+      icon={Icon.Eye}
+    />
+  );
+
+  const obsidian = (
+    <OpenAction 
+      title="Open in Obsidian" 
+      target={"obsidian://open?path=" + encodeURIComponent(note.path)}
+    />
+  );
+
+  if (primaryAction == PrimaryAction.QuickLook) {
+    return (
+      <React.Fragment>
+        {quicklook}
+        {obsidian}
+      </React.Fragment>
+    );
+  } else if (primaryAction == PrimaryAction.OpenInObsidian) {
+    return (
+      <React.Fragment>
+      {obsidian}
+      {quicklook}
+    </React.Fragment>
+    );
+  }
+};
+
 export default function Command() {
   const [notes, setNotes] = useState<Note[]>();
 
@@ -159,8 +254,8 @@ export default function Command() {
       try {
         await fs.promises.access(vaultPath + "/.");
         const files = getFiles(vaultPath);
-        const json = noteJSON(files);
-        setNotes(JSON.parse(json));
+        const _notes = loadNotes(files);
+        setNotes(_notes);
       } catch (error) {
         showToast(ToastStyle.Failure, "The path set in preferences does not exist.");
       }
@@ -176,9 +271,8 @@ export default function Command() {
           key={note.key}
           actions={
             <ActionPanel>
-              <PushAction title="Quick Look" target={<NoteQuickLook note={note} />} icon={Icon.Eye} />
 
-              <OpenAction title="Open in Obsidian" target={"obsidian://open?path=" + encodeURIComponent(note.path)} />
+              {mainActions(note)}
 
               <PushAction
                 title="Append to note"
