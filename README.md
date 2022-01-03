@@ -27,6 +27,7 @@ This command will show a list of previously specified vaults which you can open 
 - exclude folders, files and paths so they dont show up in the search
 - hide YAML frontmatter in "Quick Look" and copy/paste
 - hide wikilinks in "Quick Look" and copy/paste
+- select primary action (for `enter`)
 
 ### Open Vault
 - list of vault names
