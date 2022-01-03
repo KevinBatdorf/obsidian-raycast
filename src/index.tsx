@@ -72,7 +72,7 @@ function getFiles(vaultPath: string) {
   return files;
 }
 
-function getVaults(){
+function prefVaults() {
   const pref: Preferences = getPreferenceValues();
   const vaultString = pref.vaultPath
   if (vaultString) {
@@ -123,25 +123,25 @@ function loadNotes(files: Array<string>) {
 
 // Trying to make content of notes searchable (bad performance)
 //function keywordsForNote(note: Note){
-  // let words = note.content.split(" ")
-  // let keywords:Array<string> = [];
-  // for(let i = 0; i < words.length; i++){
-  //   let word = words[i];
-  //   if (!keywords.includes(word)){
-  //     keywords.push(word)
-  //   }
-  // }
-  // console.log(keywords.length)
-  // if (keywords.length < 570){
-  // return keywords
-  // }else{
-  //   return []
-  // }
-  // let x = []
-  // for(let i = 0; i < 400; i++){
-  //   x.push("SHORT")
-  // }
-  // return x
+// let words = note.content.split(" ")
+// let keywords:Array<string> = [];
+// for(let i = 0; i < words.length; i++){
+//   let word = words[i];
+//   if (!keywords.includes(word)){
+//     keywords.push(word)
+//   }
+// }
+// console.log(keywords.length)
+// if (keywords.length < 570){
+// return keywords
+// }else{
+//   return []
+// }
+// let x = []
+// for(let i = 0; i < 400; i++){
+//   x.push("SHORT")
+// }
+// return x
 //}
 
 function getNoteContent(note: Note) {
@@ -161,38 +161,45 @@ function getNoteContent(note: Note) {
   return content;
 }
 
+function NoteActions(props: { note: Note }) {
+  const note = props.note
+  return (
+    <React.Fragment>
+      <PushAction
+        title="Append to note"
+        target={<NoteForm note={note} />}
+        shortcut={{ modifiers: ["cmd", "shift"], key: "a" }}
+        icon={Icon.Pencil}
+      />
+
+      <CopyToClipboardAction
+        title="Copy note content"
+        content={getNoteContent(note)}
+        shortcut={{ modifiers: ["opt"], key: "c" }}
+      />
+
+      <PasteAction
+        title="Paste note content"
+        content={getNoteContent(note)}
+        shortcut={{ modifiers: ["opt"], key: "v" }}
+      />
+    </React.Fragment>
+  );
+}
+
 function NoteQuickLook(props: { note: Note }) {
   const note = props.note;
   const content = getNoteContent(note);
   return (
     <Detail markdown={content} actions={
       <ActionPanel>
-
-        <OpenAction 
-          title="Open in Obsidian" 
+        <OpenAction
+          title="Open in Obsidian"
           target={"obsidian://open?path=" + encodeURIComponent(note.path)}
         />
-
-        <PushAction
-          title="Append to note"
-          target={<NoteForm note={note} />}
-          shortcut={{ modifiers: ["cmd", "shift"], key: "a" }}
-          icon={Icon.Pencil}
-        />
-
-        <CopyToClipboardAction
-          title="Copy note content"
-          content={getNoteContent(note)}
-          shortcut={{ modifiers: ["opt"], key: "c" }}
-        />
-
-        <PasteAction
-          title="Paste note content"
-          content={getNoteContent(note)}
-          shortcut={{ modifiers: ["opt"], key: "v" }}
-        />
+        <NoteActions note={note} />
       </ActionPanel>
-    }/>
+    } />
   );
 }
 
@@ -220,22 +227,23 @@ function NoteForm(props: { note: Note }) {
   );
 }
 
-function mainActions(note: Note){
+function OpenNoteActions(props: { note: Note }) {
+  const note = props.note;
   const pref: Preferences = getPreferenceValues();
   const primaryAction = pref.primaryAction
 
   const quicklook = (
-    <PushAction 
-      title="Quick Look" 
-      target={<NoteQuickLook 
-      note={note} />} 
+    <PushAction
+      title="Quick Look"
+      target={<NoteQuickLook
+        note={note} />}
       icon={Icon.Eye}
     />
   );
 
   const obsidian = (
-    <OpenAction 
-      title="Open in Obsidian" 
+    <OpenAction
+      title="Open in Obsidian"
       target={"obsidian://open?path=" + encodeURIComponent(note.path)}
     />
   );
@@ -250,30 +258,32 @@ function mainActions(note: Note){
   } else if (primaryAction == PrimaryAction.OpenInObsidian) {
     return (
       <React.Fragment>
-      {obsidian}
-      {quicklook}
-    </React.Fragment>
+        {obsidian}
+        {quicklook}
+      </React.Fragment>
     );
+  } else {
+    return <React.Fragment></React.Fragment>
   }
 };
 
-function NoteList(props: { vaultPath: string }){
+function NoteList(props: { vaultPath: string }) {
   const vaultPath = props.vaultPath
   const [notes, setNotes] = useState<Note[]>();
-    useEffect(() => {
-      async function fetch() {  
-        try {
-          await fs.promises.access(vaultPath + "/.");
-          const files = getFiles(vaultPath);
-          const _notes = loadNotes(files);
-          setNotes(_notes);
-        } catch (error) {
-          showToast(ToastStyle.Failure, "The path set in preferences does not exist.");
-        }
+  useEffect(() => {
+    async function fetch() {
+      try {
+        await fs.promises.access(vaultPath + "/.");
+        const files = getFiles(vaultPath);
+        const _notes = loadNotes(files);
+        setNotes(_notes);
+      } catch (error) {
+        showToast(ToastStyle.Failure, "The path set in preferences does not exist.");
       }
-      fetch();
-    }, []);
-  
+    }
+    fetch();
+  }, []);
+
   return (
     <List isLoading={notes === undefined}>
       {notes?.map((note) => (
@@ -282,26 +292,28 @@ function NoteList(props: { vaultPath: string }){
           key={note.key}
           actions={
             <ActionPanel>
+              <OpenNoteActions note={note} />
+              <NoteActions note={note} />
+            </ActionPanel>
+          }
+        />
+      ))}
+    </List>
+  );
+}
 
-              {mainActions(note)}
-
+function VaultSelection(props: { vaults: string[] }) {
+  const vaults = props.vaults;
+  return (
+    <List>
+      {vaults?.map((vault) => (
+        <List.Item
+          title={vault}
+          actions={
+            <ActionPanel>
               <PushAction
-                title="Append to note"
-                target={<NoteForm note={note} />}
-                shortcut={{ modifiers: ["cmd", "shift"], key: "a" }}
-                icon={Icon.Pencil}
-              />
-
-              <CopyToClipboardAction
-                title="Copy note content"
-                content={getNoteContent(note)}
-                shortcut={{ modifiers: ["opt"], key: "c" }}
-              />
-
-              <PasteAction
-                title="Paste note content"
-                content={getNoteContent(note)}
-                shortcut={{ modifiers: ["opt"], key: "v" }}
+                title="Select Vault"
+                target={<NoteList vaultPath={vault} />}
               />
             </ActionPanel>
           }
@@ -311,37 +323,13 @@ function NoteList(props: { vaultPath: string }){
   );
 }
 
-function VaultSelection(props: { vaults: string[] }){
-  const vaults = props.vaults;
-  return (
-    <List>
-      {vaults?.map((vault) => (
-        <List.Item
-          title={vault}
-          key={vault}
-          actions={
-            <ActionPanel>
-              <PushAction
-                title="Select Vault"
-                target={<NoteList vaultPath={vault}/>}
-              />
-            </ActionPanel>
-          }
-        />
-      ))};
-    </List>
-  );
-}
-
 export default function Command() {
-  
-  const vaults = getVaults();
-  if (vaults.length > 1){
-    //return <VaultSelection vaults={vaults}/>
-  } else if (vaults.length == 1){
-    return <NoteList vaultPath={vaults[0]}/>
+  const vaults = prefVaults();
+  if (vaults.length > 1) {
+    return <VaultSelection vaults={vaults} />
+  } else if (vaults.length == 1) {
+    return <NoteList vaultPath={vaults[0]} />
   } else {
-
+    showToast(ToastStyle.Failure, "Path Error", "Something went wrong with your vault path.")
   }
-
 }
