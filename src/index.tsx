@@ -72,6 +72,20 @@ function getFiles(vaultPath: string) {
   return files;
 }
 
+function getVaults(){
+  const pref: Preferences = getPreferenceValues();
+  const vaultString = pref.vaultPath
+  if (vaultString) {
+    const vaults = vaultString.split(",");
+    for (let i = 0; i < vaults.length; i++) {
+      vaults[i] = vaults[i].trim();
+    }
+    return vaults;
+  } else {
+    return [];
+  }
+}
+
 function prefExcludedFolders() {
   const pref: Preferences = getPreferenceValues();
   const foldersString = pref.excludedFolders;
@@ -243,26 +257,23 @@ function mainActions(note: Note){
   }
 };
 
-export default function Command() {
+function NoteList(props: { vaultPath: string }){
+  const vaultPath = props.vaultPath
   const [notes, setNotes] = useState<Note[]>();
-
-  useEffect(() => {
-    async function fetch() {
-      const pref: Preferences = getPreferenceValues();
-      const vaultPath = pref.vaultPath;
-
-      try {
-        await fs.promises.access(vaultPath + "/.");
-        const files = getFiles(vaultPath);
-        const _notes = loadNotes(files);
-        setNotes(_notes);
-      } catch (error) {
-        showToast(ToastStyle.Failure, "The path set in preferences does not exist.");
+    useEffect(() => {
+      async function fetch() {  
+        try {
+          await fs.promises.access(vaultPath + "/.");
+          const files = getFiles(vaultPath);
+          const _notes = loadNotes(files);
+          setNotes(_notes);
+        } catch (error) {
+          showToast(ToastStyle.Failure, "The path set in preferences does not exist.");
+        }
       }
-    }
-    fetch();
-  }, []);
-
+      fetch();
+    }, []);
+  
   return (
     <List isLoading={notes === undefined}>
       {notes?.map((note) => (
@@ -298,4 +309,39 @@ export default function Command() {
       ))}
     </List>
   );
+}
+
+function VaultSelection(props: { vaults: string[] }){
+  const vaults = props.vaults;
+  return (
+    <List>
+      {vaults?.map((vault) => (
+        <List.Item
+          title={vault}
+          key={vault}
+          actions={
+            <ActionPanel>
+              <PushAction
+                title="Select Vault"
+                target={<NoteList vaultPath={vault}/>}
+              />
+            </ActionPanel>
+          }
+        />
+      ))};
+    </List>
+  );
+}
+
+export default function Command() {
+  
+  const vaults = getVaults();
+  if (vaults.length > 1){
+    //return <VaultSelection vaults={vaults}/>
+  } else if (vaults.length == 1){
+    return <NoteList vaultPath={vaults[0]}/>
+  } else {
+
+  }
+
 }
