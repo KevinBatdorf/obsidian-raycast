@@ -180,6 +180,18 @@ function NoteActions(props: { note: Note }) {
         content={getNoteContent(note)}
         shortcut={{ modifiers: ["opt"], key: "v" }}
       />
+
+      <CopyToClipboardAction
+        title="Copy markdown link"
+        content={`[${note.title}](obsidian://open?path=${encodeURIComponent(note.path)})`}
+        shortcut={{ modifiers: ["opt"], key: "l"}}
+      />
+
+      <CopyToClipboardAction
+        title="Copy obsidian URI"
+        content={`obsidian://open?path=${encodeURIComponent(note.path)}`}
+        shortcut={{ modifiers: ["opt"], key: "u"}}
+      />
     </React.Fragment>
   );
 }
