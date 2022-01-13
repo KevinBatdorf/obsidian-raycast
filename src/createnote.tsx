@@ -34,29 +34,28 @@ interface FormValue {
 
 function prefVaults() {
   const pref: Preferences = getPreferenceValues();
-  const vaultString = pref.vaultPath
+  const vaultString = pref.vaultPath;
   return vaultString.split(",").map(vault => ({ name: vault.trim(), key: vault.trim() })).filter(vault => !!vault);
 }
 
 function prefPath(): string {
   const pref: Preferences = getPreferenceValues();
-  const prefPath = pref.prefPath
+  const prefPath = pref.prefPath;
   if (prefPath) {
-    return prefPath
+    return prefPath;
   }
-  return ""
+  return "";
 }
 
 
 function NoteForm(props: { vaultPath: string }) {
-  const vaultPath = props.vaultPath
+  const vaultPath = props.vaultPath;
   const { pop } = useNavigation();
 
   function createNewNote(noteProps: FormValue) {
     if (noteProps.name == "") {
-      showToast(ToastStyle.Failure, "Please enter a name")
+      showToast(ToastStyle.Failure, "Please enter a name");
     } else {
-
       try {
         fs.writeFileSync(path.join(vaultPath, noteProps.path, noteProps.name + ".md"), noteProps.content);
         showToast(ToastStyle.Success, "Created new note");
@@ -111,10 +110,10 @@ function VaultSelection(props: { vaults: Vault[] }) {
 export default function Command() {
   const vaults = prefVaults();
   if (vaults.length > 1) {
-    return <VaultSelection vaults={vaults} />
+    return <VaultSelection vaults={vaults} />;
   } else if (vaults.length == 1) {
-    return <NoteForm vaultPath={vaults[0].name} />
+    return <NoteForm vaultPath={vaults[0].name} />;
   } else {
-    showToast(ToastStyle.Failure, "Path Error", "Something went wrong with your vault path.")
+    showToast(ToastStyle.Failure, "Path Error", "Something went wrong with your vault path.");
   }
 }

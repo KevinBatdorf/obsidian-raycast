@@ -17,7 +17,7 @@ interface Vault {
 
 function parseVaults() {
   const pref: Preferences = getPreferenceValues();
-  const vaultString = pref.vaults
+  const vaultString = pref.vaults;
   return vaultString.split(",").map(vault => ({name: vault.trim(), key: vault.trim()})).filter(vault => !!vault);
 }
 
@@ -27,8 +27,8 @@ export default function Command() {
 
   useEffect(() => {
     async function fetch() {
-      let vaults = parseVaults()
-      setVaults(vaults)
+      let vaults = parseVaults();
+      setVaults(vaults);
     }
     fetch();
   }, []);
