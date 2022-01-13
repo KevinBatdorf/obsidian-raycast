@@ -20,11 +20,12 @@ The primary action (`enter`) can be changed in the extensions preferences.
 ## Open Vault
 This command will show a list of previously specified vaults which you can open by pressing `enter`.
 
-<img width="795" alt="Bildschirmfoto 2022-01-04 um 00 30 18" src="https://user-images.githubusercontent.com/67844154/147991366-ef494cf8-bae7-4141-8fb6-fc14cf10182e.png">
+<img width="795" alt="Obsidian Open Vault command" src="https://user-images.githubusercontent.com/67844154/147991366-ef494cf8-bae7-4141-8fb6-fc14cf10182e.png">
 
 ## Create Note
 This command lets you create new notes on the fly by entering a name, optionally a path to a subfolder in your vault and some content.
 
+<img width="822" alt="Obsidian Create Note command" src="https://user-images.githubusercontent.com/67844154/149306847-3d180cd6-defe-44b6-a32a-3dc9f598e885.png">
 
 ## Preferences
 ### Search Note
