@@ -36,8 +36,20 @@ interface FormValue {
   tags: Array<string>;
 }
 
-function getVaultNameFromPath(vaultPath: string) {
-  return vaultPath.substring(vaultPath.lastIndexOf(path.sep) + 1);
+function getVaultNameFromPath(vaultPath: string): string {
+  let name = vaultPath
+    .split(path.sep)
+    .filter((i) => {
+      if (i != "") {
+        return i;
+      }
+    })
+    .pop();
+  if (name) {
+    return name;
+  } else {
+    return "Default Vault Name (check your path preferences)";
+  }
 }
 
 function parseVaults() {
@@ -144,7 +156,7 @@ function NoteForm(props: { vaultPath: string }) {
       }
     >
       <Form.TextField title="Name" id="name" placeholder="Name of note" />
-      <Form.TextField title="Path" id="path" defaultValue={prefPath()} placeholder="path/to/note" />
+      <Form.TextField title="Path" id="path" defaultValue={prefPath()} placeholder="path/to/note (optional)" />
       <Form.TagPicker id="tags" title="Tags" defaultValue={prefTag()}>
         {tags()?.map((tag) => (
           <Form.TagPicker.Item value={tag.name.toLowerCase()} title={tag.name} key={tag.key} />
