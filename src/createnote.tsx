@@ -84,13 +84,18 @@ function tags() {
   const tagsString = pref.tags;
   const prefTag = pref.prefTag;
   if (!tagsString) {
-    return [{ name: prefTag, key: prefTag }];
+    if (prefTag){
+      return [{ name: prefTag, key: prefTag }];
+    }
+    return [];
   }
   const tags = tagsString
     .split(",")
     .map((tag) => ({ name: tag.trim(), key: tag.trim() }))
     .filter((tag) => !!tag);
-  tags.push({ name: prefTag, key: prefTag });
+  if (prefTag){
+    tags.push({ name: prefTag, key: prefTag });
+  }
   return tags;
 }
 
