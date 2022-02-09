@@ -123,13 +123,13 @@ function NoteForm(props: { vaultPath: string }) {
       try {
         fs.mkdirSync(notePath, { recursive: true });
       } catch {
-        showToast(ToastStyle.Failure, "Couldnt create folder structure for the given path.");
+        showToast(ToastStyle.Failure, "Couldn't create folder structure for the given path.");
         return;
       }
       try {
         fs.writeFileSync(path.join(notePath, name + ".md"), content);
       } catch {
-        showToast(ToastStyle.Failure, "Couldnt write the file: " + notePath + "/" + name + ".md");
+        showToast(ToastStyle.Failure, "Couldn't write the file: " + notePath + "/" + name + ".md");
         return;
       }
       showToast(ToastStyle.Success, "Created new note");
