@@ -44,6 +44,10 @@ This command lets you create new notes on the fly by entering a name, optionally
 - default tag (will be selected by default in the tag picker)
 - list of tags to be suggested in the tag picker (comma separated)
 
+## Blog posts:
+- [First Update Raycast Obsidian Extension](https://www.marc-julian.de/2022/03/Obsidian%20Raycast%20Extension%20Update.html)
+- [Obsidian Raycast Extension](https://www.marc-julian.de/2022/01/raycastobsidian.html)
+
 ## Demo (old)
 https://user-images.githubusercontent.com/67844154/145954580-2a1cde55-a597-4298-8c6c-9cdc8d297a55.mov
 
