@@ -32,18 +32,14 @@ This command will open the daily note from the selected vault. If a daily note d
 It requires the community plugin [Advanced Obsidian URI](https://obsidian.md/plugins?id=obsidian-advanced-uri) and the core plugin "Daily notes" to be installed and enabled.
 
 ## Preferences
-### Search Note
+### General settings
 - set path/paths to your vault/vaults (comma separated)
+### Search Note
 - exclude folders, files and paths so they dont show up in the search
 - hide YAML frontmatter in "Quick Look" and copy/paste
 - hide wikilinks in "Quick Look" and copy/paste
 - select primary action (for `enter`)
-
-### Open Vault
-- list of vault names
-
 ### Create Note
-- set path/paths to your vault/vaults (comma separated)
 - default path where a new note will be created
 - default tag (will be selected by default in the tag picker)
 - list of tags to be suggested in the tag picker (comma separated)
