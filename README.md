@@ -27,6 +27,10 @@ This command lets you create new notes on the fly by entering a name, optionally
 
 <img width="831" alt="Create Note command" src="https://user-images.githubusercontent.com/67844154/149658484-50b87db0-e6cf-4669-89b1-e3c674723066.png">
 
+## Daily Note
+This command will open the daily note from the selected vault. If a daily note doesn't exist it will create one and open it.
+It requires the community plugin [Advanced Obsidian URI](https://obsidian.md/plugins?id=obsidian-advanced-uri) and the core plugin "Daily notes" to be installed and enabled.
+
 ## Preferences
 ### Search Note
 - set path/paths to your vault/vaults (comma separated)
