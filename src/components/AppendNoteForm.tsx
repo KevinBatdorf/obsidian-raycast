@@ -16,7 +16,7 @@ export function AppendNoteForm(props: { note: Note }) {
   const { pop } = useNavigation();
 
   function addTextToNote(text: FormValue) {
-    fs.appendFileSync(note.path, "\n\n" + text.content);
+    fs.appendFileSync(note.path, "\n" + text.content);
     showToast(ToastStyle.Success, "Added text to note");
     pop();
   }

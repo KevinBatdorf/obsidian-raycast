@@ -48,6 +48,13 @@
           "description": "Hide links for copying and viewing notes"
         },
         {
+          "name": "appendPrefix",
+          "type": "textfield",
+          "title": "Prefix for Append shortcuts",
+          "required": false,
+          "description": "Specify a prefix for Append shortcuts (e.g. '-')"
+        },
+        {
           "name": "primaryAction",
           "type": "dropdown",
           "title": "Primary Action",
