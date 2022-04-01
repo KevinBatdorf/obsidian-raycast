@@ -21,6 +21,7 @@ The primary action (`enter`) can be changed in the extensions preferences.
 
 ## Open Vault
 This command will show a list of previously specified vaults which you can open by pressing `enter`.
+
 ![Open Vault Command](https://user-images.githubusercontent.com/67844154/161255791-66445ad2-0e27-4c5b-b751-a8a404d18c15.png)
 
 
