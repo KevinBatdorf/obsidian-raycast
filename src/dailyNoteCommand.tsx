@@ -1,4 +1,4 @@
-import { List, ActionPanel, OpenAction, showToast, ToastStyle, Detail } from "@raycast/api";
+import { List, ActionPanel, Action, Detail } from "@raycast/api";
 import { Vault } from "./interfaces";
 import { parseVaults } from "./VaultUtils";
 import fs from "fs";
@@ -29,7 +29,7 @@ export default function Command() {
           key={vault.key}
           actions={
             <ActionPanel>
-              <OpenAction
+              <Action.Open
                 title="Daily Note"
                 target={"obsidian://advanced-uri?vault=" + encodeURIComponent(vault.name) + "&daily=true"}
               />
