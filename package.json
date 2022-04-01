@@ -4,6 +4,7 @@
   "description": "Search, open, view, copy, paste and edit any note in Obsidian",
   "icon": "command-icon.png",
   "author": "marcjulian",
+  "categories": ["Productivity"],
   "license": "MIT",
   "preferences": [
     {
