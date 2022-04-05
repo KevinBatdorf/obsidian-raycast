@@ -76,14 +76,14 @@ export function NoteActions(props: { note: Note }) {
   return (
     <React.Fragment>
       <Action.Push
-        title="Append to note"
+        title="Append to Note"
         target={<AppendNoteForm note={note} />}
         shortcut={{ modifiers: ["opt"], key: "a" }}
         icon={Icon.Pencil}
       />
 
       <Action
-        title="Append selected text"
+        title="Append Selected Text to Note"
         shortcut={{ modifiers: ["opt"], key: "s" }}
         onAction={() => {
           appendSelectedTextTo(note);
@@ -92,26 +92,26 @@ export function NoteActions(props: { note: Note }) {
       />
 
       <Action.CopyToClipboard
-        title="Copy note content"
+        title="Copy Note Content"
         content={getNoteContent(note)}
         shortcut={{ modifiers: ["opt"], key: "c" }}
       />
 
       <Action.Paste
-        title="Paste note content"
+        title="Paste Note Content"
         content={getNoteContent(note)}
         shortcut={{ modifiers: ["opt"], key: "v" }}
       />
 
       <Action.CopyToClipboard
-        title="Copy markdown link"
+        title="Copy Markdown Link"
         icon={Icon.Link}
         content={`[${note.title}](obsidian://open?path=${encodeURIComponent(note.path)})`}
         shortcut={{ modifiers: ["opt"], key: "l" }}
       />
 
       <Action.CopyToClipboard
-        title="Copy obsidian URI"
+        title="Copy Obsidian URI"
         icon={Icon.Link}
         content={`obsidian://open?path=${encodeURIComponent(note.path)}`}
         shortcut={{ modifiers: ["opt"], key: "u" }}

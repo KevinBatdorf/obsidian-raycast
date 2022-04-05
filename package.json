@@ -4,7 +4,9 @@
   "description": "Search, open, view, copy, paste and edit any note in Obsidian",
   "icon": "command-icon.png",
   "author": "marcjulian",
-  "categories": ["Productivity"],
+  "categories": [
+    "Productivity"
+  ],
   "license": "MIT",
   "preferences": [
     {
@@ -51,9 +53,9 @@
         {
           "name": "appendPrefix",
           "type": "textfield",
-          "title": "Prefix for Append shortcuts",
+          "title": "Prefix for Append action",
           "required": false,
-          "description": "Specify a prefix for Append shortcuts (e.g. '-')"
+          "description": "Specify a prefix for Append action (e.g. '-')"
         },
         {
           "name": "primaryAction",
