@@ -12,8 +12,9 @@ import {
 import fs from "fs";
 import React from "react";
 
-import { AppendNoteForm } from "./components/AppendNoteForm";
+import { AppendNoteForm } from "../components/AppendNoteForm";
 import { SearchNotePreferences, Note } from "./interfaces";
+import { pinNote } from "./PinNoteUtils";
 
 enum PrimaryAction {
   QuickLook = "quicklook",
@@ -39,7 +40,10 @@ function getNoteContent(note: Note) {
 
 async function appendSelectedTextTo(note: Note) {
   const pref: SearchNotePreferences = getPreferenceValues();
-  const appendPrefix = pref.appendPrefix;
+  let appendPrefix = pref.appendPrefix;
+  if (appendPrefix === undefined) {
+    appendPrefix = "";
+  }
   try {
     const selectedText = getSelectedText();
     selectedText.then((text) => {
@@ -55,7 +59,7 @@ async function appendSelectedTextTo(note: Note) {
   }
 }
 
-function NoteQuickLook(props: { note: Note }) {
+function NoteQuickLook(props: { note: Note; vaultPath: string }) {
   const note = props.note;
   const content = getNoteContent(note);
   return (
@@ -64,14 +68,14 @@ function NoteQuickLook(props: { note: Note }) {
       actions={
         <ActionPanel>
           <Action.Open title="Open in Obsidian" target={"obsidian://open?path=" + encodeURIComponent(note.path)} />
-          <NoteActions note={note} />
+          <NoteActions note={note} vaultPath={props.vaultPath} />
         </ActionPanel>
       }
     />
   );
 }
 
-export function NoteActions(props: { note: Note }) {
+export function NoteActions(props: { note: Note; vaultPath: string }) {
   const note = props.note;
   return (
     <React.Fragment>
@@ -116,16 +120,31 @@ export function NoteActions(props: { note: Note }) {
         content={`obsidian://open?path=${encodeURIComponent(note.path)}`}
         shortcut={{ modifiers: ["opt"], key: "u" }}
       />
+
+      <Action
+        title="Pin Note"
+        shortcut={{ modifiers: ["opt"], key: "p" }}
+        onAction={() => {
+          pinNote(note, props.vaultPath);
+        }}
+        icon={Icon.Pencil}
+      />
     </React.Fragment>
   );
 }
 
-export function OpenNoteActions(props: { note: Note }) {
+export function OpenNoteActions(props: { note: Note; vaultPath: string }) {
   const note = props.note;
   const pref: SearchNotePreferences = getPreferenceValues();
   const primaryAction = pref.primaryAction;
 
-  const quicklook = <Action.Push title="Quick Look" target={<NoteQuickLook note={note} />} icon={Icon.Eye} />;
+  const quicklook = (
+    <Action.Push
+      title="Quick Look"
+      target={<NoteQuickLook note={note} vaultPath={props.vaultPath} />}
+      icon={Icon.Eye}
+    />
+  );
 
   const obsidian = (
     <Action.Open title="Open in Obsidian" target={"obsidian://open?path=" + encodeURIComponent(note.path)} />

@@ -1,5 +1,6 @@
 import { List, ActionPanel, Action } from "@raycast/api";
-import { parseVaults } from "./VaultUtils";
+
+import { parseVaults } from "./utils/VaultUtils";
 
 export default function Command() {
   const vaults = parseVaults();

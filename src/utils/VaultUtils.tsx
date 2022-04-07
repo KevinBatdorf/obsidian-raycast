@@ -1,6 +1,7 @@
-import { Preferences } from "./interfaces";
 import { getPreferenceValues } from "@raycast/api";
 import path from "path";
+
+import { Preferences } from "./interfaces";
 
 function getVaultNameFromPath(vaultPath: string): string {
   const name = vaultPath

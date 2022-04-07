@@ -1,7 +1,8 @@
 import { List, ActionPanel, Action, Detail, showToast, Toast } from "@raycast/api";
-import { Vault } from "./interfaces";
-import { parseVaults } from "./VaultUtils";
 import fs from "fs";
+
+import { Vault } from "./utils/interfaces";
+import { parseVaults } from "./utils/VaultUtils";
 
 export default function Command() {
   let vaults = parseVaults();

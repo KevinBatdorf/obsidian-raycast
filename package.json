@@ -123,6 +123,56 @@
           "description": "The tags which will be suggested on note creation"
         }
       ]
+    },
+    {
+      "name": "pinnedNotesCommand",
+      "title": "Pinned Notes",
+      "subtitle": "Obsidian",
+      "description": "Search, open, view, copy, paste and edit pinned notes.",
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "removeYAML",
+          "label": "Hide content",
+          "type": "checkbox",
+          "title": "Hide YAML",
+          "required": false,
+          "description": "Hide YAML frontmatter for copying and viewing notes"
+        },
+        {
+          "name": "removeLinks",
+          "label": "Hide content",
+          "type": "checkbox",
+          "title": "Hide Links",
+          "required": false,
+          "description": "Hide links for copying and viewing notes"
+        },
+        {
+          "name": "appendPrefix",
+          "type": "textfield",
+          "title": "Prefix for Append action",
+          "required": false,
+          "description": "Specify a prefix for Append action (e.g. '-')"
+        },
+        {
+          "name": "primaryAction",
+          "type": "dropdown",
+          "title": "Primary Action",
+          "required": false,
+          "description": "Select a primary action to be executed on enter",
+          "defaultValue": "quicklook",
+          "data": [
+            {
+              "title": "Quick Look",
+              "value": "quicklook"
+            },
+            {
+              "title": "Open in Obsidian",
+              "value": "obsidian"
+            }
+          ]
+        }
+      ]
     }
   ],
   "dependencies": {
