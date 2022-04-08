@@ -1,12 +1,26 @@
-import { showToast, Toast } from "@raycast/api";
+import { showToast, Toast, Action, Icon } from "@raycast/api";
 import { useEffect, useState } from "react";
 import fs from "fs";
 
 import NoteLoader from "../utils/NoteLoader";
 import { Note } from "../utils/interfaces";
 import { NoteList } from "./NoteList";
+import { unpinNote } from "../utils/PinNoteUtils";
 
 export function NoteListObsidian(props: { vaultPath: string }) {
+  function unpinNoteAction(note: Note) {
+    return (
+      <Action
+        title="Unpin Note"
+        shortcut={{ modifiers: ["opt", "cmd"], key: "u" }}
+        onAction={() => {
+          const pinnedNotes = unpinNote(note, props.vaultPath);
+        }}
+        icon={Icon.XmarkCircle}
+      />
+    );
+  }
+
   const vaultPath = props.vaultPath;
   const [notes, setNotes] = useState<Note[]>([]);
   useEffect(() => {
@@ -28,5 +42,5 @@ export function NoteListObsidian(props: { vaultPath: string }) {
     fetch();
   }, []);
 
-  return <NoteList notes={notes} vaultPath={props.vaultPath} />;
+  return <NoteList notes={notes} vaultPath={props.vaultPath} action={unpinNoteAction} />;
 }

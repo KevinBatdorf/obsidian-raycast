@@ -22,7 +22,7 @@ export function NoteListPinned(props: { vaultPath: string }) {
           const pinnedNotes = unpinNote(note, props.vaultPath);
           setPinnedNotes(pinnedNotes);
         }}
-        icon={Icon.Pencil}
+        icon={Icon.XmarkCircle}
       />
     );
   }

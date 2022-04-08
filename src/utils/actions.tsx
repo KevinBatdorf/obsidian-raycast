@@ -127,7 +127,7 @@ export function NoteActions(props: { note: Note; vaultPath: string }) {
         onAction={() => {
           pinNote(note, props.vaultPath);
         }}
-        icon={Icon.Pencil}
+        icon={Icon.Pin}
       />
     </React.Fragment>
   );
