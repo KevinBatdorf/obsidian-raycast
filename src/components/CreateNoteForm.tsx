@@ -1,7 +1,7 @@
 import { ActionPanel, Form, Action, useNavigation, getPreferenceValues } from "@raycast/api";
 
-import NoteCreator from "../NoteCreator";
-import { NoteFormPreferences, FormValue } from "../interfaces";
+import NoteCreator from "../utils/NoteCreator";
+import { NoteFormPreferences, FormValue } from "../utils/interfaces";
 
 function prefPath(): string {
   const pref: NoteFormPreferences = getPreferenceValues();

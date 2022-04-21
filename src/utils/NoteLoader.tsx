@@ -1,7 +1,6 @@
+import { getPreferenceValues } from "@raycast/api";
 import fs from "fs";
 import path from "path";
-
-import { getPreferenceValues } from "@raycast/api";
 
 import { SearchNotePreferences, Note } from "./interfaces";
 
