@@ -1,8 +1,9 @@
-import { List, ActionPanel } from "@raycast/api";
+import { List, ActionPanel, getPreferenceValues } from "@raycast/api";
 import React from "react";
 
-import { Note } from "../utils/interfaces";
+import { Note, SearchNotePreferences } from "../utils/interfaces";
 import { OpenNoteActions, NoteActions } from "../utils/actions";
+import { getNoteContent } from "../utils/utils";
 
 export function NoteList(props: {
   notes: Array<Note> | undefined;
@@ -23,12 +24,15 @@ export function NoteList(props: {
     isLoading = props.isLoading;
   }
 
+  const pref: SearchNotePreferences = getPreferenceValues();
+
   return (
-    <List isLoading={isLoading}>
+    <List isLoading={isLoading} isShowingDetail={pref.showDetail}>
       {notes?.map((note) => (
         <List.Item
           title={note.title}
           key={note.key}
+          detail={<List.Item.Detail markdown={getNoteContent(note)} />}
           actions={
             <ActionPanel>
               <OpenNoteActions note={note} vaultPath={props.vaultPath} />

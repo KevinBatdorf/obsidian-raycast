@@ -14,28 +14,12 @@ import React from "react";
 
 import { AppendNoteForm } from "../components/AppendNoteForm";
 import { SearchNotePreferences, Note } from "./interfaces";
+import { getNoteContent } from "./utils";
 import { pinNote } from "./PinNoteUtils";
 
 enum PrimaryAction {
   QuickLook = "quicklook",
   OpenInObsidian = "obsidian",
-}
-
-function getNoteContent(note: Note) {
-  const pref: SearchNotePreferences = getPreferenceValues();
-
-  let content = fs.readFileSync(note.path, "utf8") as string;
-  if (pref.removeYAML) {
-    const yamlHeader = content.match(/---(.|\n)*?---/gm);
-    if (yamlHeader) {
-      content = content.replace(yamlHeader[0], "");
-    }
-  }
-  if (pref.removeLinks) {
-    content = content.replaceAll("[[", "");
-    content = content.replaceAll("]]", "");
-  }
-  return content;
 }
 
 async function appendSelectedTextTo(note: Note) {

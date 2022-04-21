@@ -21,6 +21,7 @@ export interface SearchNotePreferences extends Preferences {
   removeYAML: boolean;
   removeLinks: boolean;
   appendPrefix: string;
+  showDetail: boolean;
 }
 
 export interface Vault {

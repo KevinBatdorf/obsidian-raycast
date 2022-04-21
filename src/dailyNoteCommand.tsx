@@ -1,4 +1,4 @@
-import { List, ActionPanel, Action, Detail, showToast, Toast } from "@raycast/api";
+import { List, ActionPanel, Action, Detail, showToast, Toast, closeMainWindow } from "@raycast/api";
 import fs from "fs";
 
 import { Vault } from "./utils/interfaces";
