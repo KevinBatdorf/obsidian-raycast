@@ -2,7 +2,7 @@ export interface FormValue {
   path: string;
   name: string;
   content: string;
-  tags: Array<string>;
+  tags: string[];
 }
 
 export interface Preferences {

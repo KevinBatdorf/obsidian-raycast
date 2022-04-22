@@ -12,7 +12,7 @@ function prefPath(): string {
   return "";
 }
 
-function prefTag(): Array<string> {
+function prefTag(): string[] {
   const pref: NoteFormPreferences = getPreferenceValues();
   const prefTag = pref.prefTag;
   if (prefTag) {

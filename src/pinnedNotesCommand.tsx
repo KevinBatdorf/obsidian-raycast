@@ -1,6 +1,6 @@
 import { showToast, Toast } from "@raycast/api";
 
-import { parseVaults } from "./utils/VaultUtils";
+import { parseVaults } from "./utils/utils";
 import { VaultSelection } from "./components/VaultSelection";
 import { Vault } from "./utils/interfaces";
 import { NoteListPinned } from "./components/NoteListPinned";

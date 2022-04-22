@@ -6,7 +6,7 @@ import { OpenNoteActions, NoteActions } from "../utils/actions";
 import { getNoteContent } from "../utils/utils";
 
 export function NoteList(props: {
-  notes: Array<Note> | undefined;
+  notes: Note[] | undefined;
   action?: (note: Note) => React.ReactFragment;
   isLoading?: boolean;
   vaultPath: string;
