@@ -1,9 +1,15 @@
-import { List, ActionPanel, Action } from "@raycast/api";
+import { List, ActionPanel, Action, open, popToRoot, closeMainWindow } from "@raycast/api";
 
 import { parseVaults } from "./utils/VaultUtils";
 
 export default function Command() {
   const vaults = parseVaults();
+
+  if (vaults.length == 1) {
+    open("obsidian://advanced-uri?vault=" + encodeURIComponent(vaults[0].name) + "&daily=true");
+    popToRoot();
+    closeMainWindow();
+  }
 
   return (
     <List isLoading={vaults === undefined}>

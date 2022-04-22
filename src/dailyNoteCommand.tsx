@@ -1,4 +1,4 @@
-import { List, ActionPanel, Action, Detail, showToast, Toast, closeMainWindow } from "@raycast/api";
+import { List, ActionPanel, Action, Detail, showToast, Toast, closeMainWindow, open, popToRoot } from "@raycast/api";
 import fs from "fs";
 
 import { Vault } from "./utils/interfaces";
@@ -35,6 +35,12 @@ export default function Command() {
       "# Advanced URI plugin not installed.\nThis command requires the [Advanced URI plugin](https://obsidian.md/plugins?id=obsidian-advanced-uri) for Obsidian.  \n  \n Install it through the community plugins list.";
 
     return <Detail navigationTitle="Advanced URI plugin not installed" markdown={text} />;
+  }
+
+  if (vaults.length == 1) {
+    open("obsidian://advanced-uri?vault=" + encodeURIComponent(vaults[0].name) + "&daily=true");
+    popToRoot();
+    closeMainWindow();
   }
 
   return (
