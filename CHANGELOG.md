@@ -1,8 +1,16 @@
 # Obsidian Changelog
 
+## [New command & Detail View] - 2022-04-30
+- Add `Pinned Notes` command which lists all pinned notes of a vault 
+- Add `Pin Note` action to search command which pins a note
+- Add `Unpin Note` action to search command which unpins a note
+- Add detail view for notes in search and pinned notes command
+- Add option to hide LaTeX in Quick Look and detail view
+- Commands with only one vault will now trigger directly without prior selection
+
 ## [New command & Action for Search Command] - 2022-04-01
 - Add `Daily Note` command, opens or creates new daily note
-- Add `Append selected text` action for search command
+- Add `Append Selected Text to Note` action for search command
 - Restructure entire codebase
 
 ## [Minor Fixes] - 2022-02-10
