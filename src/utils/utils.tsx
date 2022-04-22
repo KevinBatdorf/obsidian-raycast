@@ -14,7 +14,19 @@ export function getNoteContent(note: Note) {
       content = content.replace(yamlHeader[0], "");
     }
   }
+  if (pref.removeLatex) {
+    const latex = content.matchAll(/\$\$(.|\n)*?\$\$/gm);
+    for (const match of latex) {
+      content = content.replace(match[0], "");
+    }
+    const latex_one = content.matchAll(/\$(.|\n)*?\$/gm);
+    for (const match of latex_one) {
+      content = content.replace(match[0], "");
+    }
+  }
+
   if (pref.removeLinks) {
+    content = content.replaceAll("![[", "");
     content = content.replaceAll("[[", "");
     content = content.replaceAll("]]", "");
   }

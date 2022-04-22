@@ -43,6 +43,13 @@
           "description": "Hide YAML frontmatter for copying and viewing notes"
         },
         {
+          "name": "removeLatex",
+          "label": "Hide LaTeX",
+          "type": "checkbox",
+          "required": false,
+          "description": "Hide LaTeX (surrounded by $$ or $) for copying and viewing notes"
+        },
+        {
           "name": "removeLinks",
           "label": "Hide Links",
           "type": "checkbox",
@@ -146,6 +153,13 @@
           "title": "Hide YAML",
           "required": false,
           "description": "Hide YAML frontmatter for copying and viewing notes"
+        },
+        {
+          "name": "removeLatex",
+          "label": "Hide LaTeX",
+          "type": "checkbox",
+          "required": false,
+          "description": "Hide LaTeX (surrounded by $$ or $) for copying and viewing notes"
         },
         {
           "name": "removeLinks",

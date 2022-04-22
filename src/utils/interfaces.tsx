@@ -20,6 +20,7 @@ export interface SearchNotePreferences extends Preferences {
   excludedFolders: string;
   removeYAML: boolean;
   removeLinks: boolean;
+  removeLatex: boolean;
   appendPrefix: string;
   showDetail: boolean;
 }
