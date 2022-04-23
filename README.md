@@ -1,3 +1,7 @@
+<p align="center">
+<img width=180 src="https://user-images.githubusercontent.com/67844154/164725204-544131bd-60e4-4666-8541-6587f20d7e42.png">
+</p>
+
 # Obsidian for Raycast
 This is a raycast extension with commands for the note taking and knowledge management app Obsidian. To use it, simply open Raycast Search and type one of the following commands:
 
