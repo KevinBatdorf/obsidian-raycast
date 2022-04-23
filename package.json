@@ -136,6 +136,14 @@
           "title": "Tags",
           "required": false,
           "description": "The tags which will be suggested on note creation"
+        },
+        {
+          "name": "folderActions",
+          "type": "textfield",
+          "placeholder": "folder1, folder2, folder3, ...",
+          "title": "Folder Actions",
+          "required": false,
+          "description": "Add actions to folders (comma separated)"
         }
       ]
     },
@@ -148,9 +156,9 @@
       "preferences": [
         {
           "name": "removeYAML",
-          "label": "Hide content",
+          "title": "Remove content",
+          "label": "Hide YAML frontmatter",
           "type": "checkbox",
-          "title": "Hide YAML",
           "required": false,
           "description": "Hide YAML frontmatter for copying and viewing notes"
         },
@@ -163,9 +171,8 @@
         },
         {
           "name": "removeLinks",
-          "label": "Hide content",
+          "label": "Hide Links",
           "type": "checkbox",
-          "title": "Hide Links",
           "required": false,
           "description": "Hide links for copying and viewing notes"
         },
@@ -175,6 +182,15 @@
           "title": "Prefix for Append action",
           "required": false,
           "description": "Specify a prefix for Append action (e.g. '-')"
+        },
+        {
+          "name": "showDetail",
+          "type": "checkbox",
+          "label": "Show Detail",
+          "title": "Show Detail",
+          "required": false,
+          "description": "Show the notes content in a detail view",
+          "default": true
         },
         {
           "name": "primaryAction",

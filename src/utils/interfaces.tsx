@@ -13,6 +13,7 @@ export interface NoteFormPreferences extends Preferences {
   prefPath: string;
   prefTag: string;
   tags: string;
+  folderActions: string;
 }
 
 export interface SearchNotePreferences extends Preferences {

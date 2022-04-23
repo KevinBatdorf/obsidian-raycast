@@ -21,11 +21,11 @@ class NoteCreator {
 
   createNote() {
     if (this.noteProps.name == "") {
-      showToast({ title: "Please enter a name", style: Toast.Style.Failure });
-    } else {
-      const content = this.buildNoteContent();
-      this.saveNote(content);
-    }
+      this.noteProps.name = "Untitled";
+      //showToast({ title: "Please enter a name", style: Toast.Style.Failure });
+    } 
+    const content = this.buildNoteContent();
+    this.saveNote(content);
     return this.saved;
   }
 
