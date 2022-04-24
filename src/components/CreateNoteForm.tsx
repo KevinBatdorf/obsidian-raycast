@@ -57,13 +57,14 @@ function folders() {
 
 export function CreateNoteForm(props: { vaultPath: string }) {
   const vaultPath = props.vaultPath;
+  const pref: NoteFormPreferences = getPreferenceValues();
   const { pop } = useNavigation();
 
   function createNewNote(noteProps: FormValue, path: string | undefined = undefined) {
     if (path !== undefined) {
       noteProps.path = path;
     }
-    const nc = new NoteCreator(noteProps, vaultPath);
+    const nc = new NoteCreator(noteProps, vaultPath, pref.openOnCreate);
     const saved = nc.createNote();
     if (saved) {
       pop();
