@@ -79,7 +79,7 @@ export function CreateNoteForm(props: { vaultPath: string }) {
           <Action.SubmitForm title="Create" onSubmit={createNewNote} />
           {folders()?.map((folder, index) => (
             <Action.SubmitForm
-              title={folder}
+              title={"Create in " + folder}
               onSubmit={(props: FormValue) => createNewNote(props, folder)}
               key={index}
               shortcut={{ modifiers: ["shift", "cmd"], key: index.toString() as KeyEquivalent }}

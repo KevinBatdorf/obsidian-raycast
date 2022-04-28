@@ -140,8 +140,8 @@
         {
           "name": "openOnCreate",
           "type": "checkbox",
-          "title": "Open note on Creation",
-          "label": "Open note on Creation",
+          "title": "Open Note on Creation",
+          "label": "Open Note on Creation",
           "default": true,
           "required": false,
           "description": "Open the created note in Obsidian"

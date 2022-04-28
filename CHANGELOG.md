@@ -9,6 +9,7 @@
 - Add option to hide LaTeX in Quick Look and detail view
 - Add customizable folder actions for `Create Note` command (quickly create a note in a folder)
 - Add option to open note on creation for `Create Note` command
+- Add option to specify default name for notes without name for `Create Note` command
 - Commands with only one vault will now trigger directly without prior selection
 - Minor fixes
 
