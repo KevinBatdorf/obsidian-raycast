@@ -147,6 +147,14 @@
           "description": "Open the created note in Obsidian"
         },
         {
+          "name": "prefNoteName",
+          "type": "textfield",
+          "title": "Default Note Name",
+          "required": false,
+          "description": "The default note name if no name is specified",
+          "default": "Untitled"
+        },
+        {
           "name": "folderActions",
           "type": "textfield",
           "placeholder": "folder1, folder2, folder3, ...",

@@ -8,7 +8,14 @@ import { Note, Vault, SearchNotePreferences, Preferences } from "../utils/interf
 export function getNoteContent(note: Note) {
   const pref: SearchNotePreferences = getPreferenceValues();
 
-  let content = fs.readFileSync(note.path, "utf8") as string;
+  let content = "";
+
+  try {
+    content = fs.readFileSync(note.path, "utf8") as string;
+  } catch {
+    content = "Couldn't read file. Did you move, delete or rename the file?";
+  }
+
   if (pref.removeYAML) {
     const yamlHeader = content.match(/---(.|\n)*?---/gm);
     if (yamlHeader) {

@@ -1,7 +1,8 @@
-import { showToast, Toast, confirmAlert, Icon, open } from "@raycast/api";
+import { showToast, Toast, confirmAlert, Icon, open, getPreferenceValues } from "@raycast/api";
 
 import path from "path";
 import fs from "fs";
+import { NoteFormPreferences } from "./interfaces";
 
 interface FormValue {
   path: string;
@@ -24,8 +25,8 @@ class NoteCreator {
 
   createNote() {
     if (this.noteProps.name == "") {
-      this.noteProps.name = "Untitled";
-      //showToast({ title: "Please enter a name", style: Toast.Style.Failure });
+      const pref: NoteFormPreferences = getPreferenceValues();
+      this.noteProps.name = pref.prefNoteName;
     }
     const content = this.buildNoteContent();
     this.saveNote(content);

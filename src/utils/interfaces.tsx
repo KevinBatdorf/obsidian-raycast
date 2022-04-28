@@ -14,6 +14,7 @@ export interface NoteFormPreferences extends Preferences {
   prefTag: string;
   tags: string;
   openOnCreate: boolean;
+  prefNoteName: string;
   folderActions: string;
 }
 
