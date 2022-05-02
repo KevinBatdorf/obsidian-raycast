@@ -1,6 +1,6 @@
 # Obsidian Changelog
 
-## [New command & Detail View] - 2022-04-30
+## [New command, Detail View & More | Version 1.5.0] - 2022-05-02
 
 - Add `Pinned Notes` command which lists all pinned notes of a vault
 - Add `Pin Note` action to `Search Note` command which pins a note
