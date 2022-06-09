@@ -1,13 +1,16 @@
-import { showToast, Toast } from "@raycast/api";
+import { List, showToast, Toast } from "@raycast/api";
 
-import { parseVaults } from "./utils/utils";
+import { useObsidianVaults } from "./utils/utils";
 import { VaultSelection } from "./components/VaultSelection";
 import { Vault } from "./utils/interfaces";
 import { NoteListPinned } from "./components/NoteListPinned";
 
 export default function Command() {
-  const vaults = parseVaults();
-  if (vaults.length > 1) {
+  const { vaults, ready } = useObsidianVaults();
+
+  if (!ready) {
+    return <List isLoading={true}></List>
+  } else if (vaults.length > 1) {
     return <VaultSelection vaults={vaults} target={(vault: Vault) => <NoteListPinned vaultPath={vault.path} />} />;
   } else if (vaults.length == 1) {
     return <NoteListPinned vaultPath={vaults[0].path} />;

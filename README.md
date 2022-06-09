@@ -53,7 +53,8 @@ This command will open a list of your pinned notes. All actions and preferences 
 
 ### General settings
 
-- set path/paths to your vault/vaults (comma separated)
+- set path/paths to your preferred vault/vaults (comma separated).
+  By default, vaults will be detected from `~/Library/Application Support/obsidian/obsidian.json`, which contains all vaults that have been opened with Obsidian before.
 
 ### Search Note
 

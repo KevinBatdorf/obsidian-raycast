@@ -14,7 +14,7 @@
       "type": "textfield",
       "placeholder": "path/to/vault",
       "title": "Path to Vault",
-      "required": true,
+      "required": false,
       "description": "Specify the path or multiple paths (comma separated) to your vault/vaults"
     }
   ],
