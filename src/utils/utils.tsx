@@ -90,17 +90,21 @@ export function parseVaults(): Vault[] {
   const pref: Preferences = getPreferenceValues();
   const vaultString = pref.vaultPath;
   return vaultString
-    ?.split(",")
+    .split(",")
     .map((vault) => ({ name: getVaultNameFromPath(vault.trim()), key: vault.trim(), path: vault.trim() }))
     .filter((vault) => !!vault) ?? [];
 }
 
 async function loadObsidianJson(): Promise<Vault[]> {
   const obsidianJsonPath = fsPath.resolve(`${homedir()}/Library/Application Support/obsidian/obsidian.json`);
-  const obsidianJson = JSON.parse(await readFile(obsidianJsonPath, "utf8")) as ObsidianJson;
-  return Object.values(obsidianJson.vaults).map(({ path }) => ({
-    name: getVaultNameFromPath(path), key: path, path
-  }));
+  try {
+    const obsidianJson = JSON.parse(await readFile(obsidianJsonPath, "utf8")) as ObsidianJson;
+    return Object.values(obsidianJson.vaults).map(({ path }) => ({
+      name: getVaultNameFromPath(path), key: path, path
+    }));
+  } catch (e) {
+    return [];
+  }
 }
 
 export function useObsidianVaults(): ObsidianVaultsState {
