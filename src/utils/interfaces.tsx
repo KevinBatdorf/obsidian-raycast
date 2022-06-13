@@ -39,3 +39,18 @@ export interface Note {
   key: number;
   path: string;
 }
+
+interface ObsidianJsonVault {
+  path: string,
+  ts: number,
+  open: boolean
+}
+
+export interface ObsidianJson {
+  vaults: Record<string, ObsidianJsonVault>;
+}
+
+export interface ObsidianVaultsState {
+  ready: boolean;
+  vaults: Vault[];
+}
