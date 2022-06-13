@@ -1,4 +1,4 @@
-import { Action, ActionPanel, closeMainWindow, List, open, popToRoot, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, closeMainWindow, List, open, popToRoot, showToast, Toast, Icon } from "@raycast/api";
 
 import { useObsidianVaults } from "./utils/utils";
 import { NoVaultFoundMessage } from "./components/NoVaultFoundMessage";
@@ -34,7 +34,8 @@ export default function Command() {
             key={vault.key}
             actions={
               <ActionPanel>
-                <Action.Open title="Open vault" target={getTarget(vault.name)} />
+                <Action.Open title="Open vault" icon={Icon.ArrowRight} target={getTarget(vault.name)} />
+                <Action.ShowInFinder title="Open in Finder" icon={Icon.Finder} path={vault.path} />
               </ActionPanel>
             }
           />
