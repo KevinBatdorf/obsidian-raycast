@@ -12,7 +12,7 @@ export default function Command() {
   if (!ready) {
     return <List isLoading={true}></List>;
   } else if (vaults.length === 0) {
-    return <NoVaultFoundMessage></NoVaultFoundMessage>
+    return <NoVaultFoundMessage></NoVaultFoundMessage>;
   } else if (vaults.length > 1) {
     return <VaultSelection vaults={vaults} target={(vault: Vault) => <CreateNoteForm vaultPath={vault.path} />} />;
   } else if (vaults.length == 1) {

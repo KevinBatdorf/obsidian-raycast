@@ -21,7 +21,7 @@ export default function Command() {
     showToast({
       title: "Path Error",
       message: "Something went wrong with your vault path. There are no paths to select from.",
-      style: Toast.Style.Failure
+      style: Toast.Style.Failure,
     });
   }
 }

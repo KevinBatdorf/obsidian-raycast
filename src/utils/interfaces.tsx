@@ -41,9 +41,9 @@ export interface Note {
 }
 
 interface ObsidianJsonVault {
-  path: string,
-  ts: number,
-  open: boolean
+  path: string;
+  ts: number;
+  open: boolean;
 }
 
 export interface ObsidianJson {

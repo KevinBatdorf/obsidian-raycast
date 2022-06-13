@@ -9,7 +9,7 @@ import {
   ObsidianVaultsState,
   Preferences,
   SearchNotePreferences,
-  Vault
+  Vault,
 } from "../utils/interfaces";
 import { readFile } from "fs/promises";
 import { homedir } from "os";
@@ -91,8 +91,8 @@ export function parseVaults(): Vault[] {
   const vaultString = pref.vaultPath;
   return vaultString
     .split(",")
-    .filter((vaultPath) => vaultPath.trim() !== '')
-    .map((vault) => ({ name: getVaultNameFromPath(vault.trim()), key: vault.trim(), path: vault.trim() }))
+    .filter((vaultPath) => vaultPath.trim() !== "")
+    .map((vault) => ({ name: getVaultNameFromPath(vault.trim()), key: vault.trim(), path: vault.trim() }));
 }
 
 async function loadObsidianJson(): Promise<Vault[]> {
@@ -100,7 +100,9 @@ async function loadObsidianJson(): Promise<Vault[]> {
   try {
     const obsidianJson = JSON.parse(await readFile(obsidianJsonPath, "utf8")) as ObsidianJson;
     return Object.values(obsidianJson.vaults).map(({ path }) => ({
-      name: getVaultNameFromPath(path), key: path, path
+      name: getVaultNameFromPath(path),
+      key: path,
+      path,
     }));
   } catch (e) {
     return [];
@@ -109,16 +111,22 @@ async function loadObsidianJson(): Promise<Vault[]> {
 
 export function useObsidianVaults(): ObsidianVaultsState {
   const pref = useMemo(() => getPreferenceValues(), []);
-  const [state, setState] = useState<ObsidianVaultsState>(pref.vaultPath ? {
-    ready: true,
-    vaults: parseVaults()
-  } : { ready: false, vaults: [] });
+  const [state, setState] = useState<ObsidianVaultsState>(
+    pref.vaultPath
+      ? {
+          ready: true,
+          vaults: parseVaults(),
+        }
+      : { ready: false, vaults: [] }
+  );
 
   useEffect(() => {
     if (!state.ready) {
-      loadObsidianJson().then((vaults) => {
-        setState({ vaults, ready: true });
-      }).catch(() => setState({ vaults: parseVaults(), ready: true }));
+      loadObsidianJson()
+        .then((vaults) => {
+          setState({ vaults, ready: true });
+        })
+        .catch(() => setState({ vaults: parseVaults(), ready: true }));
     }
   }, []);
 
