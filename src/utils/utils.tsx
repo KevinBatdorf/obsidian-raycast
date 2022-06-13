@@ -91,8 +91,8 @@ export function parseVaults(): Vault[] {
   const vaultString = pref.vaultPath;
   return vaultString
     .split(",")
+    .filter((vaultPath) => vaultPath.trim() !== '')
     .map((vault) => ({ name: getVaultNameFromPath(vault.trim()), key: vault.trim(), path: vault.trim() }))
-    .filter((vault) => !!vault) ?? [];
 }
 
 async function loadObsidianJson(): Promise<Vault[]> {
