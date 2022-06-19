@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import { Note, SearchNotePreferences } from "../utils/interfaces";
 import { OpenNoteActions, NoteActions } from "../utils/actions";
-import { getNoteContent } from "../utils/utils";
+import { getNoteContent, readingTime, wordCount, trimPath } from "../utils/utils";
 import { isNotePinned } from "../utils/PinNoteUtils";
 
 export function NoteListItem(props: { note: Note; vaultPath: string; key: number; pref: SearchNotePreferences }) {
@@ -25,9 +25,18 @@ export function NoteListItem(props: { note: Note; vaultPath: string; key: number
           metadata={
             props.pref.showMetadata ? (
               <List.Item.Detail.Metadata>
+                <List.Item.Detail.Metadata.Label title="Character count" text={content.length.toString()} />
+                <List.Item.Detail.Metadata.Label title="Word count" text={wordCount(content).toString()} />
+                <List.Item.Detail.Metadata.Label
+                  title="Read time"
+                  text={readingTime(content).toString() + " min read"}
+                />
+                <List.Item.Detail.Metadata.Separator />
                 <List.Item.Detail.Metadata.Label title="Creation Date" text={note.created} />
-                <List.Item.Detail.Metadata.Label title="Note Path" />
-                <List.Item.Detail.Metadata.Label title="" text={note.path} />
+                <List.Item.Detail.Metadata.Label
+                  title="Note Path"
+                  text={trimPath(note.path.split(props.vaultPath)[1], 100)}
+                />
               </List.Item.Detail.Metadata>
             ) : (
               <React.Fragment />

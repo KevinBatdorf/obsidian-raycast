@@ -156,6 +156,21 @@ export function filterNotes(notes: Note[], input: string) {
     });
 }
 
+export function wordCount(str: string){
+  return str.split(" ").length;
+}
+
+export function readingTime(str: string){
+  return Math.ceil(wordCount(str) / 200);
+}
+
+export function trimPath(path: string, maxLength: number) {
+  if (path.length > maxLength) {
+    return "..." + path.slice(path.length - maxLength);
+  }
+  return path;
+}
+
 export async function getClipboardContent() {
   const clipboardText = await Clipboard.readText();
   if (clipboardText) {
