@@ -35,7 +35,7 @@ export default function Command() {
             actions={
               <ActionPanel>
                 <Action.Open title="Open vault" icon={Icon.ArrowRight} target={getTarget(vault.name)} />
-                <Action.ShowInFinder title="Open in Finder" icon={Icon.Finder} path={vault.path} />
+                <Action.ShowInFinder title="Show in Finder" icon={Icon.Finder} path={vault.path} />
               </ActionPanel>
             }
           />

@@ -68,6 +68,13 @@ export function NoteActions(props: { note: Note; content: string; vaultPath: str
 
   return (
     <React.Fragment>
+      <Action.ShowInFinder
+        title="Show In Finder"
+        icon={Icon.Finder}
+        path={note.path}
+        shortcut={{ modifiers: ["opt"], key: "enter" }}
+      />
+
       <Action.Push
         title="Append to Note"
         target={<AppendNoteForm note={note} />}
@@ -136,7 +143,11 @@ export function OpenNoteActions(props: { note: Note; vaultPath: string }) {
   );
 
   const obsidian = (
-    <Action.Open title="Open in Obsidian" target={"obsidian://open?path=" + encodeURIComponent(note.path)} />
+    <Action.Open
+      title="Open in Obsidian"
+      target={"obsidian://open?path=" + encodeURIComponent(note.path)}
+      icon={Icon.TextDocument}
+    />
   );
 
   if (primaryAction == PrimaryAction.QuickLook) {
