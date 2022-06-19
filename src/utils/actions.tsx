@@ -60,11 +60,11 @@ function NoteQuickLook(props: { note: Note; vaultPath: string }) {
   );
 }
 
-export function NoteActions(props: { note: Note; vaultPath: string; onPin: () => void }) {
+export function NoteActions(props: { note: Note; content: string; vaultPath: string; onPin: () => void }) {
   const note = props.note;
+  const content = props.content;
 
   const [pinned, setPinned] = useState(isNotePinned(note, props.vaultPath));
-  const content = getNoteContent(note);
 
   return (
     <React.Fragment>
