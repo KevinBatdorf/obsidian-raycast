@@ -9,25 +9,24 @@ class NoteCreator {
   vaultPath: string;
   noteProps: FormValue;
   saved = false;
-  openOnCreation: boolean;
+  pref: NoteFormPreferences;
 
-  constructor(noteProps: FormValue, vaultPath: string, openOnCreation: boolean) {
+  constructor(noteProps: FormValue, vaultPath: string, pref: NoteFormPreferences) {
     this.vaultPath = vaultPath;
     this.noteProps = noteProps;
-    this.openOnCreation = openOnCreation;
+    this.pref = pref;
   }
 
   createNote() {
     if (this.noteProps.name == "") {
-      const pref: NoteFormPreferences = getPreferenceValues();
-      this.noteProps.name = pref.prefNoteName;
+      this.noteProps.name = this.pref.prefNoteName;
     }
     const content = this.buildNoteContent();
-    this.saveNote(content);
-    if (this.openOnCreation) {
+    const name = this.applyTemplates(this.noteProps.name);
+    this.saveNote(content, name);
+    if (this.pref.openOnCreate) {
       const target =
-        "obsidian://open?path=" +
-        encodeURIComponent(path.join(this.vaultPath, this.noteProps.path, this.noteProps.name + ".md"));
+        "obsidian://open?path=" + encodeURIComponent(path.join(this.vaultPath, this.noteProps.path, name + ".md"));
       open(target);
     }
     return this.saved;
@@ -41,8 +40,8 @@ class NoteCreator {
 
     const timestamp = Date.now().toString();
 
-    content = content.replaceAll("{time}", hours + ":" + minutes + ":" + seconds);
-    content = content.replaceAll("{date}", date.toISOString().split("T")[0]);
+    content = content.replaceAll("{time}", date.toLocaleTimeString());
+    content = content.replaceAll("{date}", date.toLocaleDateString());
 
     content = content.replaceAll("{year}", date.getFullYear().toString());
     content = content.replaceAll("{month}", monthMapping[date.getMonth()]);
@@ -74,9 +73,8 @@ class NoteCreator {
     return content;
   }
 
-  async saveNote(content: string) {
+  async saveNote(content: string, name: string) {
     const notePath = path.join(this.vaultPath, this.noteProps.path);
-    const name = this.applyTemplates(this.noteProps.name);
 
     if (fs.existsSync(path.join(notePath, name + ".md"))) {
       const options = {

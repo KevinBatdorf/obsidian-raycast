@@ -18,13 +18,6 @@ export interface NoteFormPreferences extends Preferences {
   folderActions: string;
 }
 
-export interface FormValue {
-  path: string;
-  name: string;
-  content: string;
-  tags: string[];
-}
-
 export interface SearchNotePreferences extends Preferences {
   primaryAction: string;
   excludedFolders: string;
