@@ -30,6 +30,7 @@ class NoteLoader {
       };
       notes.push(note);
     }
+    // console.log("Loaded " + notes.length + " notes.");
     return notes;
   }
 

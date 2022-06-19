@@ -48,6 +48,11 @@ export function getNoteContent(note: Note) {
     content = content.replaceAll("[[", "");
     content = content.replaceAll("]]", "");
   }
+
+  // console.log("Got note content for note: ", note.title);
+  // const memory = process.memoryUsage();
+  // console.log((memory.heapUsed / 1024 / 1024 / 1024).toFixed(4), 'GB');
+
   return content;
 }
 
@@ -133,7 +138,7 @@ export function useObsidianVaults(): ObsidianVaultsState {
   return state;
 }
 
-export async function getClipboardContent(){
+export async function getClipboardContent() {
   const clipboardText = await Clipboard.readText();
   if (clipboardText) {
     return clipboardText;

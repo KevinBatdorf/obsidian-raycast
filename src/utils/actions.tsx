@@ -64,6 +64,7 @@ export function NoteActions(props: { note: Note; vaultPath: string; onPin: () =>
   const note = props.note;
 
   const [pinned, setPinned] = useState(isNotePinned(note, props.vaultPath));
+  const content = getNoteContent(note);
 
   return (
     <React.Fragment>
@@ -83,17 +84,9 @@ export function NoteActions(props: { note: Note; vaultPath: string; onPin: () =>
         icon={Icon.Pencil}
       />
 
-      <Action.CopyToClipboard
-        title="Copy Note Content"
-        content={getNoteContent(note)}
-        shortcut={{ modifiers: ["opt"], key: "c" }}
-      />
+      <Action.CopyToClipboard title="Copy Note Content" content={content} shortcut={{ modifiers: ["opt"], key: "c" }} />
 
-      <Action.Paste
-        title="Paste Note Content"
-        content={getNoteContent(note)}
-        shortcut={{ modifiers: ["opt"], key: "v" }}
-      />
+      <Action.Paste title="Paste Note Content" content={content} shortcut={{ modifiers: ["opt"], key: "v" }} />
 
       <Action.CopyToClipboard
         title="Copy Markdown Link"
