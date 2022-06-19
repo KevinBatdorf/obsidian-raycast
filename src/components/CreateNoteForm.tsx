@@ -1,8 +1,7 @@
-import { ActionPanel, Form, Action, useNavigation, getPreferenceValues } from "@raycast/api";
+import { ActionPanel, Form, Action, useNavigation, getPreferenceValues, Keyboard } from "@raycast/api";
 
 import NoteCreator from "../utils/NoteCreator";
 import { NoteFormPreferences, FormValue } from "../utils/interfaces";
-import { KeyEquivalent } from "@raycast/api/types/api/app/keyboard";
 
 function prefPath(): string {
   const pref: NoteFormPreferences = getPreferenceValues();
@@ -82,7 +81,7 @@ export function CreateNoteForm(props: { vaultPath: string }) {
               title={"Create in " + folder}
               onSubmit={(props: FormValue) => createNewNote(props, folder)}
               key={index}
-              shortcut={{ modifiers: ["shift", "cmd"], key: index.toString() as KeyEquivalent }}
+              shortcut={{ modifiers: ["shift", "cmd"], key: index.toString() as Keyboard.KeyEquivalent }}
             ></Action.SubmitForm>
           ))}
         </ActionPanel>
