@@ -36,6 +36,7 @@ export function NoteList(props: {
   action?: (note: Note) => React.ReactFragment;
   isLoading?: boolean;
   vaultPath: string;
+  onSearchChange: (search: string) => void;
 }) {
   const notes = props.notes;
   const action = props.action;
@@ -53,7 +54,7 @@ export function NoteList(props: {
   const pref: SearchNotePreferences = getPreferenceValues();
 
   return (
-    <List isLoading={isLoading} isShowingDetail={pref.showDetail}>
+    <List isLoading={isLoading} isShowingDetail={pref.showDetail} onSearchTextChange={props.onSearchChange}>
       {notes?.map((note) => (
         <NoteListItem note={note} vaultPath={props.vaultPath} key={note.key} />
       ))}

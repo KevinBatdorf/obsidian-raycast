@@ -51,7 +51,7 @@ export function getNoteContent(note: Note) {
 
   // console.log("Got note content for note: ", note.title);
   // const memory = process.memoryUsage();
-  // console.log((memory.heapUsed / 1024 / 1024 / 1024).toFixed(4), 'GB');
+  // console.log((memory.heapUsed / 1024 / 1024 / 1024).toFixed(4), "GB");
 
   return content;
 }
@@ -136,6 +136,24 @@ export function useObsidianVaults(): ObsidianVaultsState {
   }, []);
 
   return state;
+}
+
+export function filterNotes(notes: Note[], input: string) {
+  if (input.length === 0) {
+    return notes;
+  }
+  return notes
+    .filter((note) => {
+      return (
+        note.title.toLowerCase().startsWith(input.toLowerCase()) ||
+        note.title.toLowerCase().startsWith(input.toLowerCase())
+      );
+    })
+    .sort((a: Note, b: Note) => {
+      const aTitle = a.title;
+      const bTitle = b.title;
+      return aTitle.length - bTitle.length;
+    });
 }
 
 export async function getClipboardContent() {
