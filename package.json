@@ -73,6 +73,15 @@
           "default": true
         },
         {
+          "name": "showMetadata",
+          "type": "checkbox",
+          "label": "Show Metadata",
+          "title": "Show Metadata",
+          "required": false,
+          "description": "Show the notes metadata in a detail view (only works when Show Detail is enabled)",
+          "default": false
+        },
+        {
           "name": "primaryAction",
           "type": "dropdown",
           "title": "Primary Action",
@@ -210,6 +219,15 @@
           "default": true
         },
         {
+          "name": "showMetadata",
+          "type": "checkbox",
+          "label": "Show Metadata",
+          "title": "Show Metadata",
+          "required": false,
+          "description": "Show the notes metadata in a detail view (only works when Show Detail is enabled)",
+          "default": false
+        },
+        {
           "name": "primaryAction",
           "type": "dropdown",
           "title": "Primary Action",
@@ -231,7 +249,7 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.31.0"
+    "@raycast/api": "^1.36.0"
   },
   "devDependencies": {
     "@types/node": "~16.10.0",

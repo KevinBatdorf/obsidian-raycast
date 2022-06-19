@@ -33,6 +33,7 @@ export interface SearchNotePreferences extends Preferences {
   removeLatex: boolean;
   appendPrefix: string;
   showDetail: boolean;
+  showMetadata: boolean;
 }
 
 export interface Vault {
@@ -45,6 +46,7 @@ export interface Note {
   title: string;
   key: number;
   path: string;
+  created: string;
 }
 
 interface ObsidianJsonVault {

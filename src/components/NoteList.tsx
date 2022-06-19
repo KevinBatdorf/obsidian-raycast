@@ -1,4 +1,4 @@
-import { List, ActionPanel, getPreferenceValues } from "@raycast/api";
+import { List, ActionPanel, getPreferenceValues, preferences } from "@raycast/api";
 import React, { useState } from "react";
 
 import { Note, SearchNotePreferences } from "../utils/interfaces";
@@ -6,7 +6,7 @@ import { OpenNoteActions, NoteActions } from "../utils/actions";
 import { getNoteContent } from "../utils/utils";
 import { isNotePinned } from "../utils/PinNoteUtils";
 
-export function NoteListItem(props: { note: Note; vaultPath: string; key: number }) {
+export function NoteListItem(props: { note: Note; vaultPath: string; key: number; pref: SearchNotePreferences }) {
   const note = props.note;
   const [pinned, setPinned] = useState(isNotePinned(note, props.vaultPath));
   const content = getNoteContent(note);
@@ -19,7 +19,22 @@ export function NoteListItem(props: { note: Note; vaultPath: string; key: number
     <List.Item
       title={note.title}
       accessories={[{ text: pinned ? "⭐️" : "" }]}
-      detail={<List.Item.Detail markdown={content} />}
+      detail={
+        <List.Item.Detail
+          markdown={content}
+          metadata={
+            props.pref.showMetadata ? (
+              <List.Item.Detail.Metadata>
+                <List.Item.Detail.Metadata.Label title="Creation Date" text={note.created} />
+                <List.Item.Detail.Metadata.Label title="Note Path" />
+                <List.Item.Detail.Metadata.Label title="" text={note.path} />
+              </List.Item.Detail.Metadata>
+            ) : (
+              <React.Fragment />
+            )
+          }
+        />
+      }
       actions={
         <ActionPanel>
           <OpenNoteActions note={note} vaultPath={props.vaultPath} />
@@ -56,7 +71,7 @@ export function NoteList(props: {
   return (
     <List isLoading={isLoading} isShowingDetail={pref.showDetail} onSearchTextChange={props.onSearchChange}>
       {notes?.map((note) => (
-        <NoteListItem note={note} vaultPath={props.vaultPath} key={note.key} />
+        <NoteListItem note={note} vaultPath={props.vaultPath} key={note.key} pref={pref} />
       ))}
     </List>
   );
