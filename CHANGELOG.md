@@ -5,7 +5,7 @@
 - Add full content search to `Search Note` and `Pinned Notes` command
 - Add metadata view for notes in `Search Note` and `Pinned Notes` command
 - Add templates for `Create Note` command that can be used in the notes name and content
-- Add `Show In Finder` action to `Search Note`, `Pinned Notes` and `Open Vault` commands
+- Add `Show in Finder` action to `Search Note`, `Pinned Notes` and `Open Vault` commands
 - Vaults will now be found automatically
 - Fix performance issues
 - Migrate to Raycast API v1.36.0

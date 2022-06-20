@@ -66,7 +66,7 @@ export function NoteActions(props: { note: Note; vaultPath: string; onPin: () =>
   return (
     <React.Fragment>
       <Action.ShowInFinder
-        title="Show In Finder"
+        title="Show in Finder"
         icon={Icon.Finder}
         path={note.path}
         shortcut={{ modifiers: ["opt"], key: "enter" }}

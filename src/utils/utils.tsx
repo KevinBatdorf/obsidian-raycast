@@ -2,6 +2,9 @@ import { getPreferenceValues, Clipboard } from "@raycast/api";
 
 import fs from "fs";
 import fsPath from "path";
+import { readFile } from "fs/promises";
+import { homedir } from "os";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   Note,
@@ -11,9 +14,8 @@ import {
   SearchNotePreferences,
   Vault,
 } from "../utils/interfaces";
-import { readFile } from "fs/promises";
-import { homedir } from "os";
-import { useEffect, useMemo, useState } from "react";
+
+import { BYTES_PER_MEGABYTE } from "./constants";
 
 export function getNoteFileContent(path: string) {
   const pref: SearchNotePreferences = getPreferenceValues();
@@ -173,9 +175,9 @@ export function createdDateFor(note: Note) {
   return birthtime;
 }
 
-export function fileSizeFor(note: Note){
+export function fileSizeFor(note: Note) {
   const { size } = fs.statSync(note.path);
-  return size / 1024;
+  return size / BYTES_PER_MEGABYTE;
 }
 
 export function trimPath(path: string, maxLength: number) {
