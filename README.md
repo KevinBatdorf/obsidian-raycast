@@ -8,7 +8,8 @@ This is a raycast extension with commands for the note taking and knowledge mana
 
 ## Search Note
 
-This command allows for quick access to all of your notes.
+This command allows for quick access to all of your notes. By default you can search notes by title. Enabeling content search in the commands preferences allows you to search for notes by their content and title.
+
 It features several actions which you can trigger with these keyboard shortcuts:
 
 - `enter` will open the note in "Quick Look"
@@ -89,6 +90,7 @@ This command will open a list of your pinned notes. All actions and preferences 
 - prefix for append action
 - show note content in detail view
 - show metadata about note in detail view
+- enable content search
 - select primary action (for `enter`)
 
 ### Create Note
@@ -108,6 +110,7 @@ This command will open a list of your pinned notes. All actions and preferences 
 - prefix for append action
 - show note content in detail view
 - show metadata about note in detail view
+- enable content search
 - select primary action (for `enter`)
 
 ## Blog posts:
