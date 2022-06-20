@@ -27,6 +27,14 @@ The primary action (`enter`) can be changed in the extensions preferences.
 
 ![Search Note Command](https://user-images.githubusercontent.com/67844154/161255751-8a460ca1-c38f-4133-adaa-909f7a450ab1.png)
 
+Enabeling `Show Detail` and `Show Metadata` in the extensions preferences will show a sidebar view with the following information:
+- Note content
+- Character Count
+- Word Count
+- Reading Time
+- Creation Date
+- Note Path
+
 ## Open Vault
 
 This command will show a list of all of your Obsidian vaults which you can open by pressing `enter`.
