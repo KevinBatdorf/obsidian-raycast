@@ -34,6 +34,7 @@ Enabeling `Show Detail` and `Show Metadata` in the extensions preferences will s
 - Word Count
 - Reading Time
 - Creation Date
+- File Size
 - Note Path
 
 ## Open Vault

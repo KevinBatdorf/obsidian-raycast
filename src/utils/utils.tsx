@@ -173,11 +173,17 @@ export function createdDateFor(note: Note) {
   return birthtime;
 }
 
+export function fileSizeFor(note: Note){
+  const { size } = fs.statSync(note.path);
+  return size / 1024;
+}
+
 export function trimPath(path: string, maxLength: number) {
   if (path.length > maxLength) {
-    return "..." + path.slice(path.length - maxLength);
+    return "..." + path.slice(path.length - maxLength).slice(1);
+  } else {
+    return path.slice(1);
   }
-  return path;
 }
 
 export async function getClipboardContent() {

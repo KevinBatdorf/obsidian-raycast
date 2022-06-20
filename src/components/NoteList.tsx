@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import { Note, SearchNotePreferences } from "../utils/interfaces";
 import { OpenNoteActions, NoteActions } from "../utils/actions";
-import { readingTime, wordCount, trimPath, createdDateFor } from "../utils/utils";
+import { readingTime, wordCount, trimPath, createdDateFor, fileSizeFor } from "../utils/utils";
 import { isNotePinned } from "../utils/PinNoteUtils";
 
 export function NoteListItem(props: { note: Note; vaultPath: string; key: number; pref: SearchNotePreferences }) {
@@ -24,10 +24,10 @@ export function NoteListItem(props: { note: Note; vaultPath: string; key: number
           metadata={
             props.pref.showMetadata ? (
               <List.Item.Detail.Metadata>
-                <List.Item.Detail.Metadata.Label title="Character count" text={note.content.length.toString()} />
-                <List.Item.Detail.Metadata.Label title="Word count" text={wordCount(note.content).toString()} />
+                <List.Item.Detail.Metadata.Label title="Character Count" text={note.content.length.toString()} />
+                <List.Item.Detail.Metadata.Label title="Word Count" text={wordCount(note.content).toString()} />
                 <List.Item.Detail.Metadata.Label
-                  title="Read time"
+                  title="Reading Time"
                   text={readingTime(note.content).toString() + " min read"}
                 />
                 <List.Item.Detail.Metadata.Separator />
@@ -35,9 +35,10 @@ export function NoteListItem(props: { note: Note; vaultPath: string; key: number
                   title="Creation Date"
                   text={createdDateFor(note).toLocaleDateString()}
                 />
+                <List.Item.Detail.Metadata.Label title="File Size" text={fileSizeFor(note).toFixed(2) + " KB"} />
                 <List.Item.Detail.Metadata.Label
                   title="Note Path"
-                  text={trimPath(note.path.split(props.vaultPath)[1], 100)}
+                  text={trimPath(note.path.split(props.vaultPath)[1], 55)}
                 />
               </List.Item.Detail.Metadata>
             ) : (
