@@ -82,6 +82,15 @@
           "default": false
         },
         {
+          "name": "searchContent",
+          "type": "checkbox",
+          "label": "Search Content",
+          "title": "Search Content",
+          "required": false,
+          "description": "Use the content of notes for searching",
+          "default": false
+        },
+        {
           "name": "primaryAction",
           "type": "dropdown",
           "title": "Primary Action",
@@ -225,6 +234,15 @@
           "title": "Show Metadata",
           "required": false,
           "description": "Show the notes metadata in a detail view (only works when Show Detail is enabled)",
+          "default": false
+        },
+        {
+          "name": "searchContent",
+          "type": "checkbox",
+          "label": "Search Content",
+          "title": "Search Content",
+          "required": false,
+          "description": "Use the content of notes for searching",
           "default": false
         },
         {

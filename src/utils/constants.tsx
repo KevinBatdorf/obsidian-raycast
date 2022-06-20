@@ -1,0 +1,1 @@
+export const MAX_RENDERED_NOTES = 1000;

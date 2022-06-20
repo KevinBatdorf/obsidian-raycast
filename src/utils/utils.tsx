@@ -15,13 +15,13 @@ import { readFile } from "fs/promises";
 import { homedir } from "os";
 import { useEffect, useMemo, useState } from "react";
 
-export function getNoteContent(note: Note) {
+export function getNoteFileContent(path: string) {
   const pref: SearchNotePreferences = getPreferenceValues();
 
   let content = "";
 
   try {
-    content = fs.readFileSync(note.path, "utf8") as string;
+    content = fs.readFileSync(path, "utf8") as string;
   } catch {
     content = "Couldn't read file. Did you move, delete or rename the file?";
   }
@@ -49,9 +49,9 @@ export function getNoteContent(note: Note) {
     content = content.replaceAll("]]", "");
   }
 
-  // console.log("Got note content for note: ", note.title);
-  // const memory = process.memoryUsage();
-  // console.log((memory.heapUsed / 1024 / 1024 / 1024).toFixed(4), "GB");
+  console.log("Got note content for note: ", path);
+  const memory = process.memoryUsage();
+  console.log((memory.heapUsed / 1024 / 1024 / 1024).toFixed(4), "GB");
 
   return content;
 }
@@ -138,16 +138,20 @@ export function useObsidianVaults(): ObsidianVaultsState {
   return state;
 }
 
-export function filterNotes(notes: Note[], input: string) {
+export function filterNotes(notes: Note[], input: string, byContent: boolean) {
   if (input.length === 0) {
     return notes;
   }
   return notes
     .filter((note) => {
-      return (
-        note.title.toLowerCase().startsWith(input.toLowerCase()) ||
-        note.title.toLowerCase().startsWith(input.toLowerCase())
-      );
+      if (byContent) {
+        return (
+          note.title.toLowerCase().includes(input.toLowerCase()) ||
+          note.content.toLowerCase().includes(input.toLowerCase())
+        );
+      } else {
+        return note.title.toLowerCase().includes(input.toLowerCase());
+      }
     })
     .sort((a: Note, b: Note) => {
       const aTitle = a.title;
@@ -156,12 +160,17 @@ export function filterNotes(notes: Note[], input: string) {
     });
 }
 
-export function wordCount(str: string){
+export function wordCount(str: string) {
   return str.split(" ").length;
 }
 
-export function readingTime(str: string){
+export function readingTime(str: string) {
   return Math.ceil(wordCount(str) / 200);
+}
+
+export function createdDateFor(note: Note) {
+  const { birthtime } = fs.statSync(note.path);
+  return birthtime;
 }
 
 export function trimPath(path: string, maxLength: number) {

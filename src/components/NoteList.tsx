@@ -3,13 +3,14 @@ import React, { useState } from "react";
 
 import { Note, SearchNotePreferences } from "../utils/interfaces";
 import { OpenNoteActions, NoteActions } from "../utils/actions";
-import { getNoteContent, readingTime, wordCount, trimPath } from "../utils/utils";
+import { readingTime, wordCount, trimPath, createdDateFor } from "../utils/utils";
 import { isNotePinned } from "../utils/PinNoteUtils";
 
 export function NoteListItem(props: { note: Note; vaultPath: string; key: number; pref: SearchNotePreferences }) {
+  console.log(props);
   const note = props.note;
+  console.log(note);
   const [pinned, setPinned] = useState(isNotePinned(note, props.vaultPath));
-  const content = getNoteContent(note);
 
   const pin = function () {
     setPinned(!pinned);
@@ -21,18 +22,21 @@ export function NoteListItem(props: { note: Note; vaultPath: string; key: number
       accessories={[{ text: pinned ? "⭐️" : "" }]}
       detail={
         <List.Item.Detail
-          markdown={content}
+          markdown={note.content}
           metadata={
             props.pref.showMetadata ? (
               <List.Item.Detail.Metadata>
-                <List.Item.Detail.Metadata.Label title="Character count" text={content.length.toString()} />
-                <List.Item.Detail.Metadata.Label title="Word count" text={wordCount(content).toString()} />
+                <List.Item.Detail.Metadata.Label title="Character count" text={note.content.length.toString()} />
+                <List.Item.Detail.Metadata.Label title="Word count" text={wordCount(note.content).toString()} />
                 <List.Item.Detail.Metadata.Label
                   title="Read time"
-                  text={readingTime(content).toString() + " min read"}
+                  text={readingTime(note.content).toString() + " min read"}
                 />
                 <List.Item.Detail.Metadata.Separator />
-                <List.Item.Detail.Metadata.Label title="Creation Date" text={note.created} />
+                <List.Item.Detail.Metadata.Label
+                  title="Creation Date"
+                  text={createdDateFor(note).toLocaleDateString()}
+                />
                 <List.Item.Detail.Metadata.Label
                   title="Note Path"
                   text={trimPath(note.path.split(props.vaultPath)[1], 100)}
@@ -47,7 +51,7 @@ export function NoteListItem(props: { note: Note; vaultPath: string; key: number
       actions={
         <ActionPanel>
           <OpenNoteActions note={note} vaultPath={props.vaultPath} />
-          <NoteActions note={note} content={content} vaultPath={props.vaultPath} onPin={pin} />
+          <NoteActions note={note} vaultPath={props.vaultPath} onPin={pin} />
           {/* {action && action(note)} */}
         </ActionPanel>
       }
@@ -64,6 +68,7 @@ export function NoteList(props: {
 }) {
   const notes = props.notes;
   const action = props.action;
+  const pref: SearchNotePreferences = getPreferenceValues();
 
   let isLoading = notes === undefined;
 
@@ -74,8 +79,6 @@ export function NoteList(props: {
   if (props.isLoading !== undefined) {
     isLoading = props.isLoading;
   }
-
-  const pref: SearchNotePreferences = getPreferenceValues();
 
   return (
     <List isLoading={isLoading} isShowingDetail={pref.showDetail} onSearchTextChange={props.onSearchChange}>

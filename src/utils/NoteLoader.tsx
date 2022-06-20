@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 
 import { SearchNotePreferences, Note } from "./interfaces";
+import { getNoteFileContent } from "./utils";
 
 class NoteLoader {
   vaultPath: string;
@@ -17,7 +18,6 @@ class NoteLoader {
 
     let key = 0;
     for (const f of files) {
-      const { birthtime } = fs.statSync(f);
       const comp = f.split("/");
       const f_name = comp.pop();
       let name = "default";
@@ -28,7 +28,7 @@ class NoteLoader {
         title: name,
         key: ++key,
         path: f,
-        created: birthtime.toDateString(),
+        content: getNoteFileContent(f),
       };
       notes.push(note);
     }

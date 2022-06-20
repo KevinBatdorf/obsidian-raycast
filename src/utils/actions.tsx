@@ -14,7 +14,6 @@ import React, { useState } from "react";
 
 import { AppendNoteForm } from "../components/AppendNoteForm";
 import { SearchNotePreferences, Note } from "./interfaces";
-import { getNoteContent } from "./utils";
 import { isNotePinned, pinNote, unpinNote } from "./PinNoteUtils";
 
 enum PrimaryAction {
@@ -47,10 +46,9 @@ async function appendSelectedTextTo(note: Note) {
 
 function NoteQuickLook(props: { note: Note; vaultPath: string }) {
   const note = props.note;
-  const content = getNoteContent(note);
   return (
     <Detail
-      markdown={content}
+      markdown={note.content}
       actions={
         <ActionPanel>
           <Action.Open title="Open in Obsidian" target={"obsidian://open?path=" + encodeURIComponent(note.path)} />
@@ -60,9 +58,8 @@ function NoteQuickLook(props: { note: Note; vaultPath: string }) {
   );
 }
 
-export function NoteActions(props: { note: Note; content: string; vaultPath: string; onPin: () => void }) {
+export function NoteActions(props: { note: Note; vaultPath: string; onPin: () => void }) {
   const note = props.note;
-  const content = props.content;
 
   const [pinned, setPinned] = useState(isNotePinned(note, props.vaultPath));
 
@@ -91,9 +88,13 @@ export function NoteActions(props: { note: Note; content: string; vaultPath: str
         icon={Icon.Pencil}
       />
 
-      <Action.CopyToClipboard title="Copy Note Content" content={content} shortcut={{ modifiers: ["opt"], key: "c" }} />
+      <Action.CopyToClipboard
+        title="Copy Note Content"
+        content={note.content}
+        shortcut={{ modifiers: ["opt"], key: "c" }}
+      />
 
-      <Action.Paste title="Paste Note Content" content={content} shortcut={{ modifiers: ["opt"], key: "v" }} />
+      <Action.Paste title="Paste Note Content" content={note.content} shortcut={{ modifiers: ["opt"], key: "v" }} />
 
       <Action.CopyToClipboard
         title="Copy Markdown Link"
