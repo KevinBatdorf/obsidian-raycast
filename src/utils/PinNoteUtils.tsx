@@ -30,7 +30,6 @@ function getInfo(vaultPath: string) {
 
 export function getPinnedNotes(path: string): Note[] {
   const info = getInfo(path);
-  console.log(environment.supportPath);
 
   // Make sure old pinned notes conform to newest interface
   info.pinnedNotes.forEach((note) => {

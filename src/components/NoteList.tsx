@@ -7,9 +7,7 @@ import { readingTime, wordCount, trimPath, createdDateFor } from "../utils/utils
 import { isNotePinned } from "../utils/PinNoteUtils";
 
 export function NoteListItem(props: { note: Note; vaultPath: string; key: number; pref: SearchNotePreferences }) {
-  console.log(props);
   const note = props.note;
-  console.log(note);
   const [pinned, setPinned] = useState(isNotePinned(note, props.vaultPath));
 
   const pin = function () {

@@ -17,13 +17,12 @@ export function NoteListPinned(props: { vaultPath: string }) {
 
   useEffect(() => {
     const pinnedNotes = getPinnedNotes(props.vaultPath);
-    console.log(pinnedNotes);
     setPinnedNotes(pinnedNotes);
   }, []);
 
   return (
     <NoteList
-      notes={pinnedNotes}
+      notes={list.slice(0, MAX_RENDERED_NOTES)}
       isLoading={pinnedNotes === undefined}
       vaultPath={props.vaultPath}
       onSearchChange={setInput}
