@@ -15,7 +15,7 @@ import {
   Vault,
 } from "../utils/interfaces";
 
-import { BYTES_PER_MEGABYTE } from "./constants";
+import { BYTES_PER_KILOBYTE } from "./constants";
 
 export function getNoteFileContent(path: string) {
   const pref: SearchNotePreferences = getPreferenceValues();
@@ -158,9 +158,9 @@ export function filterNotes(notes: Note[], input: string, byContent: boolean) {
     .sort((a: Note, b: Note) => {
       const aTitle = a.title;
       const bTitle = b.title;
-      if (aTitle > bTitle){
+      if (aTitle > bTitle) {
         return 1;
-      } else if (aTitle < bTitle){
+      } else if (aTitle < bTitle) {
         return -1;
       } else {
         return 0;
@@ -183,7 +183,7 @@ export function createdDateFor(note: Note) {
 
 export function fileSizeFor(note: Note) {
   const { size } = fs.statSync(note.path);
-  return size / BYTES_PER_MEGABYTE;
+  return size / BYTES_PER_KILOBYTE;
 }
 
 export function trimPath(path: string, maxLength: number) {
