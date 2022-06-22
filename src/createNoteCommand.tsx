@@ -14,9 +14,9 @@ export default function Command() {
   } else if (vaults.length === 0) {
     return <NoVaultFoundMessage></NoVaultFoundMessage>;
   } else if (vaults.length > 1) {
-    return <VaultSelection vaults={vaults} target={(vault: Vault) => <CreateNoteForm vaultPath={vault.path} />} />;
+    return <VaultSelection vaults={vaults} target={(vault: Vault) => <CreateNoteForm vault={vault} />} />;
   } else if (vaults.length == 1) {
-    return <CreateNoteForm vaultPath={vaults[0].path} />;
+    return <CreateNoteForm vault={vaults[0]} />;
   } else {
     showToast({
       title: "Path Error",

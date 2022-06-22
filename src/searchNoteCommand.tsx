@@ -14,9 +14,9 @@ export default function Command() {
   } else if (vaults.length === 0) {
     return <NoVaultFoundMessage />;
   } else if (vaults.length > 1) {
-    return <VaultSelection vaults={vaults} target={(vault: Vault) => <NoteListObsidian vaultPath={vault.path} />} />;
+    return <VaultSelection vaults={vaults} target={(vault: Vault) => <NoteListObsidian vault={vault} />} />;
   } else if (vaults.length == 1) {
-    return <NoteListObsidian vaultPath={vaults[0].path} />;
+    return <NoteListObsidian vault={vaults[0]} />;
   } else {
     showToast({
       title: "Path Error",

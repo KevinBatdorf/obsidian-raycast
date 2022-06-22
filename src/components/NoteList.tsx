@@ -1,18 +1,37 @@
-import { List, ActionPanel, getPreferenceValues, preferences } from "@raycast/api";
+import { List, ActionPanel, getPreferenceValues, useNavigation } from "@raycast/api";
 import React, { useState } from "react";
 
-import { Note, SearchNotePreferences } from "../utils/interfaces";
+import { Note, Vault, SearchNotePreferences } from "../utils/interfaces";
 import { OpenNoteActions, NoteActions } from "../utils/actions";
-import { readingTime, wordCount, trimPath, createdDateFor, fileSizeFor } from "../utils/utils";
+import { readingTime, wordCount, trimPath, createdDateFor, fileSizeFor, getNoteFileContent } from "../utils/utils";
 import { isNotePinned } from "../utils/PinNoteUtils";
+import { NoteAction } from "../utils/constants";
 
-export function NoteListItem(props: { note: Note; vaultPath: string; key: number; pref: SearchNotePreferences }) {
+export function NoteListItem(props: {
+  note: Note;
+  vault: Vault;
+  key: number;
+  pref: SearchNotePreferences;
+  onDelete: (note: Note) => void;
+}) {
   const note = props.note;
-  const [pinned, setPinned] = useState(isNotePinned(note, props.vaultPath));
+  const vault = props.vault;
+  const [content, setContent] = useState(note.content);
+  const [pinned, setPinned] = useState(isNotePinned(note, vault));
 
-  const pin = function () {
-    setPinned(!pinned);
-  };
+  function actionCallback(action: NoteAction) {
+    switch (+action) {
+      case NoteAction.Pin:
+        setPinned(!pinned);
+        break;
+      case NoteAction.Delete:
+        props.onDelete(note);
+        break;
+      case NoteAction.Edit:
+        const newContent = getNoteFileContent(note.path);
+        setContent((content) => newContent);
+    }
+  }
 
   return (
     <List.Item
@@ -20,15 +39,15 @@ export function NoteListItem(props: { note: Note; vaultPath: string; key: number
       accessories={[{ text: pinned ? "⭐️" : "" }]}
       detail={
         <List.Item.Detail
-          markdown={note.content}
+          markdown={content}
           metadata={
             props.pref.showMetadata ? (
               <List.Item.Detail.Metadata>
-                <List.Item.Detail.Metadata.Label title="Character Count" text={note.content.length.toString()} />
-                <List.Item.Detail.Metadata.Label title="Word Count" text={wordCount(note.content).toString()} />
+                <List.Item.Detail.Metadata.Label title="Character Count" text={content.length.toString()} />
+                <List.Item.Detail.Metadata.Label title="Word Count" text={wordCount(content).toString()} />
                 <List.Item.Detail.Metadata.Label
                   title="Reading Time"
-                  text={readingTime(note.content).toString() + " min read"}
+                  text={readingTime(content).toString() + " min read"}
                 />
                 <List.Item.Detail.Metadata.Separator />
                 <List.Item.Detail.Metadata.Label
@@ -38,7 +57,7 @@ export function NoteListItem(props: { note: Note; vaultPath: string; key: number
                 <List.Item.Detail.Metadata.Label title="File Size" text={fileSizeFor(note).toFixed(2) + " KB"} />
                 <List.Item.Detail.Metadata.Label
                   title="Note Path"
-                  text={trimPath(note.path.split(props.vaultPath)[1], 55)}
+                  text={trimPath(note.path.split(vault.path)[1], 55)}
                 />
               </List.Item.Detail.Metadata>
             ) : (
@@ -49,8 +68,8 @@ export function NoteListItem(props: { note: Note; vaultPath: string; key: number
       }
       actions={
         <ActionPanel>
-          <OpenNoteActions note={note} vaultPath={props.vaultPath} />
-          <NoteActions note={note} vaultPath={props.vaultPath} onPin={pin} />
+          <OpenNoteActions note={note} vault={vault} />
+          <NoteActions note={note} vault={vault} actionCallback={actionCallback} />
           {/* {action && action(note)} */}
         </ActionPanel>
       }
@@ -60,13 +79,13 @@ export function NoteListItem(props: { note: Note; vaultPath: string; key: number
 
 export function NoteList(props: {
   notes: Note[] | undefined;
-  action?: (note: Note) => React.ReactFragment;
   isLoading?: boolean;
-  vaultPath: string;
+  vault: Vault;
   onSearchChange: (search: string) => void;
+  onDelete: (note: Note) => void;
 }) {
   const notes = props.notes;
-  const action = props.action;
+  const vault = props.vault;
   const pref: SearchNotePreferences = getPreferenceValues();
 
   let isLoading = notes === undefined;
@@ -82,7 +101,7 @@ export function NoteList(props: {
   return (
     <List isLoading={isLoading} isShowingDetail={pref.showDetail} onSearchTextChange={props.onSearchChange}>
       {notes?.map((note) => (
-        <NoteListItem note={note} vaultPath={props.vaultPath} key={note.key} pref={pref} />
+        <NoteListItem note={note} vault={vault} key={note.key} pref={pref} onDelete={props.onDelete} />
       ))}
     </List>
   );

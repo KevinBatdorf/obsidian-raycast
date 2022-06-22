@@ -7,6 +7,7 @@ import {
   showToast,
   Toast,
   getSelectedText,
+  Color,
 } from "@raycast/api";
 
 import fs from "fs";
@@ -14,9 +15,11 @@ import React, { useState } from "react";
 
 import { AppendNoteForm } from "../components/AppendNoteForm";
 import { EditNote } from "../components/EditNote";
-import { SearchNotePreferences, Note } from "./interfaces";
+import { SearchNotePreferences, Note, Vault } from "./interfaces";
 import { isNotePinned, pinNote, unpinNote } from "./PinNoteUtils";
 import { NoteQuickLook } from "../components/NoteQuickLook";
+import { deleteNote } from "./utils";
+import { NoteAction } from "./constants";
 
 enum PrimaryAction {
   QuickLook = "quicklook",
@@ -46,10 +49,12 @@ async function appendSelectedTextTo(note: Note) {
   }
 }
 
-export function NoteActions(props: { note: Note; vaultPath: string; onPin: () => void }) {
+export function NoteActions(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
   const note = props.note;
+  const vault = props.vault;
+  const actionCallback = props.actionCallback;
 
-  const [pinned, setPinned] = useState(isNotePinned(note, props.vaultPath));
+  const [pinned, setPinned] = useState(isNotePinned(note, vault));
 
   return (
     <React.Fragment>
@@ -62,7 +67,7 @@ export function NoteActions(props: { note: Note; vaultPath: string; onPin: () =>
 
       <Action.Push
         title="Edit Note"
-        target={<EditNote note={note} />}
+        target={<EditNote note={note} actionCallback={actionCallback} />}
         shortcut={{ modifiers: ["opt"], key: "e" }}
         icon={Icon.Pencil}
       />
@@ -110,32 +115,43 @@ export function NoteActions(props: { note: Note; vaultPath: string; onPin: () =>
         shortcut={{ modifiers: ["opt"], key: "p" }}
         onAction={() => {
           if (pinned) {
-            unpinNote(note, props.vaultPath);
+            unpinNote(note, vault);
             setPinned(!pinned);
-            props.onPin();
+            actionCallback(NoteAction.Pin);
           } else {
-            pinNote(note, props.vaultPath);
+            pinNote(note, vault);
             setPinned(!pinned);
-            props.onPin();
+            actionCallback(NoteAction.Pin);
           }
         }}
         icon={pinned ? Icon.XmarkCircle : Icon.Pin}
+      />
+
+      <Action
+        title="Delete Note"
+        shortcut={{ modifiers: ["opt"], key: "d" }}
+        onAction={() => {
+          const deleted = deleteNote(note, vault);
+          deleted.then((d) => {
+            if (d) {
+              actionCallback(NoteAction.Delete);
+            }
+          });
+        }}
+        icon={{ source: Icon.Trash, tintColor: Color.Red }}
       />
     </React.Fragment>
   );
 }
 
-export function OpenNoteActions(props: { note: Note; vaultPath: string }) {
+export function OpenNoteActions(props: { note: Note; vault: Vault }) {
   const note = props.note;
+  const vault = props.vault;
   const pref: SearchNotePreferences = getPreferenceValues();
   const primaryAction = pref.primaryAction;
 
   const quicklook = (
-    <Action.Push
-      title="Quick Look"
-      target={<NoteQuickLook note={note} vaultPath={props.vaultPath} />}
-      icon={Icon.Eye}
-    />
+    <Action.Push title="Quick Look" target={<NoteQuickLook note={note} vault={vault} />} icon={Icon.Eye} />
   );
 
   const obsidian = (

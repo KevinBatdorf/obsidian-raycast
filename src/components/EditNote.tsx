@@ -1,5 +1,6 @@
 import { ActionPanel, Form, Action, useNavigation, showToast, Toast, Icon, confirmAlert } from "@raycast/api";
 import fs from "fs";
+import { NoteAction } from "../utils/constants";
 import { Note } from "../utils/interfaces";
 import { applyTemplates, getNoteFileContent } from "../utils/utils";
 
@@ -7,7 +8,7 @@ interface FormValue {
   content: string;
 }
 
-export function EditNote(props: { note: Note }) {
+export function EditNote(props: { note: Note; actionCallback: (action: NoteAction) => void }) {
   const note = props.note;
   const { pop } = useNavigation();
 
@@ -23,6 +24,7 @@ export function EditNote(props: { note: Note }) {
     if (await confirmAlert(options)) {
       fs.writeFileSync(note.path, content);
       showToast({ title: "Edited note", style: Toast.Style.Success });
+      props.actionCallback(NoteAction.Edit);
       pop();
     }
   }

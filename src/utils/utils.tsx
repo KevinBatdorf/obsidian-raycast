@@ -1,4 +1,4 @@
-import { getPreferenceValues, Clipboard } from "@raycast/api";
+import { getPreferenceValues, Clipboard, Icon, Toast, confirmAlert, showToast, useNavigation } from "@raycast/api";
 
 import fs from "fs";
 import fsPath from "path";
@@ -16,6 +16,7 @@ import {
 } from "../utils/interfaces";
 
 import { BYTES_PER_KILOBYTE } from "./constants";
+import { isNotePinned, unpinNote } from "./PinNoteUtils";
 
 function filterContent(content: string) {
   const pref: SearchNotePreferences = getPreferenceValues();
@@ -140,6 +141,29 @@ export function useObsidianVaults(): ObsidianVaultsState {
   }, []);
 
   return state;
+}
+
+export async function deleteNote(note: Note, vault: Vault) {
+  const options = {
+    title: "Delete Note",
+    message: 'Are you sure you want to delete the note: "' + note.title + '"?',
+    icon: Icon.ExclamationMark,
+  };
+  if (await confirmAlert(options)) {
+    try {
+      fs.unlinkSync(note.path);
+      if (isNotePinned(note, vault)) {
+        unpinNote(note, vault);
+      }
+      showToast({ title: "Deleted Note", style: Toast.Style.Success });
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  } else {
+    return false;
+  }
 }
 
 export function filterNotes(notes: Note[], input: string, byContent: boolean) {

@@ -2,7 +2,7 @@ import { showToast, Toast, confirmAlert, Icon, open, getPreferenceValues, Clipbo
 
 import path from "path";
 import fs from "fs";
-import { NoteFormPreferences, FormValue } from "./interfaces";
+import { NoteFormPreferences, FormValue, Vault } from "./interfaces";
 import { monthMapping, dayMapping, applyTemplates } from "./utils";
 
 class NoteCreator {
@@ -11,8 +11,8 @@ class NoteCreator {
   saved = false;
   pref: NoteFormPreferences;
 
-  constructor(noteProps: FormValue, vaultPath: string, pref: NoteFormPreferences) {
-    this.vaultPath = vaultPath;
+  constructor(noteProps: FormValue, vault: Vault, pref: NoteFormPreferences) {
+    this.vaultPath = vault.path;
     this.noteProps = noteProps;
     this.pref = pref;
   }
