@@ -1,11 +1,6 @@
 import { ActionPanel, Form, Action, useNavigation, showToast, Toast } from "@raycast/api";
 import fs from "fs";
-
-interface Note {
-  title: string;
-  key: number;
-  path: string;
-}
+import { Note } from "../utils/interfaces";
 
 interface FormValue {
   content: string;

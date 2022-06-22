@@ -13,8 +13,10 @@ import fs from "fs";
 import React, { useState } from "react";
 
 import { AppendNoteForm } from "../components/AppendNoteForm";
+import { EditNote } from "../components/EditNote";
 import { SearchNotePreferences, Note } from "./interfaces";
 import { isNotePinned, pinNote, unpinNote } from "./PinNoteUtils";
+import { NoteQuickLook } from "../components/NoteQuickLook";
 
 enum PrimaryAction {
   QuickLook = "quicklook",
@@ -44,20 +46,6 @@ async function appendSelectedTextTo(note: Note) {
   }
 }
 
-function NoteQuickLook(props: { note: Note; vaultPath: string }) {
-  const note = props.note;
-  return (
-    <Detail
-      markdown={note.content}
-      actions={
-        <ActionPanel>
-          <Action.Open title="Open in Obsidian" target={"obsidian://open?path=" + encodeURIComponent(note.path)} />
-        </ActionPanel>
-      }
-    />
-  );
-}
-
 export function NoteActions(props: { note: Note; vaultPath: string; onPin: () => void }) {
   const note = props.note;
 
@@ -70,6 +58,13 @@ export function NoteActions(props: { note: Note; vaultPath: string; onPin: () =>
         icon={Icon.Finder}
         path={note.path}
         shortcut={{ modifiers: ["opt"], key: "enter" }}
+      />
+
+      <Action.Push
+        title="Edit Note"
+        target={<EditNote note={note} />}
+        shortcut={{ modifiers: ["opt"], key: "e" }}
+        icon={Icon.Pencil}
       />
 
       <Action.Push

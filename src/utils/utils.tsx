@@ -17,16 +17,8 @@ import {
 
 import { BYTES_PER_KILOBYTE } from "./constants";
 
-export function getNoteFileContent(path: string) {
+function filterContent(content: string) {
   const pref: SearchNotePreferences = getPreferenceValues();
-
-  let content = "";
-
-  try {
-    content = fs.readFileSync(path, "utf8") as string;
-  } catch {
-    content = "Couldn't read file. Did you move, delete or rename the file?";
-  }
 
   if (pref.removeYAML) {
     const yamlHeader = content.match(/---(.|\n)*?---/gm);
@@ -44,16 +36,26 @@ export function getNoteFileContent(path: string) {
       content = content.replace(match[0], "");
     }
   }
-
   if (pref.removeLinks) {
     content = content.replaceAll("![[", "");
     content = content.replaceAll("[[", "");
     content = content.replaceAll("]]", "");
   }
+  return content;
+}
 
-  // console.log("Got note content for note: ", path);
-  // const memory = process.memoryUsage();
-  // console.log((memory.heapUsed / 1024 / 1024 / 1024).toFixed(4), "GB");
+export function getNoteFileContent(path: string, filter: boolean = true) {
+  let content = "";
+
+  try {
+    content = fs.readFileSync(path, "utf8") as string;
+  } catch {
+    content = "Couldn't read file. Did you move, delete or rename the file?";
+  }
+
+  if (filter) {
+    content = filterContent(content);
+  }
 
   return content;
 }
@@ -227,3 +229,29 @@ export const monthMapping: Record<number, string> = {
   10: "Nov",
   11: "Dec",
 };
+
+export function applyTemplates(content: string) {
+  const date = new Date();
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
+
+  const timestamp = Date.now().toString();
+
+  content = content.replaceAll("{time}", date.toLocaleTimeString());
+  content = content.replaceAll("{date}", date.toLocaleDateString());
+
+  content = content.replaceAll("{year}", date.getFullYear().toString());
+  content = content.replaceAll("{month}", monthMapping[date.getMonth()]);
+  content = content.replaceAll("{day}", dayMapping[date.getDay()]);
+
+  content = content.replaceAll("{hour}", hours);
+  content = content.replaceAll("{minute}", minutes);
+  content = content.replaceAll("{second}", seconds);
+  content = content.replaceAll("{millisecond}", date.getMilliseconds().toString());
+
+  content = content.replaceAll("{timestamp}", timestamp);
+  content = content.replaceAll("{zettelkastenID}", timestamp);
+
+  return content;
+}

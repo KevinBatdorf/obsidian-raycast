@@ -3,7 +3,7 @@ import { showToast, Toast, confirmAlert, Icon, open, getPreferenceValues, Clipbo
 import path from "path";
 import fs from "fs";
 import { NoteFormPreferences, FormValue } from "./interfaces";
-import { monthMapping, dayMapping } from "./utils";
+import { monthMapping, dayMapping, applyTemplates } from "./utils";
 
 class NoteCreator {
   vaultPath: string;
@@ -22,7 +22,7 @@ class NoteCreator {
       this.noteProps.name = this.pref.prefNoteName;
     }
     const content = this.buildNoteContent();
-    const name = this.applyTemplates(this.noteProps.name);
+    const name = applyTemplates(this.noteProps.name);
     this.saveNote(content, name);
     if (this.pref.openOnCreate) {
       const target =
@@ -30,32 +30,6 @@ class NoteCreator {
       open(target);
     }
     return this.saved;
-  }
-
-  applyTemplates(content: string) {
-    const date = new Date();
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-
-    const timestamp = Date.now().toString();
-
-    content = content.replaceAll("{time}", date.toLocaleTimeString());
-    content = content.replaceAll("{date}", date.toLocaleDateString());
-
-    content = content.replaceAll("{year}", date.getFullYear().toString());
-    content = content.replaceAll("{month}", monthMapping[date.getMonth()]);
-    content = content.replaceAll("{day}", dayMapping[date.getDay()]);
-
-    content = content.replaceAll("{hour}", hours);
-    content = content.replaceAll("{minute}", minutes);
-    content = content.replaceAll("{second}", seconds);
-    content = content.replaceAll("{millisecond}", date.getMilliseconds().toString());
-
-    content = content.replaceAll("{timestamp}", timestamp);
-    content = content.replaceAll("{zettelkastenID}", timestamp);
-
-    return content;
   }
 
   buildNoteContent() {
@@ -68,7 +42,7 @@ class NoteCreator {
       content += '"' + this.noteProps.tags.pop() + '"]\n---\n';
     }
     content += this.noteProps.content;
-    content = this.applyTemplates(content);
+    content = applyTemplates(content);
 
     return content;
   }
