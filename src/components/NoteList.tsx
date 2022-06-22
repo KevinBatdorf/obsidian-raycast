@@ -13,6 +13,7 @@ export function NoteListItem(props: {
   key: number;
   pref: SearchNotePreferences;
   onDelete: (note: Note) => void;
+  action?: (note: Note) => React.ReactFragment;
 }) {
   const note = props.note;
   const vault = props.vault;
@@ -70,7 +71,7 @@ export function NoteListItem(props: {
         <ActionPanel>
           <OpenNoteActions note={note} vault={vault} />
           <NoteActions note={note} vault={vault} actionCallback={actionCallback} />
-          {/* {action && action(note)} */}
+          {props.action && props.action(note)}
         </ActionPanel>
       }
     />
@@ -81,6 +82,7 @@ export function NoteList(props: {
   notes: Note[] | undefined;
   isLoading?: boolean;
   vault: Vault;
+  action?: (note: Note) => React.ReactFragment;
   onSearchChange: (search: string) => void;
   onDelete: (note: Note) => void;
 }) {
@@ -101,7 +103,14 @@ export function NoteList(props: {
   return (
     <List isLoading={isLoading} isShowingDetail={pref.showDetail} onSearchTextChange={props.onSearchChange}>
       {notes?.map((note) => (
-        <NoteListItem note={note} vault={vault} key={note.key} pref={pref} onDelete={props.onDelete} />
+        <NoteListItem
+          note={note}
+          vault={vault}
+          key={note.key}
+          pref={pref}
+          onDelete={props.onDelete}
+          action={props.action}
+        />
       ))}
     </List>
   );

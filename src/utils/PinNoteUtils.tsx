@@ -9,6 +9,11 @@ interface DataProps {
   pinnedNotes: Note[];
 }
 
+export function resetPinnedNotes(vault: Vault) {
+  fs.writeFileSync(environment.supportPath + "/data.json", "[]");
+  showToast(Toast.Style.Success, "Reset Pinned Notes");
+}
+
 function getInfo(vault: Vault) {
   if (!fs.existsSync(environment.supportPath + "/data.json")) {
     fs.writeFileSync(environment.supportPath + "/data.json", "[]");
