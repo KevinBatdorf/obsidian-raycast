@@ -8,3 +8,8 @@ export enum NoteAction {
   Edit,
   Delete,
 }
+
+export enum PrimaryAction {
+  QuickLook = "quicklook",
+  OpenInObsidian = "obsidian",
+}

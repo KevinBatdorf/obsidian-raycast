@@ -19,12 +19,7 @@ import { SearchNotePreferences, Note, Vault } from "./interfaces";
 import { isNotePinned, pinNote, unpinNote } from "./PinNoteUtils";
 import { NoteQuickLook } from "../components/NoteQuickLook";
 import { deleteNote } from "./utils";
-import { NoteAction } from "./constants";
-
-enum PrimaryAction {
-  QuickLook = "quicklook",
-  OpenInObsidian = "obsidian",
-}
+import { NoteAction, PrimaryAction } from "./constants";
 
 async function appendSelectedTextTo(note: Note) {
   const pref: SearchNotePreferences = getPreferenceValues();
@@ -52,6 +47,7 @@ async function appendSelectedTextTo(note: Note) {
 export function NoteActions(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
   const note = props.note;
   const vault = props.vault;
+  const URIEncodedPath = encodeURIComponent(note.path);
   const actionCallback = props.actionCallback;
 
   const [pinned, setPinned] = useState(isNotePinned(note, vault));
@@ -99,14 +95,14 @@ export function NoteActions(props: { note: Note; vault: Vault; actionCallback: (
       <Action.CopyToClipboard
         title="Copy Markdown Link"
         icon={Icon.Link}
-        content={`[${note.title}](obsidian://open?path=${encodeURIComponent(note.path)})`}
+        content={`[${note.title}](obsidian://open?path=${URIEncodedPath})`}
         shortcut={{ modifiers: ["opt"], key: "l" }}
       />
 
       <Action.CopyToClipboard
         title="Copy Obsidian URI"
         icon={Icon.Link}
-        content={`obsidian://open?path=${encodeURIComponent(note.path)}`}
+        content={`obsidian://open?path=${URIEncodedPath}`}
         shortcut={{ modifiers: ["opt"], key: "u" }}
       />
 
@@ -144,14 +140,18 @@ export function NoteActions(props: { note: Note; vault: Vault; actionCallback: (
   );
 }
 
-export function OpenNoteActions(props: { note: Note; vault: Vault }) {
+export function OpenNoteActions(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
   const note = props.note;
   const vault = props.vault;
   const pref: SearchNotePreferences = getPreferenceValues();
   const primaryAction = pref.primaryAction;
 
   const quicklook = (
-    <Action.Push title="Quick Look" target={<NoteQuickLook note={note} vault={vault} />} icon={Icon.Eye} />
+    <Action.Push
+      title="Quick Look"
+      target={<NoteQuickLook note={note} vault={vault} actionCallback={props.actionCallback} />}
+      icon={Icon.Eye}
+    />
   );
 
   const obsidian = (

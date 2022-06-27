@@ -69,7 +69,7 @@ export function NoteListItem(props: {
       }
       actions={
         <ActionPanel>
-          <OpenNoteActions note={note} vault={vault} />
+          <OpenNoteActions note={note} vault={vault} actionCallback={actionCallback} />
           <NoteActions note={note} vault={vault} actionCallback={actionCallback} />
           {props.action && props.action(note)}
         </ActionPanel>
