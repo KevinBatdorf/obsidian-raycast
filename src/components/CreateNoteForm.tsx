@@ -55,12 +55,12 @@ export function CreateNoteForm(props: { vault: Vault }) {
     return "";
   }
 
-  function createNewNote(noteProps: FormValue, path: string | undefined = undefined) {
+  async function createNewNote(noteProps: FormValue, path: string | undefined = undefined) {
     if (path !== undefined) {
       noteProps.path = path;
     }
     const nc = new NoteCreator(noteProps, vault, pref);
-    const saved = nc.createNote();
+    const saved = await nc.createNote();
     if (saved) {
       pop();
     }

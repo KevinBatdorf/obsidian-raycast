@@ -1,7 +1,7 @@
 import { showToast, Toast, confirmAlert, Icon, open, getPreferenceValues, Clipboard } from "@raycast/api";
-
 import path from "path";
 import fs from "fs";
+
 import { NoteFormPreferences, FormValue, Vault } from "./interfaces";
 import { monthMapping, dayMapping, applyTemplates } from "./utils";
 
@@ -17,13 +17,16 @@ class NoteCreator {
     this.pref = pref;
   }
 
-  createNote() {
+  async createNote() {
     if (this.noteProps.name == "") {
       this.noteProps.name = this.pref.prefNoteName;
     }
-    const content = this.buildNoteContent();
-    const name = applyTemplates(this.noteProps.name);
+    let content = this.addYAMLFrontmatter("");
+    content = await applyTemplates(content);
+    const name = await applyTemplates(this.noteProps.name);
+
     this.saveNote(content, name);
+
     if (this.pref.openOnCreate) {
       const target =
         "obsidian://open?path=" + encodeURIComponent(path.join(this.vaultPath, this.noteProps.path, name + ".md"));
@@ -32,8 +35,7 @@ class NoteCreator {
     return this.saved;
   }
 
-  buildNoteContent() {
-    let content = "";
+  addYAMLFrontmatter(content: string) {
     if (this.noteProps.tags.length > 0) {
       content = "---\ntags: [";
       for (let i = 0; i < this.noteProps.tags.length - 1; i++) {
@@ -42,7 +44,6 @@ class NoteCreator {
       content += '"' + this.noteProps.tags.pop() + '"]\n---\n';
     }
     content += this.noteProps.content;
-    content = applyTemplates(content);
 
     return content;
   }

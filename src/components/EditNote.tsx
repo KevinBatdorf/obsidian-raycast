@@ -14,7 +14,7 @@ export function EditNote(props: { note: Note; actionCallback: (action: NoteActio
 
   async function writeToNote(form: FormValue) {
     let content = form.content;
-    content = applyTemplates(content);
+    content = await applyTemplates(content);
 
     const options = {
       title: "Override note",
