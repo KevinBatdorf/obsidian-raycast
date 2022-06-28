@@ -30,6 +30,7 @@ export function NoteListItem(props: {
         break;
       case NoteAction.Edit:
         const newContent = getNoteFileContent(note.path);
+        note.content = newContent;
         setContent((content) => newContent);
     }
   }

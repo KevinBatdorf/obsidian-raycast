@@ -25,7 +25,9 @@ export function NoteQuickLook(props: { note: Note; vault: Vault; actionCallback:
         pop();
         break;
       case NoteAction.Edit:
-        setContent(getNoteFileContent(note.path));
+        const newContent = getNoteFileContent(note.path);
+        note.content = newContent;
+        setContent((content) => newContent);
     }
   }
 
