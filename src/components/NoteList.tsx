@@ -20,6 +20,12 @@ export function NoteListItem(props: {
   const [content, setContent] = useState(note.content);
   const [pinned, setPinned] = useState(isNotePinned(note, vault));
 
+  function reloadContent() {
+    const newContent = getNoteFileContent(note.path);
+    note.content = newContent;
+    setContent((content) => newContent);
+  }
+
   function actionCallback(action: NoteAction) {
     switch (+action) {
       case NoteAction.Pin:
@@ -29,9 +35,10 @@ export function NoteListItem(props: {
         props.onDelete(note);
         break;
       case NoteAction.Edit:
-        const newContent = getNoteFileContent(note.path);
-        note.content = newContent;
-        setContent((content) => newContent);
+        reloadContent();
+        break;
+      case NoteAction.Append:
+        reloadContent();
     }
   }
 

@@ -7,6 +7,7 @@ export enum NoteAction {
   Pin,
   Edit,
   Delete,
+  Append,
 }
 
 export enum PrimaryAction {

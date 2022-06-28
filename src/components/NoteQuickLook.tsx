@@ -15,6 +15,12 @@ export function NoteQuickLook(props: { note: Note; vault: Vault; actionCallback:
   const [pinned, setPinned] = useState(isNotePinned(note, vault));
   const [content, setContent] = useState(note.content);
 
+  function reloadContent() {
+    const newContent = getNoteFileContent(note.path);
+    note.content = newContent;
+    setContent((content) => newContent);
+  }
+
   function actionCallback(action: NoteAction, value: any = undefined) {
     props.actionCallback(action);
     switch (+action) {
@@ -25,9 +31,10 @@ export function NoteQuickLook(props: { note: Note; vault: Vault; actionCallback:
         pop();
         break;
       case NoteAction.Edit:
-        const newContent = getNoteFileContent(note.path);
-        note.content = newContent;
-        setContent((content) => newContent);
+        reloadContent();
+        break;
+      case NoteAction.Append:
+        reloadContent();
     }
   }
 
