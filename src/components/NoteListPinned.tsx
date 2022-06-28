@@ -16,7 +16,6 @@ export function NoteListPinned(props: { vault: Vault }) {
   const vault = props.vault;
 
   function onDelete(note: Note) {
-    console.log("delete", note);
     setPinnedNotes(pinnedNotes.filter((n) => n.path !== note.path));
   }
 
@@ -26,9 +25,10 @@ export function NoteListPinned(props: { vault: Vault }) {
         title="Reset Pinned Notes"
         icon={{ source: Icon.XmarkCircle, tintColor: Color.Red }}
         shortcut={{ modifiers: ["opt"], key: "r" }}
-        onAction={() => {
-          resetPinnedNotes(vault);
-          setPinnedNotes((pinnedNotes) => []);
+        onAction={async () => {
+          if (await resetPinnedNotes(vault)) {
+            setPinnedNotes((pinnedNotes) => []);
+          }
         }}
       />
     );

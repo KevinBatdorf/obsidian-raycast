@@ -1,4 +1,4 @@
-import { showToast, Toast, environment } from "@raycast/api";
+import { showToast, Toast, environment, Icon, confirmAlert } from "@raycast/api";
 import fs from "fs";
 
 import { Note, Vault } from "./interfaces";
@@ -9,9 +9,25 @@ interface DataProps {
   pinnedNotes: Note[];
 }
 
-export function resetPinnedNotes(vault: Vault) {
-  fs.writeFileSync(environment.supportPath + "/data.json", "[]");
-  showToast(Toast.Style.Success, "Reset Pinned Notes");
+export async function resetPinnedNotes(vault: Vault) {
+  const info = getInfo(vault);
+
+  info.vault.pinnedNotes = [];
+
+  const idx = info.data.findIndex((v) => v.vaultPath == vault.path);
+  info.data[idx] = info.vault;
+
+  const options = {
+    title: "Reset Pinned Notes",
+    message: 'Are you sure you want to reset all pinned notes for: "' + vault.name + '"?',
+    icon: Icon.ExclamationMark,
+  };
+
+  if (await confirmAlert(options)) {
+    fs.writeFileSync(environment.supportPath + "/data.json", JSON.stringify(info.data));
+    showToast(Toast.Style.Success, "Reset Pinned Notes for " + vault.name);
+    return true;
+  }
 }
 
 function getInfo(vault: Vault) {
