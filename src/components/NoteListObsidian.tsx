@@ -17,7 +17,6 @@ export function NoteListObsidian(props: { vault: Vault }) {
   const list = useMemo(() => filterNotes(notes, input, pref.searchContent), [notes, input]);
 
   function onDelete(note: Note) {
-    console.log("delete", note);
     setNotes(notes.filter((n) => n.path !== note.path));
   }
 

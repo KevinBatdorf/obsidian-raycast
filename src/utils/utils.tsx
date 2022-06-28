@@ -158,7 +158,6 @@ export async function deleteNote(note: Note, vault: Vault) {
       showToast({ title: "Deleted Note", style: Toast.Style.Success });
       return true;
     } catch (error) {
-      console.log(error);
       return false;
     }
   } else {
