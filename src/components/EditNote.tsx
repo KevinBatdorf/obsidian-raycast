@@ -42,6 +42,7 @@ export function EditNote(props: { note: Note; actionCallback: (action: NoteActio
         title={"Edit:\n" + note.title}
         id="content"
         placeholder={"Text"}
+        enableMarkdown={true}
         defaultValue={getNoteFileContent(note.path, false)}
       />
     </Form>
