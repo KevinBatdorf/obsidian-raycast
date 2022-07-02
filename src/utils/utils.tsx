@@ -1,4 +1,4 @@
-import { getPreferenceValues, Clipboard, Icon, Toast, confirmAlert, showToast } from "@raycast/api";
+import { getPreferenceValues, Clipboard, Icon, Toast, confirmAlert, showToast, getSelectedText } from "@raycast/api";
 
 import fs from "fs";
 import fsPath from "path";
@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import {
   Note,
-  ObsidianJson,
+  ObsidianJSON,
   ObsidianVaultsState,
   Preferences,
   SearchNotePreferences,
@@ -16,7 +16,7 @@ import {
 } from "../utils/interfaces";
 
 import { BYTES_PER_KILOBYTE } from "./constants";
-import { isNotePinned, unpinNote } from "./PinNoteUtils";
+import { isNotePinned, unpinNote } from "./pinNoteUtils";
 
 function filterContent(content: string) {
   const pref: SearchNotePreferences = getPreferenceValues();
@@ -108,7 +108,7 @@ export function parseVaults(): Vault[] {
 async function loadObsidianJson(): Promise<Vault[]> {
   const obsidianJsonPath = fsPath.resolve(`${homedir()}/Library/Application Support/obsidian/obsidian.json`);
   try {
-    const obsidianJson = JSON.parse(await readFile(obsidianJsonPath, "utf8")) as ObsidianJson;
+    const obsidianJson = JSON.parse(await readFile(obsidianJsonPath, "utf8")) as ObsidianJSON;
     return Object.values(obsidianJson.vaults).map(({ path }) => ({
       name: getVaultNameFromPath(path),
       key: path,
@@ -281,3 +281,36 @@ export async function applyTemplates(content: string) {
 
   return content;
 }
+
+export async function appendSelectedTextTo(note: Note) {
+  let { appendSelectedTemplate } = getPreferenceValues<SearchNotePreferences>();
+
+  appendSelectedTemplate = appendSelectedTemplate ? appendSelectedTemplate : "{content}";
+
+  try {
+    const selectedText = await getSelectedText();
+    if (selectedText.trim() == "") {
+      showToast({ title: "No text selected", message: "Make sure to select some text.", style: Toast.Style.Failure });
+    } else {
+      let content = appendSelectedTemplate.replace("{content}", selectedText);
+      content = await applyTemplates(content);
+      fs.appendFileSync(note.path, "\n" + content);
+      showToast({ title: "Added selected text to note", style: Toast.Style.Success });
+      return true;
+    }
+  } catch {
+    showToast({
+      title: "Couldn't copy selected text",
+      message: "Maybe you didn't select anything.",
+      style: Toast.Style.Failure,
+    });
+  }
+}
+
+export const getOpenVaultTarget = (vault: Vault) => {
+  return "obsidian://open?vault=" + encodeURIComponent(vault.name);
+};
+
+export const getDailyNoteTarget = (vault: Vault) => {
+  return "obsidian://advanced-uri?vault=" + encodeURIComponent(vault.name) + "&daily=true";
+};

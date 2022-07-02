@@ -57,11 +57,18 @@
           "description": "Hide links for copying and viewing notes"
         },
         {
-          "name": "appendPrefix",
+          "name": "appendTemplate",
           "type": "textfield",
-          "title": "Prefix for Append action",
+          "title": "Template for Append action",
           "required": false,
-          "description": "Specify a prefix for Append action (e.g. '-')"
+          "description": "Specify a template for Append action (e.g. '- {content}')"
+        },
+        {
+          "name": "appendSelectedTemplate",
+          "type": "textfield",
+          "title": "Template for Append Selected Text action",
+          "required": false,
+          "description": "Specify a template for Append Selected Text action (e.g. '- {content}')"
         },
         {
           "name": "showDetail",
@@ -212,11 +219,18 @@
           "description": "Hide links for copying and viewing notes"
         },
         {
-          "name": "appendPrefix",
+          "name": "appendTemplate",
           "type": "textfield",
-          "title": "Prefix for Append action",
+          "title": "Template for Append action",
           "required": false,
-          "description": "Specify a prefix for Append action (e.g. '-')"
+          "description": "Specify a template for Append action (e.g. '- {content}')"
+        },
+        {
+          "name": "appendSelectedTemplate",
+          "type": "textfield",
+          "title": "Template for Append Selected Text action",
+          "required": false,
+          "description": "Specify a template for Append Selected Text action (e.g. '- {content}')"
         },
         {
           "name": "showDetail",

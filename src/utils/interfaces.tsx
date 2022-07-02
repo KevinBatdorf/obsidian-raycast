@@ -24,7 +24,8 @@ export interface SearchNotePreferences extends Preferences {
   removeYAML: boolean;
   removeLinks: boolean;
   removeLatex: boolean;
-  appendPrefix: string;
+  appendTemplate: string;
+  appendSelectedTemplate: string;
   showDetail: boolean;
   showMetadata: boolean;
   searchContent: boolean;
@@ -43,17 +44,22 @@ export interface Note {
   content: string;
 }
 
-interface ObsidianJsonVault {
+interface ObsidianVaultJSON {
   path: string;
   ts: number;
   open: boolean;
 }
 
-export interface ObsidianJson {
-  vaults: Record<string, ObsidianJsonVault>;
+export interface ObsidianJSON {
+  vaults: Record<string, ObsidianVaultJSON>;
 }
 
 export interface ObsidianVaultsState {
   ready: boolean;
   vaults: Vault[];
+}
+
+export interface PinnedNotesJSON {
+  vaultPath: string;
+  pinnedNotes: Note[];
 }

@@ -1,38 +1,14 @@
-import { Action, getPreferenceValues, Icon, showToast, Toast, getSelectedText, Color } from "@raycast/api";
+import { Action, getPreferenceValues, Icon, Color } from "@raycast/api";
 
-import fs from "fs";
 import React, { useState } from "react";
 
 import { AppendNoteForm } from "../components/AppendNoteForm";
 import { EditNote } from "../components/EditNote";
 import { SearchNotePreferences, Note, Vault } from "./interfaces";
-import { isNotePinned, pinNote, unpinNote } from "./PinNoteUtils";
+import { isNotePinned, pinNote, unpinNote } from "./pinNoteUtils";
 import { NoteQuickLook } from "../components/NoteQuickLook";
-import { deleteNote } from "./utils";
+import { deleteNote, appendSelectedTextTo } from "./utils";
 import { NoteAction, PrimaryAction } from "./constants";
-
-async function appendSelectedTextTo(note: Note) {
-  const pref: SearchNotePreferences = getPreferenceValues();
-  let appendPrefix = pref.appendPrefix;
-  if (appendPrefix === undefined) {
-    appendPrefix = "";
-  }
-  try {
-    const selectedText = await getSelectedText();
-    if (selectedText.trim() == "") {
-      showToast({ title: "No text selected", message: "Make sure to select some text.", style: Toast.Style.Failure });
-    } else {
-      fs.appendFileSync(note.path, "\n" + appendPrefix + selectedText);
-      showToast({ title: "Added selected text to note", style: Toast.Style.Success });
-    }
-  } catch {
-    showToast({
-      title: "Couldn't copy selected text",
-      message: "Maybe you didn't select anything.",
-      style: Toast.Style.Failure,
-    });
-  }
-}
 
 export function NoteActions(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
   const note = props.note;
@@ -68,8 +44,11 @@ export function NoteActions(props: { note: Note; vault: Vault; actionCallback: (
       <Action
         title="Append Selected Text to Note"
         shortcut={{ modifiers: ["opt"], key: "s" }}
-        onAction={() => {
-          appendSelectedTextTo(note);
+        onAction={async () => {
+          let done = await appendSelectedTextTo(note);
+          if (done) {
+            actionCallback(NoteAction.Append);
+          }
         }}
         icon={Icon.Pencil}
       />
@@ -116,13 +95,11 @@ export function NoteActions(props: { note: Note; vault: Vault; actionCallback: (
       <Action
         title="Delete Note"
         shortcut={{ modifiers: ["opt"], key: "d" }}
-        onAction={() => {
-          const deleted = deleteNote(note, vault);
-          deleted.then((d) => {
-            if (d) {
-              actionCallback(NoteAction.Delete);
-            }
-          });
+        onAction={async () => {
+          const deleted = await deleteNote(note, vault);
+          if (deleted) {
+            actionCallback(NoteAction.Delete);
+          }
         }}
         icon={{ source: Icon.Trash, tintColor: Color.Red }}
       />
@@ -133,8 +110,7 @@ export function NoteActions(props: { note: Note; vault: Vault; actionCallback: (
 export function OpenNoteActions(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
   const note = props.note;
   const vault = props.vault;
-  const pref: SearchNotePreferences = getPreferenceValues();
-  const primaryAction = pref.primaryAction;
+  const { primaryAction } = getPreferenceValues<SearchNotePreferences>();
 
   const quicklook = (
     <Action.Push
