@@ -43,10 +43,8 @@ export function CreateNoteForm(props: { vault: Vault }) {
       noteProps.path = path;
     }
     const nc = new NoteCreator(noteProps, vault, pref);
-    const saved = await nc.createNote();
-    if (saved) {
-      pop();
-    }
+    nc.createNote();
+    pop();
   }
 
   return (

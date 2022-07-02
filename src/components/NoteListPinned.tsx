@@ -3,16 +3,16 @@ import { useState, useEffect, useMemo } from "react";
 
 import { Note, SearchNotePreferences, Vault } from "../utils/interfaces";
 import { NoteList } from "./NoteList";
-import { getPinnedNotes, resetPinnedNotes } from "../utils/PinNoteUtils";
+import { getPinnedNotes, resetPinnedNotes } from "../utils/pinNoteUtils";
 import { filterNotes } from "../utils/utils";
 import { MAX_RENDERED_NOTES } from "../utils/constants";
 
 export function NoteListPinned(props: { vault: Vault }) {
-  const pref: SearchNotePreferences = getPreferenceValues();
+  const { searchContent } = getPreferenceValues<SearchNotePreferences>();
 
   const [pinnedNotes, setPinnedNotes] = useState<Note[]>([]);
   const [input, setInput] = useState<string>("");
-  const list = useMemo(() => filterNotes(pinnedNotes, input, pref.searchContent), [pinnedNotes, input]);
+  const list = useMemo(() => filterNotes(pinnedNotes, input, searchContent), [pinnedNotes, input]);
   const vault = props.vault;
 
   function onDelete(note: Note) {

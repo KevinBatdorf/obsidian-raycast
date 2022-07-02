@@ -1,13 +1,9 @@
 import { showToast, Toast, environment, Icon, confirmAlert } from "@raycast/api";
 import fs from "fs";
 
-import { Note, Vault } from "./interfaces";
+import { Note, Vault, PinnedNotesJSON } from "./interfaces";
 import { getNoteFileContent } from "./utils";
-
-interface DataProps {
-  vaultPath: string;
-  pinnedNotes: Note[];
-}
+import { noteAlreadyPinnedToast, notePinnedToast, noteUnpinnedToast } from "../components/Toasts";
 
 export async function resetPinnedNotes(vault: Vault) {
   const info = getInfo(vault);
@@ -36,7 +32,7 @@ function getInfo(vault: Vault) {
   }
 
   const data = fs.readFileSync(environment.supportPath + "/data.json", "utf8");
-  const parsedData: DataProps[] = JSON.parse(data);
+  const parsedData: PinnedNotesJSON[] = JSON.parse(data);
 
   const vaults = parsedData.filter((v) => v.vaultPath == vault.path);
   if (vaults.length == 0) {
@@ -73,13 +69,7 @@ export function unpinNote(note: Note, vault: Vault) {
   info.data[idx] = info.vault;
 
   fs.writeFileSync(environment.supportPath + "/data.json", JSON.stringify(info.data));
-
-  showToast({
-    title: "Note Unpinned",
-    message: "'" + note.title + "' unpinned successfully.",
-    style: Toast.Style.Success,
-  });
-
+  noteUnpinnedToast(note);
   return pinnedNotes;
 }
 
@@ -92,11 +82,7 @@ export function pinNote(note: Note, vault: Vault) {
   const info = getInfo(vault);
 
   if (isNotePinned(note, vault)) {
-    showToast({
-      title: "Already Pinned",
-      message: "'" + note.title + "' is already pinned.",
-      style: Toast.Style.Failure,
-    });
+    noteAlreadyPinnedToast(note);
     return;
   }
 
@@ -106,10 +92,5 @@ export function pinNote(note: Note, vault: Vault) {
   info.data[idx] = info.vault;
 
   fs.writeFileSync(environment.supportPath + "/data.json", JSON.stringify(info.data));
-
-  showToast({
-    title: "Note Pinned",
-    message: "'" + note.title + "' pinned successfully.",
-    style: Toast.Style.Success,
-  });
+  notePinnedToast(note);
 }

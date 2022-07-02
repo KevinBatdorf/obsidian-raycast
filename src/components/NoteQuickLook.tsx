@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { Note, Vault } from "../utils/interfaces";
 import { NoteActions, OpenNoteActions } from "../utils/actions";
-import { isNotePinned } from "../utils/PinNoteUtils";
+import { isNotePinned } from "../utils/pinNoteUtils";
 import { NoteAction } from "../utils/constants";
 import { getNoteFileContent } from "../utils/utils";
 

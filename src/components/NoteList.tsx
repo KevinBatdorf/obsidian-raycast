@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Note, Vault, SearchNotePreferences } from "../utils/interfaces";
 import { OpenNoteActions, NoteActions } from "../utils/actions";
 import { readingTime, wordCount, trimPath, createdDateFor, fileSizeFor, getNoteFileContent } from "../utils/utils";
-import { isNotePinned } from "../utils/PinNoteUtils";
+import { isNotePinned } from "../utils/pinNoteUtils";
 import { NoteAction } from "../utils/constants";
 
 export function NoteListItem(props: {

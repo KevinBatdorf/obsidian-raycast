@@ -9,12 +9,12 @@ import { filterNotes } from "../utils/utils";
 import { MAX_RENDERED_NOTES } from "../utils/constants";
 
 export function NoteListObsidian(props: { vault: Vault }) {
-  const pref: SearchNotePreferences = getPreferenceValues();
+  const { searchContent } = getPreferenceValues<SearchNotePreferences>();
 
   const vault = props.vault;
   const [notes, setNotes] = useState<Note[]>([]);
   const [input, setInput] = useState<string>("");
-  const list = useMemo(() => filterNotes(notes, input, pref.searchContent), [notes, input]);
+  const list = useMemo(() => filterNotes(notes, input, searchContent), [notes, input]);
 
   function onDelete(note: Note) {
     setNotes(notes.filter((n) => n.path !== note.path));
