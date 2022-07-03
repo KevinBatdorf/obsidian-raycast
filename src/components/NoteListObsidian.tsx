@@ -1,12 +1,13 @@
 import { showToast, Toast, getPreferenceValues } from "@raycast/api";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import fs from "fs";
 
 import NoteLoader from "../utils/NoteLoader";
 import { Note, Vault, SearchNotePreferences } from "../utils/interfaces";
 import { NoteList } from "./NoteList";
 import { filterNotes } from "../utils/utils";
-import { MAX_RENDERED_NOTES } from "../utils/constants";
+import { MAX_RENDERED_NOTES, NoteAction } from "../utils/constants";
+import { NoteActions, OpenNoteActions } from "../utils/actions";
 
 export function NoteListObsidian(props: { vault: Vault }) {
   const { searchContent } = getPreferenceValues<SearchNotePreferences>();
@@ -40,6 +41,19 @@ export function NoteListObsidian(props: { vault: Vault }) {
   }, []);
 
   return (
-    <NoteList notes={list.slice(0, MAX_RENDERED_NOTES)} vault={vault} onSearchChange={setInput} onDelete={onDelete} />
+    <NoteList
+      notes={list.slice(0, MAX_RENDERED_NOTES)}
+      vault={vault}
+      onSearchChange={setInput}
+      onDelete={onDelete}
+      action={(note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => {
+        return (
+          <React.Fragment>
+            <OpenNoteActions note={note} vault={vault} actionCallback={actionCallback} />
+            <NoteActions note={note} vault={vault} actionCallback={actionCallback} />
+          </React.Fragment>
+        );
+      }}
+    />
   );
 }

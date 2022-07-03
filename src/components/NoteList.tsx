@@ -13,7 +13,7 @@ export function NoteListItem(props: {
   key: number;
   pref: SearchNotePreferences;
   onDelete: (note: Note) => void;
-  action?: (note: Note) => React.ReactFragment;
+  action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
 }) {
   const note = props.note;
   const vault = props.vault;
@@ -77,11 +77,7 @@ export function NoteListItem(props: {
       }
       actions={
         <ActionPanel>
-          <React.Fragment>
-            <OpenNoteActions note={note} vault={vault} actionCallback={actionCallback} />
-            <NoteActions note={note} vault={vault} actionCallback={actionCallback} />
-            {props.action && props.action(note)}
-          </React.Fragment>
+          <React.Fragment>{props.action && props.action(note, vault, actionCallback)}</React.Fragment>
         </ActionPanel>
       }
     />
@@ -91,8 +87,9 @@ export function NoteListItem(props: {
 export function NoteList(props: {
   notes: Note[] | undefined;
   isLoading?: boolean;
+  title?: string;
   vault: Vault;
-  action?: (note: Note) => React.ReactFragment;
+  action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
   onSearchChange: (search: string) => void;
   onDelete: (note: Note) => void;
 }) {
@@ -111,7 +108,12 @@ export function NoteList(props: {
   }
 
   return (
-    <List isLoading={isLoading} isShowingDetail={pref.showDetail} onSearchTextChange={props.onSearchChange}>
+    <List
+      isLoading={isLoading}
+      isShowingDetail={pref.showDetail}
+      onSearchTextChange={props.onSearchChange}
+      navigationTitle={props.title}
+    >
       {notes?.map((note) => (
         <NoteListItem
           note={note}
