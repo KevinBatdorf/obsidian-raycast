@@ -168,9 +168,7 @@ export function OpenInObsidianAction(props: { note: Note }) {
 }
 
 export function NoteActions(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
-  const note = props.note;
-  const vault = props.vault;
-  const actionCallback = props.actionCallback;
+  const { note, vault, actionCallback } = props;
 
   return (
     <React.Fragment>

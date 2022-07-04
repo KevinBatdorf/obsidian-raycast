@@ -15,8 +15,7 @@ export function NoteListItem(props: {
   onDelete: (note: Note) => void;
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
 }) {
-  const note = props.note;
-  const vault = props.vault;
+  const { note, vault, key, pref, onDelete, action } = props;
   const [content, setContent] = useState(note.content);
   const [pinned, setPinned] = useState(isNotePinned(note, vault));
 
@@ -32,7 +31,7 @@ export function NoteListItem(props: {
         setPinned(!pinned);
         break;
       case NoteAction.Delete:
-        props.onDelete(note);
+        onDelete(note);
         break;
       case NoteAction.Edit:
         reloadContent();
@@ -50,7 +49,7 @@ export function NoteListItem(props: {
         <List.Item.Detail
           markdown={content}
           metadata={
-            props.pref.showMetadata ? (
+            pref.showMetadata ? (
               <List.Item.Detail.Metadata>
                 <List.Item.Detail.Metadata.Label title="Character Count" text={content.length.toString()} />
                 <List.Item.Detail.Metadata.Label title="Word Count" text={wordCount(content).toString()} />
@@ -77,7 +76,7 @@ export function NoteListItem(props: {
       }
       actions={
         <ActionPanel>
-          <React.Fragment>{props.action && props.action(note, vault, actionCallback)}</React.Fragment>
+          <React.Fragment>{action && action(note, vault, actionCallback)}</React.Fragment>
         </ActionPanel>
       }
     />
@@ -93,36 +92,29 @@ export function NoteList(props: {
   onSearchChange: (search: string) => void;
   onDelete: (note: Note) => void;
 }) {
-  const notes = props.notes;
-  const vault = props.vault;
-  const pref: SearchNotePreferences = getPreferenceValues();
+  const { notes, vault, isLoading, title, action, onSearchChange, onDelete } = props;
+  const pref = getPreferenceValues<SearchNotePreferences>();
+  const { showDetail } = pref;
 
-  let isLoading = notes === undefined;
+  let isNotesUndefined = notes === undefined;
 
   if (notes !== undefined) {
-    isLoading = notes.length == 0;
+    isNotesUndefined = notes.length == 0;
   }
 
-  if (props.isLoading !== undefined) {
-    isLoading = props.isLoading;
+  if (isLoading !== undefined) {
+    isNotesUndefined = isLoading;
   }
 
   return (
     <List
-      isLoading={isLoading}
-      isShowingDetail={pref.showDetail}
-      onSearchTextChange={props.onSearchChange}
-      navigationTitle={props.title}
+      isLoading={isNotesUndefined}
+      isShowingDetail={showDetail}
+      onSearchTextChange={onSearchChange}
+      navigationTitle={title}
     >
       {notes?.map((note) => (
-        <NoteListItem
-          note={note}
-          vault={vault}
-          key={note.key}
-          pref={pref}
-          onDelete={props.onDelete}
-          action={props.action}
-        />
+        <NoteListItem note={note} vault={vault} key={note.key} pref={pref} onDelete={onDelete} action={action} />
       ))}
     </List>
   );

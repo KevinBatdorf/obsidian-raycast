@@ -4,7 +4,7 @@ import NoteCreator from "../utils/NoteCreator";
 import { NoteFormPreferences, FormValue, Vault } from "../utils/interfaces";
 
 export function CreateNoteForm(props: { vault: Vault }) {
-  const vault = props.vault;
+  const { vault } = props;
   const { pop } = useNavigation();
 
   const pref = getPreferenceValues<NoteFormPreferences>();

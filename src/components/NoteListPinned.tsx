@@ -10,11 +10,11 @@ import { NoteActions, OpenNoteActions } from "../utils/actions";
 
 export function NoteListPinned(props: { vault: Vault }) {
   const { searchContent } = getPreferenceValues<SearchNotePreferences>();
+  const vault = props.vault;
 
   const [pinnedNotes, setPinnedNotes] = useState<Note[]>([]);
   const [input, setInput] = useState<string>("");
   const list = useMemo(() => filterNotes(pinnedNotes, input, searchContent), [pinnedNotes, input]);
-  const vault = props.vault;
 
   function onDelete(note: Note) {
     setPinnedNotes(pinnedNotes.filter((n) => n.path !== note.path));

@@ -8,8 +8,7 @@ import { NoteAction } from "../utils/constants";
 import { getNoteFileContent } from "../utils/utils";
 
 export function NoteQuickLook(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
-  const note = props.note;
-  const vault = props.vault;
+  const { note, vault, actionCallback } = props;
   const { pop } = useNavigation();
 
   const [pinned, setPinned] = useState(isNotePinned(note, vault));
@@ -21,8 +20,8 @@ export function NoteQuickLook(props: { note: Note; vault: Vault; actionCallback:
     setContent(newContent);
   }
 
-  function actionCallback(action: NoteAction, value: any = undefined) {
-    props.actionCallback(action);
+  function quickLookActionCallback(action: NoteAction, value: any = undefined) {
+    actionCallback(action);
     switch (+action) {
       case NoteAction.Pin:
         setPinned(!pinned);
@@ -44,8 +43,8 @@ export function NoteQuickLook(props: { note: Note; vault: Vault; actionCallback:
       markdown={content}
       actions={
         <ActionPanel>
-          <OpenNoteActions note={note} vault={vault} actionCallback={actionCallback} />
-          <NoteActions note={note} vault={vault} actionCallback={actionCallback} />
+          <OpenNoteActions note={note} vault={vault} actionCallback={quickLookActionCallback} />
+          <NoteActions note={note} vault={vault} actionCallback={quickLookActionCallback} />
         </ActionPanel>
       }
     />

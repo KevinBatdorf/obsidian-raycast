@@ -9,7 +9,7 @@ interface FormValue {
 }
 
 export function AppendNoteForm(props: { note: Note; actionCallback: (action: NoteAction) => void }) {
-  const note = props.note;
+  const { note, actionCallback } = props;
   const { pop } = useNavigation();
 
   const { appendTemplate } = getPreferenceValues<SearchNotePreferences>();
@@ -19,7 +19,7 @@ export function AppendNoteForm(props: { note: Note; actionCallback: (action: Not
     fs.appendFileSync(note.path, "\n" + content);
     showToast({ title: "Added text to note", style: Toast.Style.Success });
     pop();
-    props.actionCallback(NoteAction.Append);
+    actionCallback(NoteAction.Append);
   }
 
   return (
