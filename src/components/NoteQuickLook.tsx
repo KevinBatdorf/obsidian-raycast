@@ -5,14 +5,16 @@ import { Note, Vault } from "../utils/interfaces";
 import { NoteActions, OpenNoteActions } from "../utils/actions";
 import { isNotePinned } from "../utils/pinNoteUtils";
 import { NoteAction } from "../utils/constants";
-import { getNoteFileContent } from "../utils/utils";
+import { filterContent, getNoteFileContent } from "../utils/utils";
 
 export function NoteQuickLook(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
   const { note, vault, actionCallback } = props;
   const { pop } = useNavigation();
+  let noteContent = note.content;
+  noteContent = filterContent(noteContent);
 
   const [pinned, setPinned] = useState(isNotePinned(note, vault));
-  const [content, setContent] = useState(note.content);
+  const [content, setContent] = useState(noteContent);
 
   function reloadContent() {
     const newContent = getNoteFileContent(note.path);

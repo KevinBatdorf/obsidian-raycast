@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 import { SearchNotePreferences, Note, Vault } from "./interfaces";
-import { getNoteFileContent } from "./utils";
+import { getNoteFileContent, tagsFor } from "./utils";
 
 class NoteLoader {
   vaultPath: string;
@@ -24,11 +24,14 @@ class NoteLoader {
       if (f_name) {
         name = f_name.split(".md")[0];
       }
-      const note = {
+
+      const noteContent = getNoteFileContent(f, false);
+
+      const note: Note = {
         title: name,
-        key: ++key,
         path: f,
-        content: getNoteFileContent(f),
+        tags: tagsFor(noteContent),
+        content: noteContent,
       };
       notes.push(note);
     }

@@ -1,7 +1,17 @@
-import { getPreferenceValues, Clipboard, Icon, Toast, confirmAlert, showToast, getSelectedText } from "@raycast/api";
+import {
+  getPreferenceValues,
+  Clipboard,
+  Icon,
+  Toast,
+  confirmAlert,
+  showToast,
+  getSelectedText,
+  environment,
+} from "@raycast/api";
 
 import fs from "fs";
 import fsPath from "path";
+import YAML from "yaml";
 import { readFile } from "fs/promises";
 import { homedir } from "os";
 import { useEffect, useMemo, useState } from "react";
@@ -18,7 +28,7 @@ import {
 import { BYTES_PER_KILOBYTE } from "./constants";
 import { isNotePinned, unpinNote } from "./pinNoteUtils";
 
-function filterContent(content: string) {
+export function filterContent(content: string) {
   const pref: SearchNotePreferences = getPreferenceValues();
 
   if (pref.removeYAML) {
@@ -314,3 +324,114 @@ export const getOpenVaultTarget = (vault: Vault) => {
 export const getDailyNoteTarget = (vault: Vault) => {
   return "obsidian://advanced-uri?vault=" + encodeURIComponent(vault.name) + "&daily=true";
 };
+
+function getListOfInlineTags(notes: Note[]) {
+  let foundTags: string[] = [];
+  for (let note of notes) {
+    let tags = [...note.content.matchAll(/[\s\n](#[a-zA-Z_0-9\/\-]+)/g)];
+    for (let tag of tags) {
+      if (!foundTags.includes(tag[1])) {
+        foundTags.push(tag[1]);
+      }
+    }
+  }
+  return foundTags;
+}
+
+export function inlineTagsFor(content: string) {
+  let foundTags: string[] = [];
+  let tags = [...content.matchAll(/[\s\n](#[a-zA-Z_0-9\/\-]+)/g)];
+  for (let tag of tags) {
+    if (!foundTags.includes(tag[1])) {
+      foundTags.push(tag[1]);
+    }
+  }
+  return foundTags;
+}
+
+export function YAMLTagsFor(content: string) {
+  let foundTags: string[] = [];
+  const frontmatter = content.match(/---\s([\s\S]*)---/g);
+  if (frontmatter) {
+    try {
+      const parsedYAML = YAML.parse(frontmatter[0].replaceAll("---", ""));
+
+      if (parsedYAML.hasOwnProperty("tag")) {
+        foundTags = [...parsedYAML.tag.split(",").map((tag: string) => tag.trim())];
+      } else if (parsedYAML.hasOwnProperty("tags")) {
+        foundTags = [...parsedYAML.tags.split(",").map((tag: string) => tag.trim())];
+      }
+    } catch {
+      //console.log("Error parsing file: " + note.title);
+    }
+  }
+  foundTags = foundTags.filter((tag: string) => tag != "");
+  return foundTags.map((tag) => "#" + tag);
+}
+
+export function tagsFor(content: string) {
+  let foundTags = inlineTagsFor(content);
+  let foundYAMLTags = YAMLTagsFor(content);
+  for (let tag of foundYAMLTags) {
+    if (!foundTags.includes(tag)) {
+      foundTags.push(tag);
+    }
+  }
+
+  return foundTags.sort((a, b) => {
+    if (a > b) {
+      return 1;
+    } else if (a < b) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
+}
+
+function getListOfYAMLTags(notes: Note[]) {
+  let foundTags: string[] = [];
+  for (let note of notes) {
+    let tags = YAMLTagsFor(note.content);
+    for (let tag of tags) {
+      if (!foundTags.includes(tag)) {
+        foundTags.push(tag);
+      }
+    }
+  }
+  return foundTags;
+}
+
+export function getListOfTags(notes: Note[]) {
+  let foundTags = getListOfInlineTags(notes);
+  let foundYAMLTags = getListOfYAMLTags(notes);
+  for (let tag of foundYAMLTags) {
+    if (!foundTags.includes(tag)) {
+      foundTags.push(tag);
+    }
+  }
+
+  return foundTags.sort((a, b) => {
+    if (a > b) {
+      return 1;
+    } else if (a < b) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
+}
+
+function setExtensionVersion(version: string) {
+  fs.writeFileSync(environment.supportPath + "/version.txt", version);
+}
+
+export function getCurrentPinnedVersion() {
+  if (!fs.existsSync(environment.supportPath + "/version.txt")) {
+    setExtensionVersion("");
+    return undefined;
+  } else {
+    const version = fs.readFileSync(environment.supportPath + "/version.txt", "utf8");
+    return version;
+  }
+}

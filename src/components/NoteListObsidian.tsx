@@ -5,7 +5,7 @@ import fs from "fs";
 import NoteLoader from "../utils/NoteLoader";
 import { Note, Vault, SearchNotePreferences } from "../utils/interfaces";
 import { NoteList } from "./NoteList";
-import { filterNotes } from "../utils/utils";
+import { filterNotes, getListOfTags } from "../utils/utils";
 import { MAX_RENDERED_NOTES, NoteAction } from "../utils/constants";
 import { NoteActions, OpenNoteActions } from "../utils/actions";
 
@@ -14,6 +14,8 @@ export function NoteListObsidian(props: { vault: Vault }) {
 
   const vault = props.vault;
   const [notes, setNotes] = useState<Note[]>([]);
+  const [allNotes, setAllNotes] = useState<Note[]>([]);
+
   const [input, setInput] = useState<string>("");
   const list = useMemo(() => filterNotes(notes, input, searchContent), [notes, input]);
 
@@ -29,6 +31,7 @@ export function NoteListObsidian(props: { vault: Vault }) {
         const _notes = nl.loadNotes();
 
         setNotes(_notes);
+        setAllNotes(_notes);
       } catch (error) {
         showToast({
           title: "The path set in preferences doesn't exist",
@@ -40,12 +43,17 @@ export function NoteListObsidian(props: { vault: Vault }) {
     fetch();
   }, []);
 
+  const tags = getListOfTags(allNotes ?? []);
+
   return (
     <NoteList
       notes={list.slice(0, MAX_RENDERED_NOTES)}
+      allNotes={allNotes}
+      setNotes={setNotes}
       vault={vault}
       onSearchChange={setInput}
       onDelete={onDelete}
+      tags={tags}
       action={(note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => {
         return (
           <React.Fragment>

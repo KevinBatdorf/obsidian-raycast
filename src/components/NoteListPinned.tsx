@@ -3,8 +3,8 @@ import React, { useState, useEffect, useMemo } from "react";
 
 import { Note, SearchNotePreferences, Vault } from "../utils/interfaces";
 import { NoteList } from "./NoteList";
-import { getPinnedNotes, resetPinnedNotes } from "../utils/pinNoteUtils";
-import { filterNotes } from "../utils/utils";
+import { getPinnedNotes, migratePinnedNotes, resetPinnedNotes } from "../utils/pinNoteUtils";
+import { filterNotes, getListOfTags } from "../utils/utils";
 import { MAX_RENDERED_NOTES, NoteAction } from "../utils/constants";
 import { NoteActions, OpenNoteActions } from "../utils/actions";
 
@@ -12,7 +12,10 @@ export function NoteListPinned(props: { vault: Vault }) {
   const { searchContent } = getPreferenceValues<SearchNotePreferences>();
   const vault = props.vault;
 
+  migratePinnedNotes();
+
   const [pinnedNotes, setPinnedNotes] = useState<Note[]>([]);
+  const [allNotes, setAllNotes] = useState<Note[]>([]);
   const [input, setInput] = useState<string>("");
   const list = useMemo(() => filterNotes(pinnedNotes, input, searchContent), [pinnedNotes, input]);
 
@@ -45,14 +48,20 @@ export function NoteListPinned(props: { vault: Vault }) {
     );
   }
 
+  const currentPinnedNotes = getPinnedNotes(vault);
+  const tags = getListOfTags(currentPinnedNotes ?? []);
+
   useEffect(() => {
-    const pinnedNotes = getPinnedNotes(vault);
-    setPinnedNotes(pinnedNotes);
+    setPinnedNotes(currentPinnedNotes);
+    setAllNotes(currentPinnedNotes);
   }, []);
 
   return (
     <NoteList
       notes={list.slice(0, MAX_RENDERED_NOTES)}
+      allNotes={allNotes}
+      setNotes={setPinnedNotes}
+      tags={tags}
       isLoading={pinnedNotes === undefined}
       vault={vault}
       action={actions}

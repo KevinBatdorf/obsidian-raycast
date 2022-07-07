@@ -2,20 +2,27 @@ import { List, ActionPanel, getPreferenceValues } from "@raycast/api";
 import React, { useState } from "react";
 
 import { Note, Vault, SearchNotePreferences } from "../utils/interfaces";
-import { OpenNoteActions, NoteActions } from "../utils/actions";
-import { readingTime, wordCount, trimPath, createdDateFor, fileSizeFor, getNoteFileContent } from "../utils/utils";
+import {
+  readingTime,
+  wordCount,
+  trimPath,
+  createdDateFor,
+  fileSizeFor,
+  getNoteFileContent,
+  filterContent,
+} from "../utils/utils";
 import { isNotePinned } from "../utils/pinNoteUtils";
 import { NoteAction } from "../utils/constants";
 
 export function NoteListItem(props: {
   note: Note;
   vault: Vault;
-  key: number;
+  key: string;
   pref: SearchNotePreferences;
   onDelete: (note: Note) => void;
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
 }) {
-  const { note, vault, key, pref, onDelete, action } = props;
+  const { note, vault, pref, onDelete, action } = props;
   const [content, setContent] = useState(note.content);
   const [pinned, setPinned] = useState(isNotePinned(note, vault));
 
@@ -47,7 +54,7 @@ export function NoteListItem(props: {
       accessories={[{ text: pinned ? "⭐️" : "" }]}
       detail={
         <List.Item.Detail
-          markdown={content}
+          markdown={filterContent(content)}
           metadata={
             pref.showMetadata ? (
               <List.Item.Detail.Metadata>
@@ -85,14 +92,17 @@ export function NoteListItem(props: {
 
 export function NoteList(props: {
   notes: Note[] | undefined;
+  allNotes: Note[];
+  setNotes: (notes: Note[]) => void;
   isLoading?: boolean;
   title?: string;
   vault: Vault;
+  tags: string[];
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
   onSearchChange: (search: string) => void;
   onDelete: (note: Note) => void;
 }) {
-  const { notes, vault, isLoading, title, action, onSearchChange, onDelete } = props;
+  const { notes, allNotes, vault, isLoading, title, tags, action, onSearchChange, onDelete } = props;
   const pref = getPreferenceValues<SearchNotePreferences>();
   const { showDetail } = pref;
 
@@ -112,9 +122,26 @@ export function NoteList(props: {
       isShowingDetail={showDetail}
       onSearchTextChange={onSearchChange}
       navigationTitle={title}
+      searchBarAccessory={
+        <List.Dropdown
+          tooltip="Search For"
+          onChange={(value) => {
+            if (value != "all") {
+              props.setNotes(allNotes?.filter((note) => note.tags.includes(value)) ?? []);
+            } else {
+              props.setNotes(allNotes);
+            }
+          }}
+        >
+          <List.Dropdown.Item title="All" value="all" />
+          {tags.map((tag) => (
+            <List.Dropdown.Item title={tag} value={tag} key={tag} />
+          ))}
+        </List.Dropdown>
+      }
     >
       {notes?.map((note) => (
-        <NoteListItem note={note} vault={vault} key={note.key} pref={pref} onDelete={onDelete} action={action} />
+        <NoteListItem note={note} vault={vault} key={note.path} pref={pref} onDelete={onDelete} action={action} />
       ))}
     </List>
   );
