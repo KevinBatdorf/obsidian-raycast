@@ -2,6 +2,7 @@ import { Action, ActionPanel, closeMainWindow, List, open, popToRoot, Icon } fro
 
 import { getOpenVaultTarget, useObsidianVaults } from "./utils/utils";
 import { NoVaultFoundMessage } from "./components/NoVaultFoundMessage";
+import { ShowVaultInFinderAction } from "./utils/actions";
 
 export default function Command() {
   const { ready, vaults } = useObsidianVaults();
@@ -31,7 +32,7 @@ export default function Command() {
             actions={
               <ActionPanel>
                 <Action.Open title="Open vault" icon={Icon.ArrowRight} target={getOpenVaultTarget(vault)} />
-                <Action.ShowInFinder title="Show in Finder" icon={Icon.Finder} path={vault.path} />
+                <ShowVaultInFinderAction vault={vault} />
               </ActionPanel>
             }
           />

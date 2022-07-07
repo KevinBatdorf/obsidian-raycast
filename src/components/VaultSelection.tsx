@@ -1,4 +1,5 @@
 import { List, ActionPanel, Action } from "@raycast/api";
+import { ShowVaultInFinderAction } from "../utils/actions";
 
 import { Vault } from "../utils/interfaces";
 
@@ -13,6 +14,7 @@ export function VaultSelection(props: { vaults: Vault[]; target: (vault: Vault) 
           actions={
             <ActionPanel>
               <Action.Push title="Select Vault" target={target(vault)} />
+              <ShowVaultInFinderAction vault={vault} />
             </ActionPanel>
           }
         />

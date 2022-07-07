@@ -25,7 +25,15 @@ import {
   Vault,
 } from "../utils/interfaces";
 
-import { BYTES_PER_KILOBYTE } from "./constants";
+import {
+  BYTES_PER_KILOBYTE,
+  DAY_NUMBER_TO_STRING,
+  INLINE_TAGS_REGEX,
+  LATEX_INLINE_REGEX,
+  LATEX_REGEX,
+  MONTH_NUMBER_TO_STRING,
+  YAML_FRONTMATTER_REGEX,
+} from "./constants";
 import { isNotePinned, unpinNote } from "./pinNoteUtils";
 
 export function filterContent(content: string) {
@@ -38,12 +46,12 @@ export function filterContent(content: string) {
     }
   }
   if (pref.removeLatex) {
-    const latex = content.matchAll(/\$\$(.|\n)*?\$\$/gm);
+    const latex = content.matchAll(LATEX_REGEX);
     for (const match of latex) {
       content = content.replace(match[0], "");
     }
-    const latex_one = content.matchAll(/\$(.|\n)*?\$/gm);
-    for (const match of latex_one) {
+    const latexInline = content.matchAll(LATEX_INLINE_REGEX);
+    for (const match of latexInline) {
       content = content.replace(match[0], "");
     }
   }
@@ -64,11 +72,7 @@ export function getNoteFileContent(path: string, filter = true) {
     content = "Couldn't read file. Did you move, delete or rename the file?";
   }
 
-  if (filter) {
-    content = filterContent(content);
-  }
-
-  return content;
+  return filter ? filterContent(content) : content;
 }
 
 export function vaultPluginCheck(vaults: Vault[], plugin: string) {
@@ -175,6 +179,22 @@ export async function deleteNote(note: Note, vault: Vault) {
   }
 }
 
+export function sortByAlphabet(a: string, b: string) {
+  const aTitle = a;
+  const bTitle = b;
+  if (aTitle > bTitle) {
+    return 1;
+  } else if (aTitle < bTitle) {
+    return -1;
+  } else {
+    return 0;
+  }
+}
+
+export function sortNoteByAlphabet(a: Note, b: Note) {
+  return sortByAlphabet(a.title, b.title);
+}
+
 export function filterNotes(notes: Note[], input: string, byContent: boolean) {
   if (input.length === 0) {
     return notes;
@@ -190,17 +210,7 @@ export function filterNotes(notes: Note[], input: string, byContent: boolean) {
         return note.title.toLowerCase().includes(input.toLowerCase());
       }
     })
-    .sort((a: Note, b: Note) => {
-      const aTitle = a.title;
-      const bTitle = b.title;
-      if (aTitle > bTitle) {
-        return 1;
-      } else if (aTitle < bTitle) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
+    .sort(sortNoteByAlphabet);
 }
 
 export function wordCount(str: string) {
@@ -231,37 +241,8 @@ export function trimPath(path: string, maxLength: number) {
 
 export async function getClipboardContent() {
   const clipboardText = await Clipboard.readText();
-  if (clipboardText) {
-    return clipboardText;
-  } else {
-    return "";
-  }
+  return clipboardText ? clipboardText : "";
 }
-
-export const dayMapping: Record<number, string> = {
-  0: "Sun",
-  1: "Mon",
-  2: "Tue",
-  3: "Wed",
-  4: "Thu",
-  5: "Fri",
-  6: "Sat",
-};
-
-export const monthMapping: Record<number, string> = {
-  0: "Jan",
-  1: "Feb",
-  2: "Mar",
-  3: "Apr",
-  4: "May",
-  5: "Jun",
-  6: "Jul",
-  7: "Aug",
-  8: "Sep",
-  9: "Oct",
-  10: "Nov",
-  11: "Dec",
-};
 
 export async function applyTemplates(content: string) {
   const date = new Date();
@@ -275,8 +256,8 @@ export async function applyTemplates(content: string) {
   content = content.replaceAll("{date}", date.toLocaleDateString());
 
   content = content.replaceAll("{year}", date.getFullYear().toString());
-  content = content.replaceAll("{month}", monthMapping[date.getMonth()]);
-  content = content.replaceAll("{day}", dayMapping[date.getDay()]);
+  content = content.replaceAll("{month}", MONTH_NUMBER_TO_STRING[date.getMonth()]);
+  content = content.replaceAll("{day}", DAY_NUMBER_TO_STRING[date.getDay()]);
 
   content = content.replaceAll("{hour}", hours);
   content = content.replaceAll("{minute}", minutes);
@@ -288,6 +269,15 @@ export async function applyTemplates(content: string) {
 
   const clipboard = await getClipboardContent();
   content = content.replaceAll("{clipboard}", clipboard);
+  content = content.replaceAll("{clip}", clipboard);
+
+  content = content.replaceAll("{\n}", "\n");
+  content = content.replaceAll("{newline}", "\n");
+  content = content.replaceAll("{nl}", "\n");
+
+  const selectedText = await getSelectedText();
+  content = content.replaceAll("{selected}", selectedText);
+  content = content.replaceAll("{selectedText}", selectedText);
 
   return content;
 }
@@ -302,7 +292,7 @@ export async function appendSelectedTextTo(note: Note) {
     if (selectedText.trim() == "") {
       showToast({ title: "No text selected", message: "Make sure to select some text.", style: Toast.Style.Failure });
     } else {
-      let content = appendSelectedTemplate.replace("{content}", selectedText);
+      let content = appendSelectedTemplate.replaceAll("{content}", selectedText);
       content = await applyTemplates(content);
       fs.appendFileSync(note.path, "\n" + content);
       showToast({ title: "Added selected text to note", style: Toast.Style.Success });
@@ -328,7 +318,7 @@ export const getDailyNoteTarget = (vault: Vault) => {
 function getListOfInlineTags(notes: Note[]) {
   let foundTags: string[] = [];
   for (let note of notes) {
-    let tags = [...note.content.matchAll(/[\s\n](#[a-zA-Z_0-9\/\-]+)/g)];
+    let tags = [...note.content.matchAll(INLINE_TAGS_REGEX)];
     for (let tag of tags) {
       if (!foundTags.includes(tag[1])) {
         foundTags.push(tag[1]);
@@ -340,7 +330,7 @@ function getListOfInlineTags(notes: Note[]) {
 
 export function inlineTagsFor(content: string) {
   let foundTags: string[] = [];
-  let tags = [...content.matchAll(/[\s\n](#[a-zA-Z_0-9\/\-]+)/g)];
+  let tags = [...content.matchAll(INLINE_TAGS_REGEX)];
   for (let tag of tags) {
     if (!foundTags.includes(tag[1])) {
       foundTags.push(tag[1]);
@@ -351,7 +341,7 @@ export function inlineTagsFor(content: string) {
 
 export function YAMLTagsFor(content: string) {
   let foundTags: string[] = [];
-  const frontmatter = content.match(/---\s([\s\S]*)---/g);
+  const frontmatter = content.match(YAML_FRONTMATTER_REGEX);
   if (frontmatter) {
     try {
       const parsedYAML = YAML.parse(frontmatter[0].replaceAll("---", ""));
@@ -378,15 +368,7 @@ export function tagsFor(content: string) {
     }
   }
 
-  return foundTags.sort((a, b) => {
-    if (a > b) {
-      return 1;
-    } else if (a < b) {
-      return -1;
-    } else {
-      return 0;
-    }
-  });
+  return foundTags.sort(sortByAlphabet);
 }
 
 function getListOfYAMLTags(notes: Note[]) {
@@ -411,15 +393,7 @@ export function getListOfTags(notes: Note[]) {
     }
   }
 
-  return foundTags.sort((a, b) => {
-    if (a > b) {
-      return 1;
-    } else if (a < b) {
-      return -1;
-    } else {
-      return 0;
-    }
-  });
+  return foundTags.sort(sortByAlphabet);
 }
 
 function setExtensionVersion(version: string) {

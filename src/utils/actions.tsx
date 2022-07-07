@@ -167,6 +167,11 @@ export function OpenInObsidianAction(props: { note: Note }) {
   );
 }
 
+export function ShowVaultInFinderAction(props: { vault: Vault }) {
+  const { vault } = props;
+  return <Action.ShowInFinder title="Show in Finder" icon={Icon.Finder} path={vault.path} />;
+}
+
 export function NoteActions(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
   const { note, vault, actionCallback } = props;
 
