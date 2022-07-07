@@ -92,12 +92,12 @@ export function NoteListItem(props: {
 
 export function NoteList(props: {
   notes: Note[] | undefined;
-  allNotes: Note[];
-  setNotes: (notes: Note[]) => void;
+  allNotes?: Note[];
+  setNotes?: (notes: Note[]) => void;
+  tags?: string[];
   isLoading?: boolean;
   title?: string;
   vault: Vault;
-  tags: string[];
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
   onSearchChange: (search: string) => void;
   onDelete: (note: Note) => void;
@@ -116,29 +116,38 @@ export function NoteList(props: {
     isNotesUndefined = isLoading;
   }
 
+  function DropDownList() {
+    if (props.setNotes && allNotes && tags) {
+      return (
+        <List.Dropdown
+          tooltip="Search For"
+          onChange={(value) => {
+            if (value != "all") {
+              props.setNotes!(allNotes.filter((note) => note.tags.includes(value)));
+            } else {
+              props.setNotes!(allNotes);
+            }
+          }}
+        >
+          <List.Dropdown.Item title="All" value="all" />
+          <List.Dropdown.Section title="Tags" />
+          {tags.map((tag) => (
+            <List.Dropdown.Item title={tag} value={tag} key={tag} />
+          ))}
+        </List.Dropdown>
+      );
+    } else {
+      return <React.Fragment />;
+    }
+  }
+
   return (
     <List
       isLoading={isNotesUndefined}
       isShowingDetail={showDetail}
       onSearchTextChange={onSearchChange}
       navigationTitle={title}
-      searchBarAccessory={
-        <List.Dropdown
-          tooltip="Search For"
-          onChange={(value) => {
-            if (value != "all") {
-              props.setNotes(allNotes?.filter((note) => note.tags.includes(value)) ?? []);
-            } else {
-              props.setNotes(allNotes);
-            }
-          }}
-        >
-          <List.Dropdown.Item title="All" value="all" />
-          {tags.map((tag) => (
-            <List.Dropdown.Item title={tag} value={tag} key={tag} />
-          ))}
-        </List.Dropdown>
-      }
+      searchBarAccessory={<DropDownList />}
     >
       {notes?.map((note) => (
         <NoteListItem note={note} vault={vault} key={note.path} pref={pref} onDelete={onDelete} action={action} />

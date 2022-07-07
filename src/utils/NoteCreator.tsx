@@ -18,11 +18,12 @@ class NoteCreator {
   }
 
   async createNote() {
-    this.noteProps.name == "" ? this.pref.prefNoteName : this.noteProps.name;
+    let name = this.noteProps.name == "" ? this.pref.prefNoteName : this.noteProps.name;
+    let content = this.pref.prefNoteContent;
 
-    let content = this.addYAMLFrontmatter("");
+    content = this.addYAMLFrontmatter(content);
     content = await applyTemplates(content);
-    const name = await applyTemplates(this.noteProps.name);
+    name = await applyTemplates(name);
 
     const saved = await this.saveNote(content, name);
 

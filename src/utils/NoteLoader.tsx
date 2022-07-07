@@ -56,6 +56,7 @@ class NoteLoader {
         if (
           file.endsWith(".md") &&
           file !== ".md" &&
+          !file.includes(".excalidraw") &&
           !dirPath.includes(".obsidian") &&
           this.isValidFile(dirPath, exFolders)
         ) {

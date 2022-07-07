@@ -64,7 +64,7 @@ export function CreateNoteForm(props: { vault: Vault }) {
         </ActionPanel>
       }
     >
-      <Form.TextField title="Name" id="name" placeholder="Name of note" />
+      <Form.TextField title="Name" id="name" placeholder="Name of note" defaultValue={pref.fillFormWithDefaults ? pref.prefNoteName : ""}/>
       <Form.TextField
         title="Path"
         id="path"
@@ -76,7 +76,7 @@ export function CreateNoteForm(props: { vault: Vault }) {
           <Form.TagPicker.Item value={tag.name.toLowerCase()} title={tag.name} key={tag.key} />
         ))}
       </Form.TagPicker>
-      <Form.TextArea title="Content:" id="content" placeholder={"Text"} />
+      <Form.TextArea title="Content:" id="content" placeholder={"Text"} defaultValue={pref.fillFormWithDefaults ? pref.prefNoteContent : ""}/>
     </Form>
   );
 }

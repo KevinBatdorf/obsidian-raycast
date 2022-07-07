@@ -147,6 +147,30 @@
           "description": "The default path where a new note will be created"
         },
         {
+          "name": "prefNoteName",
+          "type": "textfield",
+          "title": "Default Note Name",
+          "required": false,
+          "description": "The default note name if no name is specified",
+          "default": "Untitled"
+        },
+        {
+          "name": "prefNoteContent",
+          "type": "textfield",
+          "title": "Default Note Content",
+          "required": false,
+          "description": "The default note content (supports templates)"
+        },
+        {
+          "name": "fillFormWithDefaults",
+          "type": "checkbox",
+          "label": "Fill form with defaults",
+          "title": "Fill form with defaults",
+          "required": false,
+          "default": false,
+          "description": "Fill form with default values"
+        },
+        {
           "name": "prefTag",
           "type": "textfield",
           "placeholder": "untagged",
@@ -170,14 +194,6 @@
           "default": true,
           "required": false,
           "description": "Open the created note in Obsidian"
-        },
-        {
-          "name": "prefNoteName",
-          "type": "textfield",
-          "title": "Default Note Name",
-          "required": false,
-          "description": "The default note name if no name is specified",
-          "default": "Untitled"
         },
         {
           "name": "folderActions",

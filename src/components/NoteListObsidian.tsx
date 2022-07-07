@@ -43,7 +43,7 @@ export function NoteListObsidian(props: { vault: Vault }) {
     fetch();
   }, []);
 
-  const tags = getListOfTags(allNotes ?? []);
+  const tags = getListOfTags(allNotes);
 
   return (
     <NoteList

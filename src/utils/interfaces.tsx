@@ -11,10 +11,12 @@ export interface Preferences {
 
 export interface NoteFormPreferences extends Preferences {
   prefPath: string;
+  prefNoteName: string;
+  prefNoteContent: string;
+  fillFormWithDefaults: boolean;
   prefTag: string;
   tags: string;
   openOnCreate: boolean;
-  prefNoteName: string;
   folderActions: string;
 }
 
