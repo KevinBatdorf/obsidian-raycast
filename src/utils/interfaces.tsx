@@ -39,8 +39,8 @@ export interface Vault {
 
 export interface Note {
   title: string;
-  key: number;
   path: string;
+  tags: string[];
   content: string;
 }
 
@@ -61,5 +61,5 @@ export interface ObsidianVaultsState {
 
 export interface PinnedNotesJSON {
   vaultPath: string;
-  pinnedNotes: Note[];
+  pinnedNotes: string[];
 }
