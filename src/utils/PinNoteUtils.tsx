@@ -2,7 +2,7 @@ import { showToast, Toast, environment, Icon, confirmAlert } from "@raycast/api"
 import fs from "fs";
 
 import { Note, Vault, PinnedNotesJSON } from "./interfaces";
-import { getCurrentPinnedVersion, getNoteFileContent, tagsFor } from "./utils";
+import { getCurrentPinnedVersion, getNoteFileContent, isNote, tagsFor } from "./utils";
 import { noteAlreadyPinnedToast, notePinnedToast, noteUnpinnedToast } from "../components/Toasts";
 import { CURRENT_EXTENSION_VERSION } from "./constants";
 
@@ -51,25 +51,41 @@ export function migratePinnedNotes() {
 
 export function getPinnedNotes(vault: Vault) {
   const { pinnedNotes } = getInfoFor(vault);
-  let pinnedNoteObjects = pinnedNotes.map((p) => {
-    const comp = p.split("/");
-    const f_name = comp.pop();
-    let name = "default";
-    if (f_name) {
-      name = f_name.split(".md")[0];
-    }
+  let pinnedNoteObjects = pinnedNotes
+    .map((p) => {
+      const comp = p.split("/");
+      const f_name = comp.pop();
+      let name = "default";
+      if (f_name) {
+        name = f_name.split(".md")[0];
+      }
+      try {
+        const content = getNoteFileContent(p, false);
 
-    const content = getNoteFileContent(p, false);
-    const note: Note = {
-      title: name,
-      path: p,
-      tags: tagsFor(content),
-      content: content,
-    };
-    return note;
-  });
+        const note: Note = {
+          title: name,
+          path: p,
+          tags: tagsFor(content),
+          content: content,
+        };
+        return note;
+      } catch {
+        unpinNotePath(p, vault);
+      }
+    })
+    .filter(isNote);
 
   return pinnedNoteObjects;
+}
+
+function unpinNotePath(path: string, vault: Vault) {
+  let { pinnedNotes, data } = getInfoFor(vault);
+  pinnedNotes = pinnedNotes.filter((n) => n != path);
+
+  const idx = data.findIndex((d) => d.vaultPath == vault.path);
+  data[idx].pinnedNotes = pinnedNotes;
+  fs.writeFileSync(environment.supportPath + "/data.json", JSON.stringify(data));
+  return pinnedNotes;
 }
 
 export function unpinNote(note: Note, vault: Vault) {

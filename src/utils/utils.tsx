@@ -65,13 +65,7 @@ export function filterContent(content: string) {
 
 export function getNoteFileContent(path: string, filter = true) {
   let content = "";
-
-  try {
-    content = fs.readFileSync(path, "utf8") as string;
-  } catch {
-    content = "Couldn't read file. Did you move, delete or rename the file?";
-  }
-
+  content = fs.readFileSync(path, "utf8") as string;
   return filter ? filterContent(content) : content;
 }
 
@@ -275,10 +269,11 @@ export async function applyTemplates(content: string) {
   content = content.replaceAll("{newline}", "\n");
   content = content.replaceAll("{nl}", "\n");
 
-  const selectedText = await getSelectedText();
-  content = content.replaceAll("{selected}", selectedText);
-  content = content.replaceAll("{selectedText}", selectedText);
-
+  try {
+    const selectedText = await getSelectedText();
+    content = content.replaceAll("{selected}", selectedText);
+    content = content.replaceAll("{selectedText}", selectedText);
+  } catch (e) {}
   return content;
 }
 
@@ -408,4 +403,8 @@ export function getCurrentPinnedVersion() {
     const version = fs.readFileSync(environment.supportPath + "/version.txt", "utf8");
     return version;
   }
+}
+
+export function isNote(note: Note | undefined): note is Note {
+  return (note as Note) !== undefined;
 }
