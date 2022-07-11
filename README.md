@@ -9,8 +9,22 @@ This is a raycast extension with commands for the note taking and knowledge mana
 ## Search Note
 
 This command allows for quick access to all of your notes. By default you can search notes by title. Enabeling content search in the commands preferences allows you to search for notes by their content and title.
+Use the tag filter in the top right corner to filter notes based on their tags (both YAML frontmatter and inline tags).
 
-It features several actions which you can trigger with these keyboard shortcuts:
+Enabeling `Show Detail` and `Show Metadata` in the extensions preferences will show a sidebar view with the following information:
+
+- Note content
+- Character Count
+- Word Count
+- Reading Time
+- Creation Date
+- File Size
+- Note Path
+
+<img width="1000" alt="Search Note Command" src="https://user-images.githubusercontent.com/67844154/178247431-2c8be700-7dca-469d-9c99-cd0fde565524.png">
+
+### Actions for Search Note command
+It features several actions which you can trigger with these keyboard shortcuts (or search for them with `cmd + k`):
 
 - `enter` will open the note in "Quick Look"
 - `cmd + enter` will open the note in Obsidian
@@ -28,29 +42,23 @@ It features several actions which you can trigger with these keyboard shortcuts:
 
 The primary action (`enter`) can be changed in the extensions preferences.
 
-![Search Note Command](https://user-images.githubusercontent.com/67844154/161255751-8a460ca1-c38f-4133-adaa-909f7a450ab1.png)
+<img width="1000" alt="Search Note Command actions" src="https://user-images.githubusercontent.com/67844154/178247612-315091e4-aeec-4944-880c-d4106c493dee.png">
+<img width="1000" alt="Search Note Command actions" src="https://user-images.githubusercontent.com/67844154/178247714-0d0b48a4-ae43-4a08-8e63-246634a8d421.png">
 
-Use the tag filter in the top right corner to filter notes based on their tags (both YAML frontmatter and inline tags).
+### Quick Look Action
+<img width="1000" alt="obsidian-5" src="https://user-images.githubusercontent.com/67844154/178248667-6b90bd65-0861-41e4-b68c-256f30d89d1d.png">
 
-Enabeling `Show Detail` and `Show Metadata` in the extensions preferences will show a sidebar view with the following information:
 
-- Note content
-- Character Count
-- Word Count
-- Reading Time
-- Creation Date
-- File Size
-- Note Path
+## Random Note
+
+This command will open a random note of a previously selected vault in Quick Look where all actions from the `Search Note` command are available.
 
 ## Open Vault
 
 This command will show a list of all of your Obsidian vaults which you can open by pressing `enter`.
-
 Actions that you can trigger with a keyboard shortcut:
 
 - `cmd + enter` will open the vaults folder in the Finder app
-
-![Open Vault Command](https://user-images.githubusercontent.com/67844154/161255791-66445ad2-0e27-4c5b-b751-a8a404d18c15.png)
 
 ## Create Note
 
@@ -72,7 +80,8 @@ Both the note name and note content support these templates:
 - `{selectedText}`, `{selected}`
 - `{\n}`, `{nl}`, `{newline}`
 
-![Create Note Command](https://user-images.githubusercontent.com/67844154/161255831-b21fd820-68b8-4829-a654-b470646ba67b.png)
+<img width="1000" alt="Create Note Command" src="https://user-images.githubusercontent.com/67844154/178248345-bb1718d9-1c29-44b1-b50b-87286e121003.png">
+
 
 ## Daily Note
 
@@ -87,7 +96,7 @@ Additional actions:
 
 - `opt + r` will reset all pinned notes for the selected vault
 
-![Pinned Notes Command](https://user-images.githubusercontent.com/67844154/166225022-4025e675-0e3d-430d-9fda-d4672afd4df1.png)
+<img width="1000" alt="Pinned Notes Command" src="https://user-images.githubusercontent.com/67844154/178248422-2668fad8-8936-490b-8cf1-1dea0793712a.png">
 
 ## Preferences
 
