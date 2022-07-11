@@ -83,7 +83,7 @@ It requires the community plugin [Advanced Obsidian URI](https://obsidian.md/plu
 
 This command will open a list of your pinned notes. All actions and preferences from the `Search Note` command are available.
 
-Actions:
+Additional actions:
 
 - `opt + r` will reset all pinned notes for the selected vault
 
