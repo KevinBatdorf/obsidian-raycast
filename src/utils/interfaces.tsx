@@ -5,11 +5,21 @@ export interface FormValue {
   tags: string[];
 }
 
-export interface Preferences {
+export interface GlobalPreferences {
   vaultPath: string;
 }
 
-export interface NoteFormPreferences extends Preferences {
+export interface QuickLookPreferences {
+  removeYAML: boolean;
+  removeLinks: boolean;
+  removeLatex: boolean;
+}
+
+export interface AppendNotePreferences {
+  appendTemplate: string;
+  appendSelectedTemplate: string;
+}
+export interface NoteFormPreferences extends GlobalPreferences {
   prefPath: string;
   prefNoteName: string;
   prefNoteContent: string;
@@ -20,18 +30,15 @@ export interface NoteFormPreferences extends Preferences {
   folderActions: string;
 }
 
-export interface SearchNotePreferences extends Preferences {
+export interface SearchNotePreferences extends GlobalPreferences, QuickLookPreferences, AppendNotePreferences {
   primaryAction: string;
   excludedFolders: string;
-  removeYAML: boolean;
-  removeLinks: boolean;
-  removeLatex: boolean;
-  appendTemplate: string;
-  appendSelectedTemplate: string;
   showDetail: boolean;
   showMetadata: boolean;
   searchContent: boolean;
 }
+
+export interface RandomNotePreferences extends GlobalPreferences, QuickLookPreferences, AppendNotePreferences {}
 
 export interface Vault {
   name: string;

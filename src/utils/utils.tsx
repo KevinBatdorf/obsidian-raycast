@@ -20,9 +20,10 @@ import {
   Note,
   ObsidianJSON,
   ObsidianVaultsState,
-  Preferences,
+  GlobalPreferences,
   SearchNotePreferences,
   Vault,
+  QuickLookPreferences,
 } from "../utils/interfaces";
 
 import {
@@ -35,9 +36,10 @@ import {
   YAML_FRONTMATTER_REGEX,
 } from "./constants";
 import { isNotePinned, unpinNote } from "./pinNoteUtils";
+import NoteLoader from "./NoteLoader";
 
 export function filterContent(content: string) {
-  const pref: SearchNotePreferences = getPreferenceValues();
+  const pref: QuickLookPreferences = getPreferenceValues();
 
   if (pref.removeYAML) {
     const yamlHeader = content.match(/---(.|\n)*?---/gm);
@@ -105,7 +107,7 @@ function getVaultNameFromPath(vaultPath: string): string {
 }
 
 export function parseVaults(): Vault[] {
-  const pref: Preferences = getPreferenceValues();
+  const pref: GlobalPreferences = getPreferenceValues();
   const vaultString = pref.vaultPath;
   return vaultString
     .split(",")
@@ -407,4 +409,20 @@ export function getCurrentPinnedVersion() {
 
 export function isNote(note: Note | undefined): note is Note {
   return (note as Note) !== undefined;
+}
+
+export function getRandomNote(vault: Vault | Vault[]) {
+  let notes: Note[] = [];
+  if (Array.isArray(vault)) {
+    for (let v of vault) {
+      let nl = new NoteLoader(v);
+      notes = [...notes, ...nl.loadNotes()];
+    }
+  } else {
+    let nl = new NoteLoader(vault);
+    notes = nl.loadNotes();
+  }
+
+  let randomNote = notes[Math.floor(Math.random() * notes.length)];
+  return randomNote;
 }
