@@ -22,6 +22,8 @@ Enabeling `Show Detail` and `Show Metadata` in the extensions preferences will s
 - Note Path
 
 <img width="1000" alt="Search Note Command" src="https://user-images.githubusercontent.com/67844154/178247431-2c8be700-7dca-469d-9c99-cd0fde565524.png">
+<img width="1000" alt="Search Note Command Tag Filter" src="https://user-images.githubusercontent.com/67844154/178251441-eeb0c4f9-c848-4899-aa12-62aae9ba3094.png">
+
 
 ### Actions for Search Note command
 It features several actions which you can trigger with these keyboard shortcuts (or search for them with `cmd + k`):
