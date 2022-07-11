@@ -39,13 +39,12 @@ export function migratePinnedNotes() {
       let paths = [];
       console.log(vault);
       for (let note of vault.pinnedNotes) {
-        console.log(note);
         paths.push(note.path);
       }
       migratedData.push({ vaultPath: vault.vaultPath, pinnedNotes: paths });
     }
     fs.writeFileSync(environment.supportPath + "/data.json", JSON.stringify(migratedData));
-    fs.writeFileSync(environment.supportPath + "/version.txt", JSON.stringify(CURRENT_EXTENSION_VERSION));
+    fs.writeFileSync(environment.supportPath + "/version.txt", CURRENT_EXTENSION_VERSION);
   }
 }
 
