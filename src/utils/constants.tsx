@@ -1,3 +1,5 @@
+import { environment, Image } from "@raycast/api";
+
 export const MAX_RENDERED_NOTES = 1000;
 export const BYTES_PER_KILOBYTE = 1024;
 export const BYTES_PER_MEGABYTE = BYTES_PER_KILOBYTE ** 2;
@@ -47,3 +49,9 @@ export const MONTH_NUMBER_TO_STRING: Record<number, string> = {
   10: "Nov",
   11: "Dec",
 };
+
+export const ObsidianIconWhiteBold = { source: "obsidian-icon-white-bold.svg" };
+export const ObsidianIconBlackBold = { source: "obsidian-icon-black-bold.svg" };
+export const ObsidianIconBlackBolder = { source: "obsidian-icon-black-bolder.svg" };
+export const ObsidianIconWhiteBolder = { source: "obsidian-icon-white-bolder.svg" };
+export const ObsidianIconDynamicBold = environment.theme == "dark" ? ObsidianIconWhiteBolder : ObsidianIconBlackBolder;

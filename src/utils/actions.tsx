@@ -7,8 +7,8 @@ import { EditNote } from "../components/EditNote";
 import { SearchNotePreferences, Note, Vault } from "./interfaces";
 import { isNotePinned, pinNote, unpinNote } from "./pinNoteUtils";
 import { NoteQuickLook } from "../components/NoteQuickLook";
-import { deleteNote, appendSelectedTextTo } from "./utils";
-import { NoteAction, PrimaryAction } from "./constants";
+import { deleteNote, appendSelectedTextTo, getOpenNoteInObsidianTarget } from "./utils";
+import { NoteAction, ObsidianIconDynamicBold, PrimaryAction } from "./constants";
 
 export function ShowNoteInFinderAction(props: { note: Note }) {
   const { note } = props;
@@ -81,12 +81,12 @@ export function PasteNoteAction(props: { note: Note }) {
 
 export function CopyMarkdownLinkAction(props: { note: Note }) {
   const { note } = props;
-  const URIEncodedPath = encodeURIComponent(note.path);
+
   return (
     <Action.CopyToClipboard
       title="Copy Markdown Link"
       icon={Icon.Link}
-      content={`[${note.title}](obsidian://open?path=${URIEncodedPath})`}
+      content={`[${note.title}](${getOpenNoteInObsidianTarget(note)})`}
       shortcut={{ modifiers: ["opt"], key: "l" }}
     />
   );
@@ -94,12 +94,12 @@ export function CopyMarkdownLinkAction(props: { note: Note }) {
 
 export function CopyObsidianURIAction(props: { note: Note }) {
   const { note } = props;
-  const URIEncodedPath = encodeURIComponent(note.path);
+
   return (
     <Action.CopyToClipboard
       title="Copy Obsidian URI"
       icon={Icon.Link}
-      content={`obsidian://open?path=${URIEncodedPath}`}
+      content={getOpenNoteInObsidianTarget(note)}
       shortcut={{ modifiers: ["opt"], key: "u" }}
     />
   );
@@ -159,11 +159,7 @@ export function QuickLookAction(props: { note: Note; vault: Vault; actionCallbac
 export function OpenInObsidianAction(props: { note: Note }) {
   const { note } = props;
   return (
-    <Action.Open
-      title="Open in Obsidian"
-      target={"obsidian://open?path=" + encodeURIComponent(note.path)}
-      icon={Icon.TextDocument}
-    />
+    <Action.Open title="Open in Obsidian" target={getOpenNoteInObsidianTarget(note)} icon={ObsidianIconDynamicBold} />
   );
 }
 

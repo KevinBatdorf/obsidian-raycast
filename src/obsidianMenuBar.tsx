@@ -1,8 +1,15 @@
 import { Icon, MenuBarExtra, open, Clipboard } from "@raycast/api";
 import React from "react";
+import { ObsidianIconWhiteBold } from "./utils/constants";
 import { Vault } from "./utils/interfaces";
 import { getPinnedNotes, unpinNote } from "./utils/pinNoteUtils";
-import { getDailyNoteTarget, sortNoteByAlphabet, useObsidianVaults, vaultPluginCheck } from "./utils/utils";
+import {
+  getDailyNoteTarget,
+  getOpenNoteInObsidianTarget,
+  sortNoteByAlphabet,
+  useObsidianVaults,
+  vaultPluginCheck,
+} from "./utils/utils";
 
 function PinnedNotesList(props: { vault: Vault; key: string }) {
   const pinnedNotes = getPinnedNotes(props.vault).sort(sortNoteByAlphabet);
@@ -17,24 +24,28 @@ function PinnedNotesList(props: { vault: Vault; key: string }) {
           <MenuBarExtra.Item
             title="Open in Obsidian"
             icon={Icon.AppWindow}
-            onAction={() => open("obsidian://open?path=" + encodeURIComponent(note.path))}
+            tooltip="Opens this note in Obsidian"
+            onAction={() => open(getOpenNoteInObsidianTarget(note))}
             key={"open"}
           />
           <MenuBarExtra.Item
             title="Copy Content"
             icon={Icon.CopyClipboard}
+            tooltip="Copies the content of this note to the clipboard"
             onAction={() => Clipboard.copy(note.content)}
             key={"copy"}
           />
           <MenuBarExtra.Item
             title="Paste Content"
             icon={Icon.CopyClipboard}
+            tooltip="Pastes the content of this note to the current application"
             onAction={() => Clipboard.paste(note.content)}
             key={"paste"}
           />
           <MenuBarExtra.Item
             title="Unpin Note"
             icon={Icon.PinDisabled}
+            tooltip="Unpins this note"
             onAction={() => unpinNote(note, props.vault)}
             key={"unpin"}
           />
@@ -55,6 +66,7 @@ function VaultSection(props: { vault: Vault; key: string; dailyNote: boolean }) 
         <MenuBarExtra.Item
           title="Daily Note"
           key={vault.path + "Daily Note"}
+          tooltip="Open Daily Note"
           onAction={() => open(getDailyNoteTarget(vault))}
         />
       )}
@@ -72,7 +84,7 @@ export default function Command() {
     const [vaultsWithPlugin, vaultsWithoutPlugin] = vaultPluginCheck(vaults, "obsidian-advanced-uri");
 
     return (
-      <MenuBarExtra icon={Icon.Star} tooltip="Your Pinned Notes">
+      <MenuBarExtra icon={ObsidianIconWhiteBold} tooltip="Obsidian">
         {vaults?.map((vault: Vault) => {
           return <VaultSection vault={vault} key={vault.path} dailyNote={vaultsWithPlugin.includes(vault)} />;
         })}
