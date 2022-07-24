@@ -395,10 +395,10 @@
       ]
     },
     {
-      "name": "pinnedNotesMenuBar",
-      "title": "Pinned Notes Menu Bar",
+      "name": "obsidianMenuBar",
+      "title": "Obsidian Menu Bar",
       "subtitle": "Obsidian",
-      "description": "See your pinned notes at a glance",
+      "description": "See your pinned notes at a glance and control actions from the menu bar.",
       "mode": "menu-bar"
     }
   ],
