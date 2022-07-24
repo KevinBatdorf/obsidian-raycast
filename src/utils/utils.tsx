@@ -191,23 +191,6 @@ export function sortNoteByAlphabet(a: Note, b: Note) {
   return sortByAlphabet(a.title, b.title);
 }
 
-export function filterNotes(notes: Note[], input: string, byContent: boolean) {
-  if (input.length === 0) {
-    return notes;
-  }
-  return notes
-    .filter((note) => {
-      if (byContent) {
-        return (
-          note.title.toLowerCase().includes(input.toLowerCase()) ||
-          note.content.toLowerCase().includes(input.toLowerCase())
-        );
-      } else {
-        return note.title.toLowerCase().includes(input.toLowerCase());
-      }
-    })
-    .sort(sortNoteByAlphabet);
-}
 
 export function wordCount(str: string) {
   return str.split(" ").length;
