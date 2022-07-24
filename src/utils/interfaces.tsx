@@ -72,3 +72,8 @@ export interface PinnedNotesJSON {
   vaultPath: string;
   pinnedNotes: string[];
 }
+
+export interface SearchArguments {
+  searchArgument: string;
+  tagArgument: string;
+}
