@@ -25,6 +25,20 @@
       "subtitle": "Obsidian",
       "description": "Search, open, view, copy, paste and edit any note in Obsidian.",
       "mode": "view",
+      "arguments": [
+        {
+          "name": "searchArgument",
+          "placeholder": "Note",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "tagArgument",
+          "placeholder": "Tag",
+          "type": "text",
+          "required": false
+        }
+      ],
       "preferences": [
         {
           "name": "excludedFolders",
@@ -211,6 +225,20 @@
       "subtitle": "Obsidian",
       "description": "Search, open, view, copy, paste and edit pinned notes.",
       "mode": "view",
+      "arguments": [
+        {
+          "name": "searchArgument",
+          "placeholder": "Note",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "tagArgument",
+          "placeholder": "Tag",
+          "type": "text",
+          "required": false
+        }
+      ],
       "preferences": [
         {
           "name": "removeYAML",
@@ -365,17 +393,24 @@
           ]
         }
       ]
+    },
+    {
+      "name": "pinnedNotesMenuBar",
+      "title": "Pinned Notes Menu Bar",
+      "subtitle": "Obsidian",
+      "description": "See your pinned notes at a glance",
+      "mode": "menu-bar"
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.37.0",
+    "@raycast/api": "^1.38.1",
     "@types/uuid": "^8.3.4",
     "uuid": "^8.3.2",
     "yaml": "^2.1.1"
   },
   "devDependencies": {
     "@types/node": "~16.10.0",
-    "@types/react": "^17.0.43",
+    "@types/react": "^17.0.47",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^7.32.0",
