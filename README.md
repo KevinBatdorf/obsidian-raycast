@@ -8,17 +8,17 @@ This is a raycast extension with commands for the note taking and knowledge mana
 
 ## Overview
 
-- [Search Note](https://github.com/marcjulianschwarz/obsidian-raycast/edit/main/README.md#search-note)
-  - [Actions for Search Note Command](https://github.com/marcjulianschwarz/obsidian-raycast/edit/main/README.md#actions-for-search-note-command)
-  - [Quick Look Action](https://github.com/marcjulianschwarz/obsidian-raycast/edit/main/README.md#quick-look-action)
-- [Search Media](https://github.com/marcjulianschwarz/obsidian-raycast/edit/main/README.md#search-media)
-  - [Actions for Search Media Command](https://github.com/marcjulianschwarz/obsidian-raycast/edit/main/README.md#actions-for-search-media-command)
-- [Random Notes](https://github.com/marcjulianschwarz/obsidian-raycast/edit/main/README.md#random-note)
-- [Open Vault](https://github.com/marcjulianschwarz/obsidian-raycast/edit/main/README.md#open-vault)
-- [Create Note](https://github.com/marcjulianschwarz/obsidian-raycast/edit/main/README.md#create-note)
-- [Daily Note](https://github.com/marcjulianschwarz/obsidian-raycast/edit/main/README.md#daily-note)
-- [Pinned Note](https://github.com/marcjulianschwarz/obsidian-raycast/edit/main/README.md#pinned-notes)
-- [Obsidian Menu Bar Item](https://github.com/marcjulianschwarz/obsidian-raycast/edit/main/README.md#obsidian-menu-bar-item)
+- [Search Note](https://github.com/marcjulianschwarz/obsidian-raycast#search-note)
+  - [Actions for Search Note Command](https://github.com/marcjulianschwarz/obsidian-raycast#actions-for-search-note-command)
+  - [Quick Look Action](https://github.com/marcjulianschwarz/obsidian-raycast#quick-look-action)
+- [Search Media](https://github.com/marcjulianschwarz/obsidian-raycast#search-media)
+  - [Actions for Search Media Command](https://github.com/marcjulianschwarz/obsidian-raycast#actions-for-search-media-command)
+- [Random Notes](https://github.com/marcjulianschwarz/obsidian-raycast#random-note)
+- [Open Vault](https://github.com/marcjulianschwarz/obsidian-raycast#open-vault)
+- [Create Note](https://github.com/marcjulianschwarz/obsidian-raycast#create-note)
+- [Daily Note](https://github.com/marcjulianschwarz/obsidian-raycast#daily-note)
+- [Pinned Note](https://github.com/marcjulianschwarz/obsidian-raycast#pinned-notes)
+- [Obsidian Menu Bar Item](https://github.com/marcjulianschwarz/obsidian-raycast#obsidian-menu-bar-item)
 
 
 ## Search Note
