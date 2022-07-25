@@ -1,7 +1,8 @@
 import { Icon, Image } from "@raycast/api";
-import { VIDEO_FILE_EXTENSIONS } from "./constants";
+import { AUDIO_FILE_EXTENSIONS, VIDEO_FILE_EXTENSIONS } from "./constants";
 import { Note, Vault, Media } from "./interfaces";
 import { getNoteFileContent, prefExcludedFolders, tagsFor, walkFilesHelper } from "./utils";
+import path from "path";
 
 export class NoteLoader {
   vaultPath: string;
@@ -71,12 +72,14 @@ export class MediaLoader {
     return medias;
   }
 
-  getIconFor(path: string) {
-    for (const ext of VIDEO_FILE_EXTENSIONS) {
-      if (path.endsWith(ext)) {
-        return { source: Icon.Video };
-      }
+  getIconFor(pathStr: string) {
+    const ext = path.extname(pathStr);
+    if (VIDEO_FILE_EXTENSIONS.includes(ext)) {
+      return { source: Icon.Video };
+    } else if (AUDIO_FILE_EXTENSIONS.includes(ext)) {
+      return { source: Icon.Microphone };
     }
-    return { source: path };
+
+    return { source: pathStr };
   }
 }

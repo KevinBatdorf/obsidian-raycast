@@ -410,20 +410,24 @@
           "description": "Specify which folders to exclude (comma separated)"
         },
         {
-          "name": "primaryAction",
+          "name": "imageSize",
           "type": "dropdown",
-          "title": "Primary Action",
+          "title": "Image Size",
           "required": false,
-          "description": "Select a primary action to be executed on enter",
-          "defaultValue": "quicklook",
+          "description": "Select the image size to display",
+          "defaultValue": "medium",
           "data": [
             {
-              "title": "Quick Look",
-              "value": "quicklook"
+              "title": "Small",
+              "value": "small"
             },
             {
-              "title": "Open in Obsidian",
-              "value": "obsidian"
+              "title": "Medium",
+              "value": "medium"
+            },
+            {
+              "title": "Large",
+              "value": "large"
             }
           ]
         }

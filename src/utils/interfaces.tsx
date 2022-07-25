@@ -42,6 +42,11 @@ export interface SearchNotePreferences extends GlobalPreferences, QuickLookPrefe
 
 export interface RandomNotePreferences extends GlobalPreferences, QuickLookPreferences, AppendNotePreferences {}
 
+export interface SearchMediaPreferences extends GlobalPreferences {
+  imageSize: string;
+  excludedFolders: string;
+}
+
 export interface Vault {
   name: string;
   key: string;

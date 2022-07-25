@@ -1,4 +1,4 @@
-import { environment, Image } from "@raycast/api";
+import { environment, Grid } from "@raycast/api";
 
 export const MAX_RENDERED_NOTES = 1000;
 export const BYTES_PER_KILOBYTE = 1024;
@@ -90,6 +90,35 @@ export const VIDEO_FILE_EXTENSIONS = [
   ".f4b",
   ".mod",
 ];
+
+export const AUDIO_FILE_EXTENSIONS = [
+  "aac",
+  "aiff",
+  "ape",
+  "au",
+  "flac",
+  "gsm",
+  "it",
+  "m3u",
+  "m4a",
+  "mid",
+  "mod",
+  "mp3",
+  "mpa",
+  "pls",
+  "ra",
+  "s3m",
+  "sid",
+  "wav",
+  "wma",
+  "xm",
+];
+
+export const IMAGE_SIZE_MAPPING: Map<string, Grid.ItemSize> = new Map([
+  ["small", Grid.ItemSize.Small],
+  ["large", Grid.ItemSize.Large],
+  ["medium", Grid.ItemSize.Medium],
+]);
 
 export const ObsidianIconWhiteBold = { source: "obsidian-icon-white-bold.svg" };
 export const ObsidianIconBlackBold = { source: "obsidian-icon-black-bold.svg" };

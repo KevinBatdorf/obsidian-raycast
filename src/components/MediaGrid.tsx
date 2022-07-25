@@ -1,9 +1,10 @@
-import { Action, ActionPanel, Grid } from "@raycast/api";
+import { Action, ActionPanel, getPreferenceValues, Grid } from "@raycast/api";
 import { useEffect, useState } from "react";
 
-import { Media, Vault } from "../utils/interfaces";
+import { Media, SearchMediaPreferences, Vault } from "../utils/interfaces";
 import { OpenPathInObsidianAction, ShowPathInFinderAction } from "../utils/actions";
 import { getListOfExtensions, useMedia } from "../utils/utils";
+import { IMAGE_SIZE_MAPPING } from "../utils/constants";
 
 export function MediaGrid(props: { vault: Vault }) {
   const { vault } = props;
@@ -20,10 +21,12 @@ export function MediaGrid(props: { vault: Vault }) {
   }, [ready]);
 
   const extensions = getListOfExtensions(allMedia);
+  const { imageSize } = getPreferenceValues<SearchMediaPreferences>();
 
   return (
     <Grid
       inset={Grid.Inset.Small}
+      itemSize={IMAGE_SIZE_MAPPING.get(imageSize)}
       isLoading={mediaList.length == 0 && !ready}
       searchBarAccessory={
         <Grid.Dropdown
