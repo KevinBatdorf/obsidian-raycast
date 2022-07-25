@@ -124,4 +124,6 @@ export const ObsidianIconWhiteBold = { source: "obsidian-icon-white-bold.svg" };
 export const ObsidianIconBlackBold = { source: "obsidian-icon-black-bold.svg" };
 export const ObsidianIconBlackBolder = { source: "obsidian-icon-black-bolder.svg" };
 export const ObsidianIconWhiteBolder = { source: "obsidian-icon-white-bolder.svg" };
-export const ObsidianIconDynamicBold = environment.theme == "dark" ? ObsidianIconWhiteBolder : ObsidianIconBlackBolder;
+export const ObsidianIconDynamicBold = {
+  source: { light: "obsidian-icon-black-bolder.svg", dark: "obsidian-icon-white-bolder.svg" },
+};
