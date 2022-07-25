@@ -1,13 +1,13 @@
 import { Action, ActionPanel, getPreferenceValues, Grid } from "@raycast/api";
 import { useEffect, useState } from "react";
 
-import { Media, SearchMediaPreferences, Vault } from "../utils/interfaces";
+import { Media, MediaSearchArguments, SearchMediaPreferences, Vault } from "../utils/interfaces";
 import { OpenPathInObsidianAction, ShowPathInFinderAction } from "../utils/actions";
 import { getListOfExtensions, useMedia } from "../utils/utils";
 import { IMAGE_SIZE_MAPPING } from "../utils/constants";
 
-export function MediaGrid(props: { vault: Vault }) {
-  const { vault } = props;
+export function MediaGrid(props: { vault: Vault; searchArguments: MediaSearchArguments }) {
+  const { vault, searchArguments } = props;
 
   const { ready, media } = useMedia(vault);
   const [mediaList, setMediaList] = useState<Media[]>([]);
@@ -28,11 +28,12 @@ export function MediaGrid(props: { vault: Vault }) {
       inset={Grid.Inset.Small}
       itemSize={IMAGE_SIZE_MAPPING.get(imageSize)}
       isLoading={mediaList.length == 0 && !ready}
+      searchText={searchArguments.searchArgument}
       searchBarAccessory={
         <Grid.Dropdown
           tooltip="Filter by type"
+          defaultValue={searchArguments.typeArgument}
           onChange={(value) => {
-            console.log(value);
             if (value != "all") {
               setMediaList(allMedia.filter((media) => media.path.endsWith(value)));
             } else {

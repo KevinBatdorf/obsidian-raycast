@@ -95,3 +95,8 @@ export interface MediaState {
   ready: boolean;
   media: Media[];
 }
+
+export interface MediaSearchArguments {
+  searchArgument: string;
+  typeArgument: string;
+}

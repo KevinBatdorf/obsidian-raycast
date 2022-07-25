@@ -400,6 +400,20 @@
       "subtitle": "Obsidian",
       "description": "Search for media in your vault",
       "mode": "view",
+      "arguments": [
+        {
+          "name": "searchArgument",
+          "placeholder": "Name",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "typeArgument",
+          "placeholder": "Type",
+          "type": "text",
+          "required": false
+        }
+      ],
       "preferences": [
         {
           "name": "excludedFolders",
