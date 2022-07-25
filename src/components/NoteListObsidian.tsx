@@ -2,7 +2,7 @@ import { showToast, Toast, getPreferenceValues } from "@raycast/api";
 import React, { useEffect, useMemo, useState } from "react";
 import fs from "fs";
 
-import NoteLoader from "../utils/NoteLoader";
+import { NoteLoader } from "../utils/NoteLoader";
 import { Note, Vault, SearchNotePreferences, SearchArguments } from "../utils/interfaces";
 import { NoteList } from "./NoteList";
 import { getListOfTags } from "../utils/utils";

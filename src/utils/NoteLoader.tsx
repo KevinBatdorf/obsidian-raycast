@@ -1,11 +1,9 @@
-import { getPreferenceValues } from "@raycast/api";
-import fs from "fs";
-import path from "path";
+import { Icon, Image } from "@raycast/api";
+import { VIDEO_FILE_EXTENSIONS } from "./constants";
+import { Note, Vault, Media } from "./interfaces";
+import { getNoteFileContent, prefExcludedFolders, tagsFor, walkFilesHelper } from "./utils";
 
-import { SearchNotePreferences, Note, Vault } from "./interfaces";
-import { getNoteFileContent, tagsFor } from "./utils";
-
-class NoteLoader {
+export class NoteLoader {
   vaultPath: string;
 
   constructor(vault: Vault) {
@@ -14,7 +12,7 @@ class NoteLoader {
 
   loadNotes() {
     const notes: Note[] = [];
-    const files = this.getFiles();
+    const files = this._getFiles();
 
     for (const f of files) {
       const comp = f.split("/");
@@ -37,58 +35,48 @@ class NoteLoader {
     return notes;
   }
 
-  getFiles() {
-    const exFolders = this.prefExcludedFolders();
-    const files = this.getFilesHelp(this.vaultPath, exFolders, []);
+  _getFiles() {
+    const exFolders = prefExcludedFolders();
+    const files = walkFilesHelper(this.vaultPath, exFolders, [".md"], []);
     return files;
-  }
-
-  getFilesHelp(dirPath: string, exFolders: string[], arrayOfFiles: string[]) {
-    const files = fs.readdirSync(dirPath);
-    arrayOfFiles = arrayOfFiles || [];
-
-    for (const file of files) {
-      const next = fs.statSync(dirPath + "/" + file);
-      if (next.isDirectory() && !file.includes(".obsidian")) {
-        arrayOfFiles = this.getFilesHelp(dirPath + "/" + file, exFolders, arrayOfFiles);
-      } else {
-        if (
-          file.endsWith(".md") &&
-          file !== ".md" &&
-          !file.includes(".excalidraw") &&
-          !dirPath.includes(".obsidian") &&
-          this.isValidFile(dirPath, exFolders)
-        ) {
-          arrayOfFiles.push(path.join(dirPath, "/", file));
-        }
-      }
-    }
-
-    return arrayOfFiles;
-  }
-
-  isValidFile(file: string, exFolders: string[]) {
-    for (const folder of exFolders) {
-      if (file.includes(folder)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  prefExcludedFolders() {
-    const pref: SearchNotePreferences = getPreferenceValues();
-    const foldersString = pref.excludedFolders;
-    if (foldersString) {
-      const folders = foldersString.split(",");
-      for (let i = 0; i < folders.length; i++) {
-        folders[i] = folders[i].trim();
-      }
-      return folders;
-    } else {
-      return [];
-    }
   }
 }
 
-export default NoteLoader;
+export class MediaLoader {
+  vaultPath: string;
+
+  constructor(vault: Vault) {
+    this.vaultPath = vault.path;
+  }
+
+  _getFiles() {
+    const exFolders = prefExcludedFolders();
+    const files = walkFilesHelper(this.vaultPath, exFolders, [".jpg", ".png", ".gif", ".mp4", ".pdf"], []);
+    return files;
+  }
+
+  loadMedia() {
+    const medias: Media[] = [];
+    const files = this._getFiles();
+
+    for (const f of files) {
+      const icon = this.getIconFor(f);
+      const media: Media = {
+        title: f.split("/").pop() ?? "",
+        path: f,
+        icon: icon,
+      };
+      medias.push(media);
+    }
+    return medias;
+  }
+
+  getIconFor(path: string) {
+    for (const ext of VIDEO_FILE_EXTENSIONS) {
+      if (path.endsWith(ext)) {
+        return { source: Icon.Video };
+      }
+    }
+    return { source: path };
+  }
+}

@@ -1,3 +1,5 @@
+import { Image } from "@raycast/api";
+
 export interface FormValue {
   path: string;
   name: string;
@@ -76,4 +78,15 @@ export interface PinnedNotesJSON {
 export interface SearchArguments {
   searchArgument: string;
   tagArgument: string;
+}
+
+export interface Media {
+  title: string;
+  path: string;
+  icon: Image;
+}
+
+export interface MediaState {
+  ready: boolean;
+  media: Media[];
 }

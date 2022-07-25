@@ -395,6 +395,41 @@
       ]
     },
     {
+      "name": "searchMedia",
+      "title": "Search Media",
+      "subtitle": "Obsidian",
+      "description": "Search for media in your vault",
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "excludedFolders",
+          "type": "textfield",
+          "placeholder": "folder1, folder2, ...",
+          "title": "Exclude following folders",
+          "required": false,
+          "description": "Specify which folders to exclude (comma separated)"
+        },
+        {
+          "name": "primaryAction",
+          "type": "dropdown",
+          "title": "Primary Action",
+          "required": false,
+          "description": "Select a primary action to be executed on enter",
+          "defaultValue": "quicklook",
+          "data": [
+            {
+              "title": "Quick Look",
+              "value": "quicklook"
+            },
+            {
+              "title": "Open in Obsidian",
+              "value": "obsidian"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "obsidianMenuBar",
       "title": "Obsidian Menu Bar",
       "subtitle": "Obsidian",
