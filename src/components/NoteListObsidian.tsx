@@ -2,7 +2,7 @@ import { showToast, Toast, getPreferenceValues } from "@raycast/api";
 import React, { useEffect, useMemo, useState } from "react";
 import fs from "fs";
 
-import { NoteLoader } from "../utils/NoteLoader";
+import { useNotes } from "../utils/NoteLoader";
 import { Note, Vault, SearchNotePreferences, SearchArguments } from "../utils/interfaces";
 import { NoteList } from "./NoteList";
 import { getListOfTags } from "../utils/utils";
@@ -28,9 +28,7 @@ export function NoteListObsidian(props: { vault: Vault; showTitle: boolean; sear
     async function fetch() {
       try {
         await fs.promises.access(vault.path + "/.");
-        const nl = new NoteLoader(vault);
-        const _notes = nl.loadNotes();
-
+        const _notes = useNotes(vault);
         setNotes(_notes);
         setAllNotes(_notes);
       } catch (error) {

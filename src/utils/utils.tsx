@@ -39,7 +39,7 @@ import {
   YAML_FRONTMATTER_REGEX,
 } from "./constants";
 import { isNotePinned, unpinNote } from "./pinNoteUtils";
-import { MediaLoader, NoteLoader } from "./NoteLoader";
+import { MediaLoader, useNotes } from "./NoteLoader";
 
 export function filterContent(content: string) {
   const pref: QuickLookPreferences = getPreferenceValues();
@@ -325,7 +325,7 @@ export function YAMLTagsFor(content: string) {
   const frontmatter = content.match(YAML_FRONTMATTER_REGEX);
   if (frontmatter) {
     try {
-      const parsedYAML = YAML.parse(frontmatter[0].replaceAll("---", ""));
+      const parsedYAML = YAML.parse(frontmatter[0].replaceAll("---", ""), { logLevel: "error" });
 
       if (Object.prototype.hasOwnProperty.call(parsedYAML, "tag")) {
         foundTags = [...parsedYAML.tag.split(",").map((tag: string) => tag.trim())];
@@ -410,12 +410,10 @@ export function getRandomNote(vault: Vault | Vault[]) {
   let notes: Note[] = [];
   if (Array.isArray(vault)) {
     for (const v of vault) {
-      const nl = new NoteLoader(v);
-      notes = [...notes, ...nl.loadNotes()];
+      notes = [...notes, ...useNotes(v)];
     }
   } else {
-    const nl = new NoteLoader(vault);
-    notes = nl.loadNotes();
+    notes = useNotes(vault);
   }
 
   const randomNote = notes[Math.floor(Math.random() * notes.length)];

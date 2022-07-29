@@ -1,8 +1,28 @@
-import { Icon, Image } from "@raycast/api";
-import { AUDIO_FILE_EXTENSIONS, VIDEO_FILE_EXTENSIONS } from "./constants";
+import { Cache, Icon } from "@raycast/api";
+import { AUDIO_FILE_EXTENSIONS, BYTES_PER_MEGABYTE, VIDEO_FILE_EXTENSIONS } from "./constants";
 import { Note, Vault, Media } from "./interfaces";
 import { getNoteFileContent, prefExcludedFolders, tagsFor, walkFilesHelper } from "./utils";
 import path from "path";
+
+const cache = new Cache({ capacity: BYTES_PER_MEGABYTE * 500 });
+
+export function useNotes(vault: Vault) {
+  console.log(vault.name);
+  if (cache.has(vault.name)) {
+    const data = JSON.parse(cache.get(vault.name) ?? "");
+    if (data.lastCached > Date.now() - 1000 * 60 * 60 * 24) {
+      console.log("Cache still valid");
+      return data.notes;
+    }
+  } else {
+    console.log("Cache not found");
+  }
+  const nl = new NoteLoader(vault);
+  const notes = nl.loadNotes();
+  cache.set(vault.name, JSON.stringify({ lastCached: Date.now(), notes: notes }));
+
+  return notes;
+}
 
 export class NoteLoader {
   vaultPath: string;
@@ -12,6 +32,7 @@ export class NoteLoader {
   }
 
   loadNotes() {
+    console.log("Loading Notes for vault: " + this.vaultPath);
     const notes: Note[] = [];
     const files = this._getFiles();
 
@@ -33,6 +54,8 @@ export class NoteLoader {
       };
       notes.push(note);
     }
+    console.log("Finished loading " + notes.length + " notes");
+
     return notes;
   }
 
@@ -52,7 +75,12 @@ export class MediaLoader {
 
   _getFiles() {
     const exFolders = prefExcludedFolders();
-    const files = walkFilesHelper(this.vaultPath, exFolders, [".jpg", ".png", ".gif", ".mp4", ".pdf"], []);
+    const files = walkFilesHelper(
+      this.vaultPath,
+      exFolders,
+      [...AUDIO_FILE_EXTENSIONS, ...VIDEO_FILE_EXTENSIONS, ".jpg", ".png", ".gif", ".mp4", ".pdf"],
+      []
+    );
     return files;
   }
 
@@ -62,8 +90,9 @@ export class MediaLoader {
 
     for (const f of files) {
       const icon = this.getIconFor(f);
+
       const media: Media = {
-        title: f.split("/").pop() ?? "",
+        title: path.basename(f),
         path: f,
         icon: icon,
       };
