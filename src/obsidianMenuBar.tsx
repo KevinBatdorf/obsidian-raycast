@@ -1,11 +1,11 @@
 import { Icon, MenuBarExtra, open, Clipboard } from "@raycast/api";
 import React from "react";
-import { ObsidianIconWhiteBold } from "./utils/constants";
+import { ObsidianIconDynamicBold } from "./utils/constants";
 import { Vault } from "./utils/interfaces";
 import { getPinnedNotes, unpinNote } from "./utils/pinNoteUtils";
 import {
   getDailyNoteTarget,
-  getOpenNoteInObsidianTarget,
+  getOpenPathInObsidianTarget,
   sortNoteByAlphabet,
   useObsidianVaults,
   vaultPluginCheck,
@@ -25,7 +25,7 @@ function PinnedNotesList(props: { vault: Vault; key: string }) {
             title="Open in Obsidian"
             icon={Icon.AppWindow}
             tooltip="Opens this note in Obsidian"
-            onAction={() => open(getOpenNoteInObsidianTarget(note))}
+            onAction={() => open(getOpenPathInObsidianTarget(note.path))}
             key={"open"}
           />
           <MenuBarExtra.Item
@@ -84,7 +84,7 @@ export default function Command() {
     const [vaultsWithPlugin, vaultsWithoutPlugin] = vaultPluginCheck(vaults, "obsidian-advanced-uri");
 
     return (
-      <MenuBarExtra icon={ObsidianIconWhiteBold} tooltip="Obsidian">
+      <MenuBarExtra icon={ObsidianIconDynamicBold} tooltip="Obsidian">
         {vaults?.map((vault: Vault) => {
           return <VaultSection vault={vault} key={vault.path} dailyNote={vaultsWithPlugin.includes(vault)} />;
         })}

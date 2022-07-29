@@ -1,4 +1,4 @@
-import { Action, ActionPanel, getPreferenceValues, Grid } from "@raycast/api";
+import { Action, ActionPanel, getPreferenceValues, Grid, Image } from "@raycast/api";
 import { useEffect, useState } from "react";
 
 import { Media, MediaSearchArguments, SearchMediaPreferences, Vault } from "../utils/interfaces";
@@ -52,7 +52,7 @@ export function MediaGrid(props: { vault: Vault; searchArguments: MediaSearchArg
         return (
           <Grid.Item
             title={m.title}
-            content={m.icon}
+            content={{ source: m.icon.source, mask: Image.Mask.RoundedRectangle }}
             key={m.path}
             quickLook={{ path: m.path, name: m.title }}
             actions={
