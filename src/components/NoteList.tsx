@@ -14,14 +14,15 @@ import {
 import { isNotePinned } from "../utils/pinNoteUtils";
 import { NoteAction } from "../utils/constants";
 import { updateNoteInCache } from "../utils/cache";
+import { tagsForNotes } from "../utils/yaml";
 
 export function NoteListItem(props: {
   note: Note;
   vault: Vault;
   key: string;
   pref: SearchNotePreferences;
-  onDelete: (note: Note) => void;
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
+  onDelete?: (note: Note, vault: Vault) => void;
 }) {
   const { note, vault, pref, onDelete, action } = props;
   const [content, setContent] = useState(note.content);
@@ -39,7 +40,7 @@ export function NoteListItem(props: {
         setPinned(!pinned);
         break;
       case NoteAction.Delete:
-        onDelete(note);
+        onDelete ? onDelete(note, vault) : null;
         break;
       case NoteAction.Edit:
         reloadContent();
@@ -95,20 +96,21 @@ export function NoteListItem(props: {
 
 export function NoteList(props: {
   notes: Note[] | undefined;
+  vault: Vault;
   allNotes?: Note[];
   setNotes?: (notes: Note[]) => void;
-  tags?: string[];
   isLoading?: boolean;
   title?: string;
-  vault: Vault;
-  searchArguments: SearchArguments;
+  searchArguments?: SearchArguments;
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
+  onDelete?: (note: Note) => void;
   onSearchChange: (search: string) => void;
-  onDelete: (note: Note) => void;
 }) {
-  const { notes, allNotes, vault, isLoading, title, tags, searchArguments, action, onSearchChange, onDelete } = props;
+  const { notes, allNotes, vault, isLoading, title, searchArguments, action, onDelete, onSearchChange } = props;
   const pref = getPreferenceValues<SearchNotePreferences>();
   const { showDetail } = pref;
+
+  const tags = tagsForNotes(allNotes ?? []);
 
   let isNotesUndefined = notes === undefined;
 
@@ -126,9 +128,11 @@ export function NoteList(props: {
         <List.Dropdown
           tooltip="Search For"
           defaultValue={
-            searchArguments.tagArgument.startsWith("#")
-              ? searchArguments.tagArgument
-              : "#" + searchArguments.tagArgument
+            searchArguments
+              ? searchArguments.tagArgument.startsWith("#")
+                ? searchArguments.tagArgument
+                : "#" + searchArguments.tagArgument
+              : "all"
           }
           onChange={(value) => {
             if (value != "all") {
@@ -160,7 +164,7 @@ export function NoteList(props: {
       isShowingDetail={showDetail}
       onSearchTextChange={onSearchChange}
       navigationTitle={title}
-      searchText={searchArguments.searchArgument}
+      searchText={searchArguments ? searchArguments.searchArgument : ""}
       searchBarAccessory={<DropDownList />}
     >
       {notes?.map((note) => (

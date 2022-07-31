@@ -42,8 +42,6 @@ export function NoteListObsidian(props: { vault: Vault; showTitle: boolean; sear
     fetch();
   }, []);
 
-  const tags = tagsForNotes(allNotes);
-
   return (
     <NoteList
       title={showTitle ? "Search Note in " + vault.name : ""}
@@ -51,9 +49,8 @@ export function NoteListObsidian(props: { vault: Vault; showTitle: boolean; sear
       allNotes={allNotes}
       setNotes={setNotes}
       vault={vault}
-      onSearchChange={setInput}
       onDelete={onDelete}
-      tags={tags}
+      onSearchChange={setInput}
       searchArguments={searchArguments}
       action={(note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => {
         return (

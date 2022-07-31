@@ -50,7 +50,6 @@ export function NoteListPinned(props: { vault: Vault; showTitle: boolean; search
   }
 
   const currentPinnedNotes = getPinnedNotes(vault);
-  const tags = tagsForNotes(currentPinnedNotes ?? []);
 
   useEffect(() => {
     setPinnedNotes(currentPinnedNotes);
@@ -63,13 +62,12 @@ export function NoteListPinned(props: { vault: Vault; showTitle: boolean; search
       notes={list.slice(0, MAX_RENDERED_NOTES)}
       allNotes={allNotes}
       setNotes={setPinnedNotes}
-      tags={tags}
       isLoading={pinnedNotes === undefined}
       vault={vault}
       searchArguments={searchArguments}
       action={actions}
-      onSearchChange={setInput}
       onDelete={onDelete}
+      onSearchChange={setInput}
     />
   );
 }

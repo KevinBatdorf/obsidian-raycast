@@ -60,6 +60,10 @@ export interface Note {
   content: string;
 }
 
+export interface CodeBlock {
+  language: string;
+  code: string;
+}
 interface ObsidianVaultJSON {
   path: string;
   ts: number;

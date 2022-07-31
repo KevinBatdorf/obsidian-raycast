@@ -2,7 +2,7 @@ import { Action, ActionPanel, getPreferenceValues, Grid, Image } from "@raycast/
 import { useEffect, useState } from "react";
 
 import { Media, MediaSearchArguments, SearchMediaPreferences, Vault } from "../utils/interfaces";
-import { OpenPathInObsidianAction, ShowPathInFinderAction } from "../utils/actions";
+import { OpenPathInObsidianAction, ShowMentioningNotesAction, ShowPathInFinderAction } from "../utils/actions";
 import { getListOfExtensions, useMedia } from "../utils/utils";
 import { IMAGE_SIZE_MAPPING } from "../utils/constants";
 
@@ -60,6 +60,7 @@ export function MediaGrid(props: { vault: Vault; searchArguments: MediaSearchArg
                 <Action.ToggleQuickLook />
                 <OpenPathInObsidianAction path={m.path} />
                 <ShowPathInFinderAction path={m.path} />
+                <ShowMentioningNotesAction vault={vault} str={m.title} />
               </ActionPanel>
             }
           />

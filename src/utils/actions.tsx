@@ -1,4 +1,4 @@
-import { Action, getPreferenceValues, Icon, Color } from "@raycast/api";
+import { Action, getPreferenceValues, Icon, Color, List, ActionPanel } from "@raycast/api";
 
 import React, { useState } from "react";
 
@@ -7,8 +7,16 @@ import { EditNote } from "../components/EditNote";
 import { SearchNotePreferences, Note, Vault, Media } from "./interfaces";
 import { isNotePinned, pinNote, unpinNote } from "./pinNoteUtils";
 import { NoteQuickLook } from "../components/NoteQuickLook";
-import { deleteNote, appendSelectedTextTo, getOpenPathInObsidianTarget, vaultPluginCheck } from "./utils";
+import {
+  deleteNote,
+  appendSelectedTextTo,
+  getOpenPathInObsidianTarget,
+  vaultPluginCheck,
+  getCodeBlocks,
+} from "./utils";
 import { NoteAction, ObsidianIconDynamicBold, PrimaryAction } from "./constants";
+import { NoteList } from "../components/NoteList";
+import { useNotes } from "./cache";
 
 export function ShowPathInFinderAction(props: { path: string }) {
   const { path } = props;
@@ -186,12 +194,86 @@ export function ShowVaultInFinderAction(props: { vault: Vault }) {
   return <Action.ShowInFinder title="Show in Finder" icon={Icon.Finder} path={vault.path} />;
 }
 
+export function ShowMentioningNotesAction(props: { vault: Vault; str: string }) {
+  const { vault, str } = props;
+
+  const notes = useNotes(vault).filter((note: Note) => note.content.includes(str));
+  const count = notes.length;
+  if (count > 0) {
+    const list = (
+      <NoteList
+        vault={vault}
+        notes={notes}
+        title={`${count} notes mentioning "${str}"`}
+        onSearchChange={() => {}}
+        action={(note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => {
+          return (
+            <React.Fragment>
+              <OpenNoteActions note={note} vault={vault} actionCallback={actionCallback} />
+              <NoteActions note={note} vault={vault} actionCallback={actionCallback} />
+            </React.Fragment>
+          );
+        }}
+      />
+    );
+    return <Action.Push title={`Show Mentioning Notes (${count})`} target={list} icon={Icon.Megaphone} />;
+  } else {
+    return <React.Fragment></React.Fragment>;
+  }
+}
+
+export function CopyCodeAction(props: { note: Note }) {
+  const { note } = props;
+  const codeBlocks = getCodeBlocks(note.content);
+  if (codeBlocks.length === 1) {
+    const codeBlock = codeBlocks[0];
+    return (
+      <React.Fragment>
+        <Action.Paste title="Paste Code" content={codeBlock.code} />
+        <Action.CopyToClipboard title="Copy Code" content={codeBlock.code} />
+      </React.Fragment>
+    );
+  } else if (codeBlocks.length > 1) {
+    return (
+      <Action.Push
+        title="Copy Code"
+        target={
+          <List isShowingDetail={true}>
+            {codeBlocks?.map((codeBlock) => (
+              <List.Item
+                title={codeBlock.code}
+                detail={<List.Item.Detail markdown={codeBlock.code} />}
+                subtitle={codeBlock.language}
+                key={codeBlock.code}
+                actions={
+                  <ActionPanel>
+                    <Action.Paste title="Paste Code" content={codeBlock.code} />
+                    <Action.CopyToClipboard
+                      title="Copy Code"
+                      content={codeBlock.code}
+                      shortcut={{ modifiers: ["opt"], key: "c" }}
+                    />
+                  </ActionPanel>
+                }
+              />
+            ))}
+          </List>
+        }
+      />
+    );
+  } else {
+    return <React.Fragment></React.Fragment>;
+  }
+}
+
 export function NoteActions(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
   const { note, vault, actionCallback } = props;
 
   return (
     <React.Fragment>
       <ShowPathInFinderAction path={note.path} />
+      <ShowMentioningNotesAction vault={vault} str={note.title} />
+      <CopyCodeAction note={note} />
       <EditNoteAction note={note} vault={vault} actionCallback={actionCallback} />
       <AppendToNoteAction note={note} actionCallback={actionCallback} />
       <AppendSelectedTextToNoteAction note={note} actionCallback={actionCallback} />
