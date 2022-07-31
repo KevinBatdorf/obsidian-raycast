@@ -13,7 +13,7 @@ import {
 } from "../utils/utils";
 import { isNotePinned } from "../utils/pinNoteUtils";
 import { NoteAction } from "../utils/constants";
-import { updateNoteInCache } from "../utils/cache";
+import { deleteNoteFromCache, updateNoteInCache } from "../utils/cache";
 import { tagsForNotes } from "../utils/yaml";
 
 export function NoteListItem(props: {
@@ -22,7 +22,7 @@ export function NoteListItem(props: {
   key: string;
   pref: SearchNotePreferences;
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
-  onDelete?: (note: Note, vault: Vault) => void;
+  onDelete: (note: Note, vault: Vault) => void;
 }) {
   const { note, vault, pref, onDelete, action } = props;
   const [content, setContent] = useState(note.content);
@@ -40,7 +40,8 @@ export function NoteListItem(props: {
         setPinned(!pinned);
         break;
       case NoteAction.Delete:
-        onDelete ? onDelete(note, vault) : null;
+        onDelete(note, vault);
+        deleteNoteFromCache(vault, note);
         break;
       case NoteAction.Edit:
         reloadContent();
@@ -103,7 +104,7 @@ export function NoteList(props: {
   title?: string;
   searchArguments?: SearchArguments;
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
-  onDelete?: (note: Note) => void;
+  onDelete: (note: Note, vault: Vault) => void;
   onSearchChange: (search: string) => void;
 }) {
   const { notes, allNotes, vault, isLoading, title, searchArguments, action, onDelete, onSearchChange } = props;
