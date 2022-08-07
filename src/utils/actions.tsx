@@ -225,34 +225,32 @@ export function ShowMentioningNotesAction(props: { vault: Vault; str: string }) 
 export function CopyCodeAction(props: { note: Note }) {
   const { note } = props;
   const codeBlocks = getCodeBlocks(note.content);
+
   if (codeBlocks.length === 1) {
     const codeBlock = codeBlocks[0];
     return (
       <React.Fragment>
-        <Action.Paste title="Paste Code" content={codeBlock.code} />
-        <Action.CopyToClipboard title="Copy Code" content={codeBlock.code} />
+        <Action.Paste title="Paste Code" icon={Icon.Code} content={codeBlock.code} />
+        <Action.CopyToClipboard title="Copy Code" icon={Icon.Code} content={codeBlock.code} />
       </React.Fragment>
     );
   } else if (codeBlocks.length > 1) {
     return (
       <Action.Push
         title="Copy Code"
+        icon={Icon.Code}
         target={
           <List isShowingDetail={true}>
             {codeBlocks?.map((codeBlock) => (
               <List.Item
                 title={codeBlock.code}
-                detail={<List.Item.Detail markdown={codeBlock.code} />}
+                detail={<List.Item.Detail markdown={"```\n" + codeBlock.code + "```"} />}
                 subtitle={codeBlock.language}
                 key={codeBlock.code}
                 actions={
                   <ActionPanel>
-                    <Action.Paste title="Paste Code" content={codeBlock.code} />
-                    <Action.CopyToClipboard
-                      title="Copy Code"
-                      content={codeBlock.code}
-                      shortcut={{ modifiers: ["opt"], key: "c" }}
-                    />
+                    <Action.Paste title="Paste Code" icon={Icon.Code} content={codeBlock.code} />
+                    <Action.CopyToClipboard title="Copy Code" icon={Icon.Code} content={codeBlock.code} />
                   </ActionPanel>
                 }
               />
