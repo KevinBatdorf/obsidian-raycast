@@ -34,6 +34,11 @@ export function NoteListItem(props: {
     setContent(newContent);
   }
 
+  function reloadTags() {
+    const newTags = tagsForNotes([note]);
+    note.tags = newTags;
+  }
+
   function actionCallback(action: NoteAction) {
     switch (+action) {
       case NoteAction.Pin:
@@ -45,10 +50,12 @@ export function NoteListItem(props: {
         break;
       case NoteAction.Edit:
         reloadContent();
+        reloadTags();
         updateNoteInCache(vault, note);
         break;
       case NoteAction.Append:
         reloadContent();
+        reloadTags();
         updateNoteInCache(vault, note);
     }
   }
