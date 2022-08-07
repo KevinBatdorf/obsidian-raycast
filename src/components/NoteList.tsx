@@ -122,18 +122,31 @@ export function NoteList(props: {
     isNotesUndefined = isLoading;
   }
 
-  function DropDownList() {
+  function defaultTagValue() {
+    console.log(searchArguments);
+    if (searchArguments) {
+      if (searchArguments.tagArgument != "") {
+        if (searchArguments.tagArgument.startsWith("#")) {
+          console.log("tag");
+          return searchArguments.tagArgument;
+        } else {
+          console.log("tag without #");
+          return "#" + searchArguments.tagArgument;
+        }
+      } else {
+        return "";
+      }
+    } else {
+      return "";
+    }
+  }
+
+  function dropdownWithDefault() {
     if (props.setNotes && allNotes && tags) {
       return (
         <List.Dropdown
           tooltip="Search For"
-          defaultValue={
-            searchArguments
-              ? searchArguments.tagArgument.startsWith("#")
-                ? searchArguments.tagArgument
-                : "#" + searchArguments.tagArgument
-              : "all"
-          }
+          defaultValue={defaultTagValue()}
           onChange={(value) => {
             if (value != "all") {
               if (props.setNotes) {
@@ -154,7 +167,47 @@ export function NoteList(props: {
         </List.Dropdown>
       );
     } else {
-      return <React.Fragment />;
+      return <React.Fragment></React.Fragment>;
+    }
+  }
+
+  function dropdownWithoutDefault() {
+    console.log("NO DEFAULT");
+    if (props.setNotes && allNotes && tags) {
+      return (
+        <List.Dropdown
+          tooltip="Search For"
+          onChange={(value) => {
+            if (value != "all") {
+              if (props.setNotes) {
+                props.setNotes(allNotes.filter((note) => note.tags.includes(value)));
+              }
+            } else {
+              if (props.setNotes) {
+                props.setNotes(allNotes);
+              }
+            }
+          }}
+        >
+          <List.Dropdown.Item title="All" value="all" />
+          <List.Dropdown.Section title="Tags" />
+          {tags.map((tag) => (
+            <List.Dropdown.Item title={tag} value={tag} key={tag} />
+          ))}
+        </List.Dropdown>
+      );
+    } else {
+      return <React.Fragment></React.Fragment>;
+    }
+  }
+
+  function DropDownList() {
+    const defaultValue = defaultTagValue();
+    console.log(defaultValue);
+    if (defaultValue == "") {
+      return dropdownWithoutDefault();
+    } else {
+      return dropdownWithDefault();
     }
   }
 
