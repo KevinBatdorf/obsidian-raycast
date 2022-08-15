@@ -232,7 +232,7 @@ export function NoteList(props: {
       isShowingDetail={showDetail}
       onSearchTextChange={onSearchChange}
       navigationTitle={title}
-      searchText={searchArguments ? searchArguments.searchArgument : ""}
+      searchText={searchArguments.searchArgument}
       searchBarAccessory={<DropDownList />}
     >
       {notes?.map((note) => (
