@@ -2,13 +2,13 @@ import { showToast, Toast, getPreferenceValues } from "@raycast/api";
 import React, { useEffect, useMemo, useState } from "react";
 import fs from "fs";
 
-import { useNotes } from "../utils/cache";
-import { Note, Vault, SearchNotePreferences, SearchArguments } from "../utils/interfaces";
+import { useNotes } from "../../utils/cache";
+import { Note, Vault, SearchNotePreferences, SearchArguments } from "../../utils/interfaces";
 import { NoteList } from "./NoteList";
-import { filterNotes } from "../utils/search";
-import { MAX_RENDERED_NOTES, NoteAction } from "../utils/constants";
-import { NoteActions, OpenNoteActions } from "../utils/actions";
-import { tagsForNotes } from "../utils/yaml";
+import { filterNotes } from "../../utils/search";
+import { MAX_RENDERED_NOTES, NoteAction } from "../../utils/constants";
+import { NoteActions, OpenNoteActions } from "../../utils/actions";
+import { tagsForNotes } from "../../utils/yaml";
 
 export function NoteListObsidian(props: { vault: Vault; showTitle: boolean; searchArguments: SearchArguments }) {
   const { searchContent } = getPreferenceValues<SearchNotePreferences>();

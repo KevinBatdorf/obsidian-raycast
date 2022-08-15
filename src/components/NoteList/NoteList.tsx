@@ -2,7 +2,7 @@ import { List, ActionPanel, getPreferenceValues } from "@raycast/api";
 import React, { useState } from "react";
 import fs from "fs";
 
-import { Note, Vault, SearchNotePreferences, SearchArguments } from "../utils/interfaces";
+import { Note, Vault, SearchNotePreferences, SearchArguments } from "../../utils/interfaces";
 import {
   readingTime,
   wordCount,
@@ -11,11 +11,11 @@ import {
   fileSizeFor,
   getNoteFileContent,
   filterContent,
-} from "../utils/utils";
-import { isNotePinned } from "../utils/pinNoteUtils";
-import { NoteAction } from "../utils/constants";
-import { deleteNoteFromCache, renewCache, updateNoteInCache } from "../utils/cache";
-import { tagsForNotes } from "../utils/yaml";
+} from "../../utils/utils";
+import { isNotePinned } from "../../utils/pinNoteUtils";
+import { NoteAction } from "../../utils/constants";
+import { deleteNoteFromCache, renewCache, updateNoteInCache } from "../../utils/cache";
+import { tagsForNotes } from "../../utils/yaml";
 
 export function NoteListItem(props: {
   note: Note;
@@ -138,14 +138,11 @@ export function NoteList(props: {
   }
 
   function defaultTagValue() {
-    console.log(searchArguments);
     if (searchArguments) {
       if (searchArguments.tagArgument != "") {
         if (searchArguments.tagArgument.startsWith("#")) {
-          console.log("tag");
           return searchArguments.tagArgument;
         } else {
-          console.log("tag without #");
           return "#" + searchArguments.tagArgument;
         }
       } else {
@@ -187,7 +184,6 @@ export function NoteList(props: {
   }
 
   function dropdownWithoutDefault() {
-    console.log("NO DEFAULT");
     if (props.setNotes && allNotes && tags) {
       return (
         <List.Dropdown
@@ -232,7 +228,7 @@ export function NoteList(props: {
       isShowingDetail={showDetail}
       onSearchTextChange={onSearchChange}
       navigationTitle={title}
-      searchText={searchArguments.searchArgument}
+      searchText={searchArguments ? searchArguments.searchArgument : ""}
       searchBarAccessory={<DropDownList />}
     >
       {notes?.map((note) => (

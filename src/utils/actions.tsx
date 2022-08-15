@@ -15,7 +15,7 @@ import {
   getCodeBlocks,
 } from "./utils";
 import { NoteAction, ObsidianIconDynamicBold, PrimaryAction } from "./constants";
-import { NoteList } from "../components/NoteList";
+import { NoteList } from "../components/NoteList/NoteList";
 import { useNotes } from "./cache";
 
 export function ShowPathInFinderAction(props: { path: string }) {
@@ -206,6 +206,7 @@ export function ShowMentioningNotesAction(props: { vault: Vault; str: string }) 
         notes={notes}
         title={`${count} notes mentioning "${str}"`}
         onSearchChange={() => {}}
+        onDelete={() => {}}
         action={(note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => {
           return (
             <React.Fragment>
