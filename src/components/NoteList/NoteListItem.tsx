@@ -15,7 +15,7 @@ import {
 import { isNotePinned } from "../../utils/pinNoteUtils";
 import { NoteAction } from "../../utils/constants";
 import { deleteNoteFromCache, renewCache, updateNoteInCache } from "../../utils/cache";
-import { tagsForNotes } from "../../utils/yaml";
+import { tagsForNotes, yamlPropertyForString } from "../../utils/yaml";
 
 export function NoteListItem(props: {
   note: Note;
@@ -67,6 +67,29 @@ export function NoteListItem(props: {
     }
   }
 
+  function TagList() {
+    if (note.tags.length > 0) {
+      return (
+        <List.Item.Detail.Metadata.TagList title="Tags">
+          {note.tags.map((tag) => (
+            <List.Item.Detail.Metadata.TagList.Item key={tag} text={tag} />
+          ))}
+        </List.Item.Detail.Metadata.TagList>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  function Link() {
+    const url = yamlPropertyForString(note.content, "url");
+    if (url) {
+      return <List.Item.Detail.Metadata.Link target={url} text="View" title="URL" />;
+    } else {
+      return null;
+    }
+  }
+
   return !noteHasBeenMoved ? (
     <List.Item
       title={note.title}
@@ -83,6 +106,8 @@ export function NoteListItem(props: {
                   title="Reading Time"
                   text={readingTime(content).toString() + " min read"}
                 />
+                <TagList />
+                <Link />
                 <List.Item.Detail.Metadata.Separator />
                 <List.Item.Detail.Metadata.Label
                   title="Creation Date"
