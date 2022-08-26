@@ -8,7 +8,6 @@ import { NoteList } from "./NoteList";
 import { filterNotes } from "../../utils/search";
 import { MAX_RENDERED_NOTES, NoteAction } from "../../utils/constants";
 import { NoteActions, OpenNoteActions } from "../../utils/actions";
-import { tagsForNotes } from "../../utils/yaml";
 
 export function NoteListObsidian(props: { vault: Vault; showTitle: boolean; searchArguments: SearchArguments }) {
   const { searchContent } = getPreferenceValues<SearchNotePreferences>();

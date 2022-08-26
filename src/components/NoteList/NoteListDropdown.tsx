@@ -18,11 +18,7 @@ export function NoteListDropdown(props: {
         } else {
           return "#" + searchArguments.tagArgument;
         }
-      } else {
-        return "";
       }
-    } else {
-      return "";
     }
   }
 
@@ -54,7 +50,7 @@ export function NoteListDropdown(props: {
 
   function dropdownWithDefault() {
     return (
-      <List.Dropdown tooltip="Search For" defaultValue={defaultTagValue()} onChange={handleChange}>
+      <List.Dropdown tooltip="Search For" defaultValue={defaultTagValue() ?? ""} onChange={handleChange}>
         {dropdownContent()}
       </List.Dropdown>
     );
@@ -70,10 +66,10 @@ export function NoteListDropdown(props: {
 
   function DropDownList() {
     const defaultValue = defaultTagValue();
-    if (defaultValue == "") {
-      return dropdownWithoutDefault();
-    } else {
+    if (defaultValue) {
       return dropdownWithDefault();
+    } else {
+      return dropdownWithoutDefault();
     }
   }
 
