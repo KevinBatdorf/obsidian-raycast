@@ -18,6 +18,10 @@ import { NoteAction, ObsidianIconDynamicBold, PrimaryAction } from "./constants"
 import { NoteList } from "../components/NoteList/NoteList";
 import { useNotes } from "./cache";
 
+//--------------------------------------------------------------------------------
+// All actions for all commands should be defined here.
+//--------------------------------------------------------------------------------
+
 export function ShowPathInFinderAction(props: { path: string }) {
   const { path } = props;
   return (

@@ -1,5 +1,9 @@
 import { Grid } from "@raycast/api";
 
+//--------------------------------------------------------------------------------
+// All important constants for all commands should be defined here.
+//--------------------------------------------------------------------------------
+
 export const MAX_RENDERED_NOTES = 1000;
 export const BYTES_PER_KILOBYTE = 1024;
 export const BYTES_PER_MEGABYTE = BYTES_PER_KILOBYTE ** 2;
