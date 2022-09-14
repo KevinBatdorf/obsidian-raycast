@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 import { AppendNoteForm } from "../components/AppendNoteForm";
 import { EditNote } from "../components/EditNote";
-import { SearchNotePreferences, Note, Vault, Media } from "./interfaces";
+import { SearchNotePreferences, Note, Vault } from "./interfaces";
 import { isNotePinned, pinNote, unpinNote } from "./pinNoteUtils";
 import { NoteQuickLook } from "../components/NoteQuickLook";
 import {
@@ -209,8 +209,6 @@ export function ShowMentioningNotesAction(props: { vault: Vault; str: string }) 
         vault={vault}
         notes={notes}
         title={`${count} notes mentioning "${str}"`}
-        onSearchChange={() => {}}
-        onDelete={() => {}}
         action={(note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => {
           return (
             <React.Fragment>

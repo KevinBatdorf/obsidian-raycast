@@ -16,8 +16,8 @@ export function NoteList(props: {
   title?: string;
   searchArguments?: SearchArguments;
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
-  onDelete: (note: Note, vault: Vault) => void;
-  onSearchChange: (search: string) => void;
+  onDelete?: (note: Note, vault: Vault) => void;
+  onSearchChange?: (search: string) => void;
 }) {
   const { notes, allNotes, vault, isLoading, title, searchArguments, setNotes, action, onDelete, onSearchChange } =
     props;

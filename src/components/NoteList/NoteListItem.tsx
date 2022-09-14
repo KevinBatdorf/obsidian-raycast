@@ -23,7 +23,7 @@ export function NoteListItem(props: {
   key: string;
   pref: SearchNotePreferences;
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
-  onDelete: (note: Note, vault: Vault) => void;
+  onDelete?: (note: Note, vault: Vault) => void;
 }) {
   const { note, vault, pref, onDelete, action } = props;
   const [content, setContent] = useState(note.content);
@@ -52,7 +52,9 @@ export function NoteListItem(props: {
         setPinned(!pinned);
         break;
       case NoteAction.Delete:
-        onDelete(note, vault);
+        if (onDelete) {
+          onDelete(note, vault);
+        }
         deleteNoteFromCache(vault, note);
         break;
       case NoteAction.Edit:

@@ -70,9 +70,6 @@ export function fuzzyFilter(notes: Note[], input: string) {
   // TODO: weigh tokens before using them
 
   return notes.filter((note) => {
-    return (
-      note.title.toLowerCase().includes(input) ||
-      note.path.toLowerCase().includes(input)
-    );
+    return note.title.toLowerCase().includes(input) || note.path.toLowerCase().includes(input);
   });
 }
