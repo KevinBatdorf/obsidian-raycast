@@ -128,7 +128,7 @@ export function parseVaults(): Vault[] {
     .map((vault) => ({ name: getVaultNameFromPath(vault.trim()), key: vault.trim(), path: vault.trim() }));
 }
 
-async function loadObsidianJson(): Promise<Vault[]> {
+export async function loadObsidianJson(): Promise<Vault[]> {
   const obsidianJsonPath = fsPath.resolve(`${homedir()}/Library/Application Support/obsidian/obsidian.json`);
   try {
     const obsidianJson = JSON.parse(await readFile(obsidianJsonPath, "utf8")) as ObsidianJSON;

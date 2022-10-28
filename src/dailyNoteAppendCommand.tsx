@@ -1,6 +1,6 @@
-import { getPreferenceValues, open, Detail, showToast, Toast, useNavigation } from "@raycast/api";
+import { getPreferenceValues, open, showToast, Toast } from "@raycast/api";
 import { URLSearchParams } from "url";
-import { applyTemplates } from "./utils/utils";
+import { applyTemplates, loadObsidianJson, vaultPluginCheck } from "./utils/utils";
 
 interface QuickAppendArgs {
   text: string;
@@ -8,13 +8,50 @@ interface QuickAppendArgs {
 
 interface Preferences {
   appendTemplate?: string;
-  vault?: string;
+  vaultName?: string;
   heading?: string;
 }
 
 export default async function DailyNoteAppend(props: { arguments: QuickAppendArgs }) {
   const { text } = props.arguments;
-  const { appendTemplate, heading, vault } = getPreferenceValues<Preferences>();
+  const { appendTemplate, heading, vaultName } = getPreferenceValues<Preferences>();
+
+  const vaults = await loadObsidianJson();
+  if (vaults.length === 0) {
+    return showToast({
+      style: Toast.Style.Failure,
+      title: "No vaults found",
+      message:
+        "Please use Obsidian to create a vault, or set a vault path in the extension's preferences before using this command.",
+    });
+  }
+
+  const [vaultsWithPlugin, _] = vaultPluginCheck(vaults, "obsidian-advanced-uri");
+
+  if (vaultName) {
+    // Fail if selected vault doesn't have plugin
+    if (!vaultsWithPlugin.some((v) => v.name === vaultName)) {
+      return showToast({
+        style: Toast.Style.Failure,
+        title: "Advanced URI plugin not found in vault",
+        message: `Vault ${vaultName} is missing the Advanced URI plugin`,
+      });
+    }
+  }
+
+  // Fail if there's no selected vault, and no vaults have the plugin
+  if (vaultsWithPlugin.length == 0) {
+    const message =
+      "Advanced URI plugin not installed.\nThis command requires the [Advanced URI plugin](https://obsidian.md/plugins?id=obsidian-advanced-uri) for Obsidian.  \n  \n Install it through the community plugins list.";
+    return await showToast({
+      title: "Advanced URI plugin required",
+      message,
+    });
+  }
+
+  // Use configured vault, fallback to first vault with plugin
+  const configuredVault = vaults.find((vault) => vault.name === vaultName);
+  const vaultToUse = configuredVault || vaultsWithPlugin[0];
 
   const withTemplate = appendTemplate ? appendTemplate + text : text;
   const content = await applyTemplates(withTemplate);
@@ -24,12 +61,10 @@ export default async function DailyNoteAppend(props: { arguments: QuickAppendArg
     daily: "true",
     data,
     mode: "append",
+    vault: vaultToUse.name,
   });
   if (heading) {
     params.append("heading", heading);
-  }
-  if (vault) {
-    params.append("vault", vault);
   }
   const uri = `obsidian://advanced-uri?${params}`;
   open(uri);
