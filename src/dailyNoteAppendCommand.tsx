@@ -2,7 +2,7 @@ import { getPreferenceValues, open, showToast, Toast } from "@raycast/api";
 import { URLSearchParams } from "url";
 import { applyTemplates, loadObsidianJson, vaultPluginCheck } from "./utils/utils";
 
-interface QuickAppendArgs {
+interface DailyNoteAppendArgs {
   text: string;
 }
 
@@ -12,7 +12,7 @@ interface Preferences {
   heading?: string;
 }
 
-export default async function DailyNoteAppend(props: { arguments: QuickAppendArgs }) {
+export default async function DailyNoteAppend(props: { arguments: DailyNoteAppendArgs }) {
   const { text } = props.arguments;
   const { appendTemplate, heading, vaultName } = getPreferenceValues<Preferences>();
 
