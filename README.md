@@ -182,7 +182,7 @@ Clicking it will reveal a list of your vaults. You can view your pinned notes, p
 ### Append to Daily Note
 
 - template for the appended text (e.g. could set to `- [ ] ` to create a checklist item)
-- vault in which the Daily Note will be appended (if not set, the last open vault will be used)
+- vault in which the Daily Note will be appended (if not set, you will be prompted to select a vault when the command is run)
 - heading in which the appended text will be placed (if not set, the text will be appended to the end of the note)
 
 ### Pinned Notes
