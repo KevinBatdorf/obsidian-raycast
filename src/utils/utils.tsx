@@ -40,6 +40,7 @@ import {
 import { isNotePinned, unpinNote } from "./pinNoteUtils";
 import { useNotes } from "./cache";
 import { MediaLoader } from "./loader";
+import { URLSearchParams } from "url";
 
 export function getCodeBlocks(content: string): CodeBlock[] {
   const codeBlockMatches = content.matchAll(CODE_BLOCK_REGEX);
@@ -128,7 +129,7 @@ export function parseVaults(): Vault[] {
     .map((vault) => ({ name: getVaultNameFromPath(vault.trim()), key: vault.trim(), path: vault.trim() }));
 }
 
-export async function loadObsidianJson(): Promise<Vault[]> {
+async function loadObsidianJson(): Promise<Vault[]> {
   const obsidianJsonPath = fsPath.resolve(`${homedir()}/Library/Application Support/obsidian/obsidian.json`);
   try {
     const obsidianJson = JSON.parse(await readFile(obsidianJsonPath, "utf8")) as ObsidianJSON;
@@ -304,6 +305,21 @@ export const getOpenPathInObsidianTarget = (path: string) => {
 
 export const getDailyNoteTarget = (vault: Vault) => {
   return "obsidian://advanced-uri?vault=" + encodeURIComponent(vault.name) + "&daily=true";
+};
+
+export const getDailyNoteAppendTarget = (vault: Vault, text: string, heading: string | undefined) => {
+  // encodeURIComponent to avoid replacing spaces with +
+  const data = encodeURIComponent(text);
+  const params = new URLSearchParams({
+    daily: "true",
+    data,
+    mode: "append",
+    vault: vault.name,
+  });
+  if (heading) {
+    params.append("heading", heading);
+  }
+  return `obsidian://advanced-uri?${params}`;
 };
 
 export function getListOfExtensions(media: Media[]) {

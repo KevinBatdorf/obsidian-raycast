@@ -147,7 +147,7 @@
       "title": "Append to Daily Note",
       "subtitle": "Obsidian",
       "description": "Append text to your daily note",
-      "mode": "no-view",
+      "mode": "view",
       "arguments": [
         {
           "name": "text",
