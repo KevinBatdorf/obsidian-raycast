@@ -308,18 +308,15 @@ export const getDailyNoteTarget = (vault: Vault) => {
 };
 
 export const getDailyNoteAppendTarget = (vault: Vault, text: string, heading: string | undefined) => {
-  // encodeURIComponent to avoid replacing spaces with +
-  const data = encodeURIComponent(text);
-  const params = new URLSearchParams({
-    daily: "true",
-    data,
-    mode: "append",
-    vault: vault.name,
-  });
-  if (heading) {
-    params.append("heading", heading);
-  }
-  return `obsidian://advanced-uri?${params}`;
+  const headingParam = heading ? "&heading=" + encodeURIComponent(heading) : "";
+  return (
+    "obsidian://advanced-uri?daily=true&mode=append" +
+    "&data=" +
+    encodeURIComponent(text) +
+    "&vault=" +
+    encodeURIComponent(vault.name) +
+    headingParam
+  );
 };
 
 export function getListOfExtensions(media: Media[]) {
