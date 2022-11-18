@@ -43,6 +43,7 @@ export function NoteList(props: {
 
   return (
     <List
+      throttle={true}
       isLoading={isNotesUndefined}
       isShowingDetail={pref.showDetail}
       onSearchTextChange={(value) => {
