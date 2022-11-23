@@ -4,7 +4,7 @@
 
 - Add `Append to Daily Note Command` which can append text to a daily note. Text can be appended to the end of the note or to a specific heading. It supports all templates. Contributed by @iancanderson.
 - Fixed dropdown menu preventing search to function in newer Raycast versions
-- Update to Raycast API v1.42.0
+- Update to Raycast API v1.44.0
 
 ## [Fix | Version 1.9.2] - 2022-11-18
 
