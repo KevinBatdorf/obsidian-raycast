@@ -1,5 +1,4 @@
 import { Icon, MenuBarExtra, open, Clipboard } from "@raycast/api";
-import React from "react";
 import { ObsidianIconDynamicBold } from "./utils/constants";
 import { Vault } from "./utils/interfaces";
 import { getPinnedNotes, unpinNote } from "./utils/pinNoteUtils";
@@ -16,7 +15,7 @@ function PinnedNotesList(props: { vault: Vault; key: string }) {
   const { vault } = props;
   const [withPlugin, _] = vaultPluginCheck([vault], "obsidian-advanced-uri");
   return (
-    <MenuBarExtra.Submenu title="Pinned Notes" key={"Pinned Notes"}>
+    <MenuBarExtra.Submenu title={vault.name} key={vault.name}>
       {pinnedNotes.map((note) => (
         <MenuBarExtra.Submenu
           title={note.title}
@@ -73,23 +72,54 @@ function PinnedNotesList(props: { vault: Vault; key: string }) {
   );
 }
 
-function VaultSection(props: { vault: Vault; key: string; dailyNote: boolean }) {
-  const { vault } = props;
-
+function PinnedVaultSelection(props: { vaults: Vault[] }) {
   return (
-    <React.Fragment>
-      <MenuBarExtra.Item title={vault.name} key={vault.path + "Heading"} />
-      <PinnedNotesList vault={vault} key={vault.path + "List"} />
-      {props.dailyNote && (
+    <MenuBarExtra.Submenu title="Pinned Notes" key={"Pinned Notes"}>
+      {props.vaults.map((vault) => (
+        <PinnedNotesList vault={vault} key={vault.path} />
+      ))}
+    </MenuBarExtra.Submenu>
+  );
+}
+
+function DailyNoteVaultSelection(props: { vaults: Vault[] }) {
+  const [withPlugin, _] = vaultPluginCheck(props.vaults, "obsidian-advanced-uri");
+  return (
+    <MenuBarExtra.Submenu title="Daily Note" key={"Daily Note"}>
+      {withPlugin.map((vault) => (
         <MenuBarExtra.Item
-          title="Daily Note"
+          title={vault.name}
           key={vault.path + "Daily Note"}
           tooltip="Open Daily Note"
           onAction={() => open(getDailyNoteTarget(vault))}
         />
-      )}
-      <MenuBarExtra.Separator />
-    </React.Fragment>
+      ))}
+    </MenuBarExtra.Submenu>
+  );
+}
+
+function OpenVaultSelection(props: { vaults: Vault[] }) {
+  return (
+    <MenuBarExtra.Submenu title="Open Vault" key={"Open Vault"}>
+      {props.vaults.map((vault) => (
+        <MenuBarExtra.Item
+          title={vault.name}
+          key={vault.path}
+          tooltip="Open Vault"
+          onAction={() => open(getOpenPathInObsidianTarget(vault.path))}
+        />
+      ))}
+    </MenuBarExtra.Submenu>
+  );
+}
+
+function ObsidianMenuBar(props: { vaults: Vault[] }) {
+  return (
+    <MenuBarExtra icon={ObsidianIconDynamicBold} tooltip="Obsidian">
+      <PinnedVaultSelection vaults={props.vaults}></PinnedVaultSelection>
+      <DailyNoteVaultSelection vaults={props.vaults}></DailyNoteVaultSelection>
+      <OpenVaultSelection vaults={props.vaults}></OpenVaultSelection>
+    </MenuBarExtra>
   );
 }
 
@@ -99,14 +129,6 @@ export default function Command() {
   if (!ready) {
     return <MenuBarExtra isLoading={true} />;
   } else {
-    const [vaultsWithPlugin, vaultsWithoutPlugin] = vaultPluginCheck(vaults, "obsidian-advanced-uri");
-
-    return (
-      <MenuBarExtra icon={ObsidianIconDynamicBold} tooltip="Obsidian">
-        {vaults?.map((vault: Vault) => {
-          return <VaultSection vault={vault} key={vault.path} dailyNote={vaultsWithPlugin.includes(vault)} />;
-        })}
-      </MenuBarExtra>
-    );
+    return <ObsidianMenuBar vaults={vaults} />;
   }
 }
