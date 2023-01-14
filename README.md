@@ -218,3 +218,7 @@ Clicking it will reveal a list of your vaults. You can view your pinned notes, p
 ## Contributions and Credits
 
 Thank you [macedotavares](https://forum.obsidian.md/t/big-sur-icon/8121?u=marcjulian) for letting me use your amazing Obsidian (Big Sur) icon.
+
+## Disclaimer
+
+This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Obsidian or any of its subsidiaries or its affiliates. The official Obsidian website can be found at https://obsidian.md. "Obsidian" as well as related names, marks, emblems and images are registered trademarks of their respective owners.
