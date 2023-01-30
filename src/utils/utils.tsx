@@ -250,6 +250,9 @@ export async function applyTemplates(content: string) {
   content = content.replaceAll("{year}", date.getFullYear().toString());
   content = content.replaceAll("{month}", MONTH_NUMBER_TO_STRING[date.getMonth()]);
   content = content.replaceAll("{day}", DAY_NUMBER_TO_STRING[date.getDay()]);
+  
+  content = content.replaceAll("{month_num}", (date.getMonth() + 1).toString().padStart(2, "0"));
+  content = content.replaceAll("{day_num}", date.getDate().toString().padStart(2, "0"));
 
   content = content.replaceAll("{hour}", hours);
   content = content.replaceAll("{minute}", minutes);
