@@ -10,7 +10,6 @@ export const BYTES_PER_MEGABYTE = BYTES_PER_KILOBYTE ** 2;
 export const BYTES_PER_GIGABYTE = BYTES_PER_MEGABYTE ** 2;
 
 export enum NoteAction {
-  Pin,
   Edit,
   Delete,
   Append,

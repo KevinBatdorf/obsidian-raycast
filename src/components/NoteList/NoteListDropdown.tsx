@@ -1,14 +1,12 @@
-import { Note, SearchArguments } from "../../utils/interfaces";
+import { SearchArguments } from "../../utils/interfaces";
 import { List } from "@raycast/api";
-import React from "react";
+import React, { useContext } from "react";
+import { NoteListContext } from "../../utils/utils";
+import { NoteReducerActionType } from "../../utils/reducers";
 
-export function NoteListDropdown(props: {
-  allNotes?: Note[];
-  setNotes?: (notes: Note[]) => void;
-  tags: string[];
-  searchArguments: SearchArguments;
-}) {
-  const { setNotes, allNotes, tags, searchArguments } = props;
+export function NoteListDropdown(props: { tags: string[]; searchArguments: SearchArguments }) {
+  const [dispatch, allNotes] = useContext(NoteListContext);
+  const { tags, searchArguments } = props;
 
   function defaultTagValue() {
     if (searchArguments.tagArgument) {
@@ -21,15 +19,9 @@ export function NoteListDropdown(props: {
   }
 
   function handleChange(value: string) {
-    if (setNotes && allNotes) {
+    if (allNotes) {
       if (value != "all") {
-        if (setNotes) {
-          setNotes(allNotes.filter((note) => note.tags.includes(value)));
-        }
-      } else {
-        if (setNotes) {
-          setNotes(allNotes);
-        }
+        dispatch({ type: NoteReducerActionType.Set, payload: allNotes.filter((note) => note.tags.includes(value)) });
       }
     }
   }

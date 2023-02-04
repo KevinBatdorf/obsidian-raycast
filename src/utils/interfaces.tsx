@@ -11,12 +11,10 @@ import { NoteAction } from "./constants";
 
 export interface GlobalPreferences {
   vaultPath: string;
-}
-
-export interface QuickLookPreferences {
   removeYAML: boolean;
   removeLinks: boolean;
   removeLatex: boolean;
+  excludedFolders: string;
 }
 
 export interface AppendNotePreferences {
@@ -34,19 +32,17 @@ export interface NoteFormPreferences extends GlobalPreferences {
   folderActions: string;
 }
 
-export interface SearchNotePreferences extends GlobalPreferences, QuickLookPreferences, AppendNotePreferences {
+export interface SearchNotePreferences extends GlobalPreferences, AppendNotePreferences {
   primaryAction: string;
-  excludedFolders: string;
   showDetail: boolean;
   showMetadata: boolean;
   searchContent: boolean;
 }
 
-export interface RandomNotePreferences extends GlobalPreferences, QuickLookPreferences, AppendNotePreferences {}
+export interface RandomNotePreferences extends GlobalPreferences, AppendNotePreferences {}
 
 export interface SearchMediaPreferences extends GlobalPreferences {
   imageSize: string;
-  excludedFolders: string;
 }
 
 //--------------------------------------------------------------------------------
@@ -92,11 +88,6 @@ export interface ObsidianVaultsState {
   vaults: Vault[];
 }
 
-export interface PinnedNotesJSON {
-  vaultPath: string;
-  pinnedNotes: string[];
-}
-
 export interface SearchArguments {
   searchArgument: string;
   tagArgument: string;
@@ -121,9 +112,7 @@ export interface MediaSearchArguments {
 export interface NoteListProps {
   title?: string;
   vault: Vault;
-  notes: Note[] | undefined;
-  allNotes?: Note[];
-  setNotes?: (notes: Note[]) => void;
+  notes: Note[];
   isLoading?: boolean;
   searchArguments: SearchArguments;
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;

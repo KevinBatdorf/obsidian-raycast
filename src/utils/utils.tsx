@@ -14,7 +14,7 @@ import fsPath from "path";
 import path from "path";
 import { readFile } from "fs/promises";
 import { homedir } from "os";
-import { useEffect, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 
 import {
   Note,
@@ -23,7 +23,6 @@ import {
   GlobalPreferences,
   SearchNotePreferences,
   Vault,
-  QuickLookPreferences,
   MediaState,
   Media,
   CodeBlock,
@@ -36,11 +35,12 @@ import {
   LATEX_INLINE_REGEX,
   LATEX_REGEX,
   MONTH_NUMBER_TO_STRING,
+  NoteAction,
 } from "./constants";
-import { isNotePinned, unpinNote } from "./pinNoteUtils";
-import { useNotes } from "./cache";
+import { useNotes } from "./hooks";
 import { MediaLoader } from "./loader";
 import { URLSearchParams } from "url";
+import { NoteReducerAction, NoteReducerActionType } from "./reducers";
 
 export function getCodeBlocks(content: string): CodeBlock[] {
   const codeBlockMatches = content.matchAll(CODE_BLOCK_REGEX);
@@ -53,7 +53,7 @@ export function getCodeBlocks(content: string): CodeBlock[] {
 }
 
 export function filterContent(content: string) {
-  const pref: QuickLookPreferences = getPreferenceValues();
+  const pref: GlobalPreferences = getPreferenceValues();
 
   if (pref.removeYAML) {
     const yamlHeader = content.match(/---(.|\n)*?---/gm);
@@ -167,7 +167,7 @@ export function useObsidianVaults(): ObsidianVaultsState {
   return state;
 }
 
-export async function deleteNote(note: Note, vault: Vault) {
+export async function deleteNote(note: Note) {
   const options = {
     title: "Delete Note",
     message: 'Are you sure you want to delete the note: "' + note.title + '"?',
@@ -176,9 +176,6 @@ export async function deleteNote(note: Note, vault: Vault) {
   if (await confirmAlert(options)) {
     try {
       fs.unlinkSync(note.path);
-      if (isNotePinned(note, vault)) {
-        unpinNote(note, vault);
-      }
       showToast({ title: "Deleted Note", style: Toast.Style.Success });
       return true;
     } catch (error) {
@@ -309,13 +306,15 @@ export const getDailyNoteTarget = (vault: Vault) => {
 
 export const getDailyNoteAppendTarget = (vault: Vault, text: string, heading: string | undefined) => {
   const headingParam = heading ? "&heading=" + encodeURIComponent(heading) : "";
+
   return (
     "obsidian://advanced-uri?daily=true&mode=append" +
     "&data=" +
     encodeURIComponent(text) +
     "&vault=" +
     encodeURIComponent(vault.name) +
-    headingParam
+    headingParam +
+    "&openmode=silent"
   );
 };
 
@@ -330,36 +329,17 @@ export function getListOfExtensions(media: Media[]) {
   return foundExtensions;
 }
 
-function setExtensionVersion(version: string) {
-  fs.writeFileSync(environment.supportPath + "/version.txt", version);
-}
-
-export function getCurrentPinnedVersion() {
-  if (!fs.existsSync(environment.supportPath + "/version.txt")) {
-    setExtensionVersion("");
-    return undefined;
-  } else {
-    const version = fs.readFileSync(environment.supportPath + "/version.txt", "utf8");
-    return version;
-  }
-}
-
 export function isNote(note: Note | undefined): note is Note {
   return (note as Note) !== undefined;
 }
 
-export function getRandomNote(vault: Vault | Vault[]) {
-  let notes: Note[] = [];
-  if (Array.isArray(vault)) {
-    for (const v of vault) {
-      notes = [...notes, ...useNotes(v)];
+function validFile(file: string, includes: string[]) {
+  for (const include of includes) {
+    if (file.includes(include)) {
+      return false;
     }
-  } else {
-    notes = useNotes(vault);
   }
-
-  const randomNote = notes[Math.floor(Math.random() * notes.length)];
-  return randomNote;
+  return true;
 }
 
 export function walkFilesHelper(dirPath: string, exFolders: string[], fileEndings: string[], arrayOfFiles: string[]) {
@@ -369,7 +349,7 @@ export function walkFilesHelper(dirPath: string, exFolders: string[], fileEnding
 
   for (const file of files) {
     const next = fs.statSync(dirPath + "/" + file);
-    if (next.isDirectory() && !file.includes(".obsidian")) {
+    if (next.isDirectory() && validFile(file, [".git", ".obsidian", ".trash", ".excalidraw", ".mobile"])) {
       arrayOfFiles = walkFilesHelper(dirPath + "/" + file, exFolders, fileEndings, arrayOfFiles);
     } else {
       if (
@@ -449,3 +429,5 @@ export function useMedia(vault: Vault) {
 
   return media;
 }
+
+export const NoteListContext = createContext([() => {}, []] as [(action: NoteReducerAction) => void, Note[]]);

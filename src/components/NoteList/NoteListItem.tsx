@@ -1,5 +1,5 @@
 import { List, ActionPanel } from "@raycast/api";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import fs from "fs";
 
 import { Note, Vault, SearchNotePreferences } from "../../utils/interfaces";
@@ -11,11 +11,12 @@ import {
   fileSizeFor,
   getNoteFileContent,
   filterContent,
+  NoteListContext,
 } from "../../utils/utils";
-import { isNotePinned } from "../../utils/pinNoteUtils";
 import { NoteAction } from "../../utils/constants";
-import { deleteNoteFromCache, renewCache, updateNoteInCache } from "../../utils/cache";
+import { renewCache, updateNoteInCache } from "../../utils/cache";
 import { tagsForNotes, yamlPropertyForString } from "../../utils/yaml";
+import { NoteReducerActionType } from "../../utils/reducers";
 
 export function NoteListItem(props: {
   note: Note;
@@ -23,11 +24,10 @@ export function NoteListItem(props: {
   key: string;
   pref: SearchNotePreferences;
   action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
-  onDelete?: (note: Note, vault: Vault) => void;
 }) {
-  const { note, vault, pref, onDelete, action } = props;
+  const { note, vault, pref, action } = props;
   const [content, setContent] = useState(note.content);
-  const [pinned, setPinned] = useState(isNotePinned(note, vault));
+  const [notes, dispatch, allNotes] = useContext(NoteListContext);
 
   const noteHasBeenMoved = !fs.existsSync(note.path);
 
@@ -48,14 +48,8 @@ export function NoteListItem(props: {
 
   function actionCallback(action: NoteAction) {
     switch (+action) {
-      case NoteAction.Pin:
-        setPinned(!pinned);
-        break;
       case NoteAction.Delete:
-        if (onDelete) {
-          onDelete(note, vault);
-        }
-        deleteNoteFromCache(vault, note);
+        dispatch({ type: NoteReducerActionType.Delete, payload: { note: note, vault: vault } });
         break;
       case NoteAction.Edit:
         reloadContent();
@@ -95,7 +89,6 @@ export function NoteListItem(props: {
   return !noteHasBeenMoved ? (
     <List.Item
       title={note.title}
-      accessories={[{ text: pinned ? "⭐️" : "" }]}
       detail={
         <List.Item.Detail
           markdown={filterContent(content)}

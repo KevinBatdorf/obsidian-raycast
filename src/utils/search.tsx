@@ -1,4 +1,4 @@
-import { useNotes } from "./cache";
+import { useNotes } from "./hooks";
 import { Media, Note, Vault } from "./interfaces";
 
 /**
@@ -35,14 +35,13 @@ export function filterNotes(notes: Note[], input: string, byContent: boolean) {
  * @param input - Search input
  * @returns - A list of media filtered according to the input search string
  */
-export function filterMedia(mediaList: Media[], input: string, vault: Vault) {
+export function filterMedia(mediaList: Media[], input: string, notes: Note[]) {
   if (input.length === 0) {
     return mediaList;
   }
 
   input = input.toLowerCase();
 
-  let notes = useNotes(vault);
   notes = notes.filter((note) => note.title.toLowerCase().includes(input));
 
   return mediaList.filter((media) => {

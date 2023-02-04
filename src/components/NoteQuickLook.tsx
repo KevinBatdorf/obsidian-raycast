@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 import { Note, Vault } from "../utils/interfaces";
 import { NoteActions, OpenNoteActions } from "../utils/actions";
-import { isNotePinned } from "../utils/pinNoteUtils";
 import { NoteAction } from "../utils/constants";
 import { filterContent, getNoteFileContent } from "../utils/utils";
 
@@ -20,7 +19,6 @@ export function NoteQuickLook(props: {
   let noteContent = note?.content;
   noteContent = filterContent(noteContent ?? "");
 
-  const [pinned, setPinned] = useState(note ? isNotePinned(note, vault) : false);
   const [content, setContent] = useState(noteContent);
 
   function reloadContent() {
@@ -38,9 +36,6 @@ export function NoteQuickLook(props: {
       actionCallback(action);
     }
     switch (+action) {
-      case NoteAction.Pin:
-        setPinned(!pinned);
-        break;
       case NoteAction.Delete:
         pop();
         break;
@@ -55,7 +50,7 @@ export function NoteQuickLook(props: {
   return (
     <Detail
       isLoading={note === undefined}
-      navigationTitle={showTitle ? (pinned ? "⭐ " + note?.title : note?.title) : ""}
+      navigationTitle={showTitle ? note?.title : ""}
       markdown={content}
       actions={
         note ? (

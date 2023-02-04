@@ -1,22 +1,15 @@
 import { Action, getPreferenceValues, Icon, Color, List, ActionPanel } from "@raycast/api";
 
-import React, { useState } from "react";
+import React from "react";
 
 import { AppendNoteForm } from "../components/AppendNoteForm";
 import { EditNote } from "../components/EditNote";
 import { SearchNotePreferences, Note, Vault } from "./interfaces";
-import { isNotePinned, pinNote, unpinNote } from "./pinNoteUtils";
+
 import { NoteQuickLook } from "../components/NoteQuickLook";
-import {
-  deleteNote,
-  appendSelectedTextTo,
-  getOpenPathInObsidianTarget,
-  vaultPluginCheck,
-  getCodeBlocks,
-} from "./utils";
+import { appendSelectedTextTo, getOpenPathInObsidianTarget, vaultPluginCheck, getCodeBlocks } from "./utils";
 import { NoteAction, ObsidianIconDynamicBold, PrimaryAction } from "./constants";
 import { NoteList } from "../components/NoteList/NoteList";
-import { useNotes } from "./cache";
 
 //--------------------------------------------------------------------------------
 // All actions for all commands should be defined here.
@@ -117,40 +110,14 @@ export function CopyObsidianURIAction(props: { note: Note }) {
   );
 }
 
-export function PinNoteAction(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
-  const { note, vault, actionCallback } = props;
-  const [pinned, setPinned] = useState(isNotePinned(note, vault));
-  return (
-    <Action
-      title={pinned ? "Unpin Note" : "Pin Note"}
-      shortcut={{ modifiers: ["opt"], key: "p" }}
-      onAction={() => {
-        if (pinned) {
-          unpinNote(note, vault);
-          setPinned(!pinned);
-          actionCallback(NoteAction.Pin);
-        } else {
-          pinNote(note, vault);
-          setPinned(!pinned);
-          actionCallback(NoteAction.Pin);
-        }
-      }}
-      icon={pinned ? Icon.XMarkCircle : Icon.Pin}
-    />
-  );
-}
-
-export function DeleteNoteAction(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
-  const { note, vault, actionCallback } = props;
+export function DeleteNoteAction(props: { actionCallback: (action: NoteAction) => void }) {
+  const { actionCallback } = props;
   return (
     <Action
       title="Delete Note"
       shortcut={{ modifiers: ["opt"], key: "d" }}
       onAction={async () => {
-        const deleted = await deleteNote(note, vault);
-        if (deleted) {
-          actionCallback(NoteAction.Delete);
-        }
+        actionCallback(NoteAction.Delete);
       }}
       icon={{ source: Icon.Trash, tintColor: Color.Red }}
     />
@@ -294,8 +261,7 @@ export function NoteActions(props: {
       <PasteNoteAction note={note} />
       <CopyMarkdownLinkAction note={note} />
       <CopyObsidianURIAction note={note} />
-      <PinNoteAction note={note} vault={vault} actionCallback={actionCallback} />
-      <DeleteNoteAction note={note} vault={vault} actionCallback={actionCallback} />
+      <DeleteNoteAction actionCallback={actionCallback} />
     </React.Fragment>
   );
 }
