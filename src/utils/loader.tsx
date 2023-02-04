@@ -3,11 +3,11 @@ import path from "path";
 
 import { AUDIO_FILE_EXTENSIONS, VIDEO_FILE_EXTENSIONS } from "./constants";
 import { Note, Vault, Media } from "./interfaces";
-import { getNoteFileContent, prefExcludedFolders, walkFilesHelper } from "./utils";
+import { getNoteFileContent, getUserIgnoreFilters, prefExcludedFolders, walkFilesHelper } from "./utils";
 import { tagsForString } from "./yaml";
 
 export class NoteLoader {
-  vaultPath: string;
+  vault: Vault;
 
   /**
    * Loads notes for a given vault from disk. cache.useNotes() is the preferred way of loading notes.
@@ -15,7 +15,7 @@ export class NoteLoader {
    * @param vault
    */
   constructor(vault: Vault) {
-    this.vaultPath = vault.path;
+    this.vault = vault;
   }
 
   /**
@@ -23,7 +23,7 @@ export class NoteLoader {
    * @returns A list of notes for the vault
    */
   loadNotes() {
-    console.log("Loading Notes for vault: " + this.vaultPath);
+    console.log("Loading Notes for vault: " + this.vault.path);
     const notes: Note[] = [];
     const files = this._getFiles();
 
@@ -56,7 +56,10 @@ export class NoteLoader {
    */
   _getFiles() {
     const exFolders = prefExcludedFolders();
-    const files = walkFilesHelper(this.vaultPath, exFolders, [".md"], []);
+    const userIgnoredFolders = getUserIgnoreFilters(this.vault);
+    exFolders.push(...userIgnoredFolders);
+    console.log(exFolders)
+    const files = walkFilesHelper(this.vault.path, exFolders, [".md"], []);
     return files;
   }
 }

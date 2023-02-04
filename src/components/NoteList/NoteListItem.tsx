@@ -27,7 +27,7 @@ export function NoteListItem(props: {
 }) {
   const { note, vault, pref, action } = props;
   const [content, setContent] = useState(note.content);
-  const [notes, dispatch, allNotes] = useContext(NoteListContext);
+  const [dispatch, allNotes] = useContext(NoteListContext);
 
   const noteHasBeenMoved = !fs.existsSync(note.path);
 

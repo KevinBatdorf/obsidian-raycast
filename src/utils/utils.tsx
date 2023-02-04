@@ -104,6 +104,16 @@ export function vaultPluginCheck(vaults: Vault[], plugin: string) {
   return [vaults, vaultsWithoutPlugin];
 }
 
+export function getUserIgnoreFilters(vault: Vault) {
+  const appJSONPath = vault.path + "/.obsidian/app.json";
+  if (!fs.existsSync(appJSONPath)) {
+    return [];
+  } else {
+    const appJSON = JSON.parse(fs.readFileSync(appJSONPath, "utf-8"));
+    return appJSON["userIgnoreFilters"] || [];
+  }
+}
+
 function getVaultNameFromPath(vaultPath: string): string {
   const name = vaultPath
     .split(fsPath.sep)
@@ -368,7 +378,10 @@ export function walkFilesHelper(dirPath: string, exFolders: string[], fileEnding
 }
 
 export function validFolder(folder: string, exFolders: string[]) {
-  for (const f of exFolders) {
+  for (let f of exFolders) {
+    if (f.endsWith("/")) {
+      f = f.slice(0, -1);
+    }
     if (folder.includes(f)) {
       return false;
     }
