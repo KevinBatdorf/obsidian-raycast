@@ -1,4 +1,4 @@
-import { List, ActionPanel } from "@raycast/api";
+import { List, ActionPanel, confirmAlert, Icon } from "@raycast/api";
 import React, { useContext, useState } from "react";
 import fs from "fs";
 
@@ -46,10 +46,17 @@ export function NoteListItem(props: {
     note.tags = newTags;
   }
 
-  function actionCallback(action: NoteAction) {
+  async function actionCallback(action: NoteAction) {
     switch (+action) {
       case NoteAction.Delete:
-        dispatch({ type: NoteReducerActionType.Delete, payload: { note: note, vault: vault } });
+        const options = {
+          title: "Delete Note",
+          message: 'Are you sure you want to delete the note: "' + note.title + '"?',
+          icon: Icon.ExclamationMark,
+        };
+        if (await confirmAlert(options)) {
+          dispatch({ type: NoteReducerActionType.Delete, payload: { note: note, vault: vault } });
+        }
         break;
       case NoteAction.Edit:
         reloadContent();

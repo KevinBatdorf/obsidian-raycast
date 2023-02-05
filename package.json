@@ -198,6 +198,24 @@
       "mode": "view",
       "preferences": [
         {
+          "name": "blankNote",
+          "type": "checkbox",
+          "label": "Blank Note",
+          "title": "Blank Note",
+          "required": false,
+          "description": "Create a blank note",
+          "default": false
+        },
+        {
+          "name": "openOnCreate",
+          "type": "checkbox",
+          "title": "Open Note on Creation",
+          "label": "Open Note on Creation",
+          "default": true,
+          "required": false,
+          "description": "Open the created note in Obsidian"
+        },
+        {
           "name": "prefPath",
           "type": "textfield",
           "placeholder": "path/to/note",
@@ -248,15 +266,6 @@
           "required": false,
           "description": "The tags which will be suggested on note creation",
           "default": ""
-        },
-        {
-          "name": "openOnCreate",
-          "type": "checkbox",
-          "title": "Open Note on Creation",
-          "label": "Open Note on Creation",
-          "default": true,
-          "required": false,
-          "description": "Open the created note in Obsidian"
         },
         {
           "name": "folderActions",

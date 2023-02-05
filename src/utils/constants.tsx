@@ -119,10 +119,10 @@ export const AUDIO_FILE_EXTENSIONS = [
   "xm",
 ];
 
-export const IMAGE_SIZE_MAPPING: Map<string, Grid.ItemSize> = new Map([
-  ["small", Grid.ItemSize.Small],
-  ["large", Grid.ItemSize.Large],
-  ["medium", Grid.ItemSize.Medium],
+export const IMAGE_SIZE_MAPPING: Map<string, number> = new Map([
+  ["small", 8],
+  ["large", 3],
+  ["medium", 5],
 ]);
 
 export const ObsidianIconWhiteBold = { source: "obsidian-icon-white-bold.svg" };

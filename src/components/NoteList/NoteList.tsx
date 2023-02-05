@@ -1,4 +1,4 @@
-import { List, getPreferenceValues } from "@raycast/api";
+import { List, getPreferenceValues, ActionPanel, Action } from "@raycast/api";
 import { useState, useMemo, useContext } from "react";
 
 import { SearchNotePreferences, NoteListProps } from "../../utils/interfaces";
@@ -7,7 +7,7 @@ import { tagsForNotes } from "../../utils/yaml";
 import { NoteListItem } from "./NoteListItem";
 import { NoteListDropdown } from "./NoteListDropdown";
 import { filterNotes } from "../../utils/search";
-import { NoteListContext } from "../../utils/utils";
+import { getObsidianTarget, NoteListContext, ObsidianTargetType } from "../../utils/utils";
 
 export function NoteList(props: NoteListProps) {
   const [dispatch, allNotes] = useContext(NoteListContext);
@@ -22,14 +22,28 @@ export function NoteList(props: NoteListProps) {
 
   const tags = tagsForNotes(allNotes);
 
-  let isNotesUndefined = notes === undefined;
-
-  if (notes !== undefined) {
-    isNotesUndefined = notes.length == 0;
-  }
-
-  if (isLoading !== undefined) {
-    isNotesUndefined = isLoading;
+  const isNotesUndefined = notes === undefined;
+  if (_notes.length == 0) {
+    return (
+      <List
+        navigationTitle={title}
+        onSearchTextChange={(value) => {
+          setSearchText(value);
+        }}
+      >
+        <List.Item
+          title={"Create Note " + "'" + searchText + "'"}
+          actions={
+            <ActionPanel>
+              <Action.Open
+                title="Create Note"
+                target={getObsidianTarget({ type: ObsidianTargetType.NewNote, vault: vault, name: searchText })}
+              />
+            </ActionPanel>
+          }
+        />
+      </List>
+    );
   }
 
   return (

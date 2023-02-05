@@ -177,23 +177,10 @@ export function useObsidianVaults(): ObsidianVaultsState {
   return state;
 }
 
-export async function deleteNote(note: Note) {
-  const options = {
-    title: "Delete Note",
-    message: 'Are you sure you want to delete the note: "' + note.title + '"?',
-    icon: Icon.ExclamationMark,
-  };
-  if (await confirmAlert(options)) {
-    try {
-      fs.unlinkSync(note.path);
-      showToast({ title: "Deleted Note", style: Toast.Style.Success });
-      return true;
-    } catch (error) {
-      return false;
-    }
-  } else {
-    return false;
-  }
+export function deleteNote(note: Note) {
+  fs.unlinkSync(note.path);
+  showToast({ title: "Deleted Note", style: Toast.Style.Success });
+  return true;
 }
 
 export function sortByAlphabet(a: string, b: string) {
@@ -302,31 +289,50 @@ export async function appendSelectedTextTo(note: Note) {
   }
 }
 
-export const getOpenVaultTarget = (vault: Vault) => {
-  return "obsidian://open?vault=" + encodeURIComponent(vault.name);
-};
+export enum ObsidianTargetType {
+  OpenVault = "obsidian://open?vault=",
+  OpenPath = "obsidian://open?path=",
+  DailyNote = "obsidian://advanced-uri?daily=true&vault=",
+  DailyNoteAppend = "obsidian://advanced-uri?daily=true&mode=append&openmode=silent",
+  NewNote = "obsidian://new?vault=",
+}
 
-export const getOpenPathInObsidianTarget = (path: string) => {
-  return "obsidian://open?path=" + encodeURIComponent(path);
-};
+export type ObsidianTarget =
+  | { type: ObsidianTargetType.OpenVault; vault: Vault }
+  | { type: ObsidianTargetType.OpenPath; path: string }
+  | { type: ObsidianTargetType.DailyNote; vault: Vault }
+  | { type: ObsidianTargetType.DailyNoteAppend; vault: Vault; text: string; heading?: string }
+  | { type: ObsidianTargetType.NewNote; vault: Vault; name: string; content?: string };
 
-export const getDailyNoteTarget = (vault: Vault) => {
-  return "obsidian://advanced-uri?vault=" + encodeURIComponent(vault.name) + "&daily=true";
-};
-
-export const getDailyNoteAppendTarget = (vault: Vault, text: string, heading: string | undefined) => {
-  const headingParam = heading ? "&heading=" + encodeURIComponent(heading) : "";
-
-  return (
-    "obsidian://advanced-uri?daily=true&mode=append" +
-    "&data=" +
-    encodeURIComponent(text) +
-    "&vault=" +
-    encodeURIComponent(vault.name) +
-    headingParam +
-    "&openmode=silent"
-  );
-};
+export function getObsidianTarget(target: ObsidianTarget) {
+  switch (target.type) {
+    case ObsidianTargetType.OpenVault:
+      return ObsidianTargetType.OpenVault + encodeURIComponent(target.vault.name);
+    case ObsidianTargetType.OpenPath:
+      return ObsidianTargetType.OpenPath + encodeURIComponent(target.path);
+    case ObsidianTargetType.DailyNote:
+      return ObsidianTargetType.DailyNote + encodeURIComponent(target.vault.name);
+    case ObsidianTargetType.DailyNoteAppend:
+      const headingParam = target.heading ? "&heading=" + encodeURIComponent(target.heading) : "";
+      return (
+        ObsidianTargetType.DailyNoteAppend +
+        "&data=" +
+        encodeURIComponent(target.text) +
+        "&vault=" +
+        encodeURIComponent(target.vault.name) +
+        headingParam
+      );
+    case ObsidianTargetType.NewNote:
+      return (
+        ObsidianTargetType.NewNote +
+        encodeURIComponent(target.vault.name) +
+        "&name=" +
+        encodeURIComponent(target.name) +
+        "&content=" +
+        encodeURIComponent(target.content || "")
+      );
+  }
+}
 
 export function getListOfExtensions(media: Media[]) {
   const foundExtensions: string[] = [];

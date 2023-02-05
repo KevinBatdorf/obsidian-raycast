@@ -3,7 +3,13 @@ import { useEffect, useState } from "react";
 import AdvancedURIPluginNotInstalled from "./components/Notifications/AdvancedURIPluginNotInstalled";
 import { NoVaultFoundMessage } from "./components/Notifications/NoVaultFoundMessage";
 import { vaultsWithoutAdvancedURIToast } from "./components/Toasts";
-import { applyTemplates, getDailyNoteAppendTarget, useObsidianVaults, vaultPluginCheck } from "./utils/utils";
+import {
+  applyTemplates,
+  getObsidianTarget,
+  ObsidianTargetType,
+  useObsidianVaults,
+  vaultPluginCheck,
+} from "./utils/utils";
 
 interface DailyNoteAppendArgs {
   text: string;
@@ -53,8 +59,13 @@ export default function DailyNoteAppend(props: { arguments: DailyNoteAppendArgs 
   // If there's a configured vault, or only one vault, use that
   if (selectedVault || vaultsWithPlugin.length == 1) {
     const vaultToUse = selectedVault || vaultsWithPlugin[0];
-    const uri = getDailyNoteAppendTarget(vaultToUse, content, heading);
-    open(uri);
+    const target = getObsidianTarget({
+      type: ObsidianTargetType.DailyNoteAppend,
+      vault: vaultToUse,
+      text: content,
+      heading: heading,
+    });
+    open(target);
     popToRoot();
     closeMainWindow();
   }
@@ -68,7 +79,15 @@ export default function DailyNoteAppend(props: { arguments: DailyNoteAppendArgs 
           key={vault.key}
           actions={
             <ActionPanel>
-              <Action.Open title="Append to Daily Note" target={getDailyNoteAppendTarget(vault, content, heading)} />
+              <Action.Open
+                title="Append to Daily Note"
+                target={getObsidianTarget({
+                  type: ObsidianTargetType.DailyNoteAppend,
+                  vault: vault,
+                  text: content,
+                  heading: heading,
+                })}
+              />
             </ActionPanel>
           }
         />

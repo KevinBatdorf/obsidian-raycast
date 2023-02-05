@@ -22,6 +22,7 @@ export interface AppendNotePreferences {
   appendSelectedTemplate: string;
 }
 export interface NoteFormPreferences extends GlobalPreferences {
+  blankNote: boolean;
   prefPath: string;
   prefNoteName: string;
   prefNoteContent: string;

@@ -1,15 +1,7 @@
-import { Icon, MenuBarExtra, open, Clipboard } from "@raycast/api";
+import { MenuBarExtra, open } from "@raycast/api";
 import { ObsidianIconDynamicBold } from "./utils/constants";
 import { Vault } from "./utils/interfaces";
-import {
-  getDailyNoteTarget,
-  getOpenPathInObsidianTarget,
-  sortNoteByAlphabet,
-  useObsidianVaults,
-  vaultPluginCheck,
-} from "./utils/utils";
-
-
+import { getObsidianTarget, ObsidianTargetType, useObsidianVaults, vaultPluginCheck } from "./utils/utils";
 
 function DailyNoteVaultSelection(props: { vaults: Vault[] }) {
   const [withPlugin, _] = vaultPluginCheck(props.vaults, "obsidian-advanced-uri");
@@ -20,7 +12,7 @@ function DailyNoteVaultSelection(props: { vaults: Vault[] }) {
           title={vault.name}
           key={vault.path + "Daily Note"}
           tooltip="Open Daily Note"
-          onAction={() => open(getDailyNoteTarget(vault))}
+          onAction={() => open(getObsidianTarget({ type: ObsidianTargetType.DailyNote, vault: vault }))}
         />
       ))}
     </MenuBarExtra.Submenu>
@@ -35,7 +27,7 @@ function OpenVaultSelection(props: { vaults: Vault[] }) {
           title={vault.name}
           key={vault.path}
           tooltip="Open Vault"
-          onAction={() => open(getOpenPathInObsidianTarget(vault.path))}
+          onAction={() => open(getObsidianTarget({ type: ObsidianTargetType.OpenVault, vault: vault }))}
         />
       ))}
     </MenuBarExtra.Submenu>
@@ -44,7 +36,7 @@ function OpenVaultSelection(props: { vaults: Vault[] }) {
 
 function ObsidianMenuBar(props: { vaults: Vault[] }) {
   return (
-    <MenuBarExtra icon={ObsidianIconDynamicBold} tooltip="Obsidian">      
+    <MenuBarExtra icon={ObsidianIconDynamicBold} tooltip="Obsidian">
       <DailyNoteVaultSelection vaults={props.vaults}></DailyNoteVaultSelection>
       <OpenVaultSelection vaults={props.vaults}></OpenVaultSelection>
     </MenuBarExtra>

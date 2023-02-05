@@ -31,9 +31,10 @@ export function MediaGrid(props: { vault: Vault; searchArguments: MediaSearchArg
 
   return (
     <Grid
-      inset={Grid.Inset.Small}
-      itemSize={IMAGE_SIZE_MAPPING.get(imageSize)}
+      fit={Grid.Fit.Fill}    
+      columns={IMAGE_SIZE_MAPPING.get(imageSize)}
       isLoading={mediaList.length == 0 && !ready}
+      aspectRatio={"4/3"}
       searchText={searchText}
       onSearchTextChange={setSearchText}
       searchBarAccessory={

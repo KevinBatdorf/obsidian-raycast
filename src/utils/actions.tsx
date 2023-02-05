@@ -7,7 +7,7 @@ import { EditNote } from "../components/EditNote";
 import { SearchNotePreferences, Note, Vault } from "./interfaces";
 
 import { NoteQuickLook } from "../components/NoteQuickLook";
-import { appendSelectedTextTo, getOpenPathInObsidianTarget, vaultPluginCheck, getCodeBlocks } from "./utils";
+import { appendSelectedTextTo, getObsidianTarget, vaultPluginCheck, getCodeBlocks, ObsidianTargetType } from "./utils";
 import { NoteAction, ObsidianIconDynamicBold, PrimaryAction } from "./constants";
 import { NoteList } from "../components/NoteList/NoteList";
 
@@ -86,12 +86,13 @@ export function PasteNoteAction(props: { note: Note }) {
 
 export function CopyMarkdownLinkAction(props: { note: Note }) {
   const { note } = props;
+  const target = getObsidianTarget({ type: ObsidianTargetType.OpenPath, path: note.path });
 
   return (
     <Action.CopyToClipboard
       title="Copy Markdown Link"
       icon={Icon.Link}
-      content={`[${note.title}](${getOpenPathInObsidianTarget(note.path)})`}
+      content={`[${note.title}](${target})`}
       shortcut={{ modifiers: ["opt"], key: "l" }}
     />
   );
@@ -99,12 +100,13 @@ export function CopyMarkdownLinkAction(props: { note: Note }) {
 
 export function CopyObsidianURIAction(props: { note: Note }) {
   const { note } = props;
+  const target = getObsidianTarget({ type: ObsidianTargetType.OpenPath, path: note.path });
 
   return (
     <Action.CopyToClipboard
       title="Copy Obsidian URI"
       icon={Icon.Link}
-      content={getOpenPathInObsidianTarget(note.path)}
+      content={target}
       shortcut={{ modifiers: ["opt"], key: "u" }}
     />
   );
@@ -144,9 +146,8 @@ export function QuickLookAction(props: {
 
 export function OpenPathInObsidianAction(props: { path: string }) {
   const { path } = props;
-  return (
-    <Action.Open title="Open in Obsidian" target={getOpenPathInObsidianTarget(path)} icon={ObsidianIconDynamicBold} />
-  );
+  const target = getObsidianTarget({ type: ObsidianTargetType.OpenPath, path: path });
+  return <Action.Open title="Open in Obsidian" target={target} icon={ObsidianIconDynamicBold} />;
 }
 
 export function OpenNoteInObsidianNewPaneAction(props: { note: Note; vault: Vault }) {

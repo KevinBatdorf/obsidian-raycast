@@ -58,7 +58,6 @@ export class NoteLoader {
     const exFolders = prefExcludedFolders();
     const userIgnoredFolders = getUserIgnoreFilters(this.vault);
     exFolders.push(...userIgnoredFolders);
-    console.log(exFolders)
     const files = walkFilesHelper(this.vault.path, exFolders, [".md"], []);
     return files;
   }
