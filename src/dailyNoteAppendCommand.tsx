@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import AdvancedURIPluginNotInstalled from "./components/Notifications/AdvancedURIPluginNotInstalled";
 import { NoVaultFoundMessage } from "./components/Notifications/NoVaultFoundMessage";
 import { vaultsWithoutAdvancedURIToast } from "./components/Toasts";
+import { DailyNoteAppendPreferences } from "./utils/preferences";
 import {
   applyTemplates,
   getObsidianTarget,
@@ -15,16 +16,10 @@ interface DailyNoteAppendArgs {
   text: string;
 }
 
-interface Preferences {
-  appendTemplate?: string;
-  vaultName?: string;
-  heading?: string;
-}
-
 export default function DailyNoteAppend(props: { arguments: DailyNoteAppendArgs }) {
   const { vaults, ready } = useObsidianVaults();
   const { text } = props.arguments;
-  const { appendTemplate, heading, vaultName } = getPreferenceValues<Preferences>();
+  const { appendTemplate, heading, vaultName, silent } = getPreferenceValues<DailyNoteAppendPreferences>();
   const [vaultsWithPlugin, vaultsWithoutPlugin] = vaultPluginCheck(vaults, "obsidian-advanced-uri");
   const [content, setContent] = useState("");
   useEffect(() => {
@@ -64,6 +59,7 @@ export default function DailyNoteAppend(props: { arguments: DailyNoteAppendArgs 
       vault: vaultToUse,
       text: content,
       heading: heading,
+      silent: silent,
     });
     open(target);
     popToRoot();

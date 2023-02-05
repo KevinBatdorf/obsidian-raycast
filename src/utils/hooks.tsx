@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getNotesFromCache } from "./cache";
+import { getNotesFromCache } from "./data/cache";
 import { Note, Vault } from "./interfaces";
 
 export function useNotes(vault: Vault) {

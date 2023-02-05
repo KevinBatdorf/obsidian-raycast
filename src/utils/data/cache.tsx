@@ -1,6 +1,6 @@
 import { Cache } from "@raycast/api";
-import { BYTES_PER_MEGABYTE } from "./constants";
-import { Note, Vault } from "./interfaces";
+import { BYTES_PER_MEGABYTE } from "../constants";
+import { Note, Vault } from "../interfaces";
 import { NoteLoader } from "./loader";
 
 //--------------------------------------------------------------------------------

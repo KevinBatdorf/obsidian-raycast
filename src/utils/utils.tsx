@@ -1,13 +1,4 @@
-import {
-  getPreferenceValues,
-  Clipboard,
-  Icon,
-  Toast,
-  confirmAlert,
-  showToast,
-  getSelectedText,
-  environment,
-} from "@raycast/api";
+import { getPreferenceValues, Clipboard, Toast, showToast, getSelectedText } from "@raycast/api";
 
 import fs from "fs";
 import fsPath from "path";
@@ -16,17 +7,7 @@ import { readFile } from "fs/promises";
 import { homedir } from "os";
 import { createContext, useEffect, useMemo, useState } from "react";
 
-import {
-  Note,
-  ObsidianJSON,
-  ObsidianVaultsState,
-  GlobalPreferences,
-  SearchNotePreferences,
-  Vault,
-  MediaState,
-  Media,
-  CodeBlock,
-} from "../utils/interfaces";
+import { Note, ObsidianJSON, ObsidianVaultsState, Vault, MediaState, Media, CodeBlock } from "../utils/interfaces";
 
 import {
   BYTES_PER_KILOBYTE,
@@ -35,12 +16,12 @@ import {
   LATEX_INLINE_REGEX,
   LATEX_REGEX,
   MONTH_NUMBER_TO_STRING,
-  NoteAction,
 } from "./constants";
-import { useNotes } from "./hooks";
-import { MediaLoader } from "./loader";
-import { URLSearchParams } from "url";
-import { NoteReducerAction, NoteReducerActionType } from "./reducers";
+
+import { MediaLoader } from "./data/loader";
+
+import { NoteReducerAction } from "./data/reducers";
+import { GlobalPreferences, SearchNotePreferences } from "./preferences";
 
 export function getCodeBlocks(content: string): CodeBlock[] {
   const codeBlockMatches = content.matchAll(CODE_BLOCK_REGEX);
@@ -293,7 +274,7 @@ export enum ObsidianTargetType {
   OpenVault = "obsidian://open?vault=",
   OpenPath = "obsidian://open?path=",
   DailyNote = "obsidian://advanced-uri?daily=true&vault=",
-  DailyNoteAppend = "obsidian://advanced-uri?daily=true&mode=append&openmode=silent",
+  DailyNoteAppend = "obsidian://advanced-uri?daily=true&mode=append",
   NewNote = "obsidian://new?vault=",
 }
 
@@ -301,7 +282,7 @@ export type ObsidianTarget =
   | { type: ObsidianTargetType.OpenVault; vault: Vault }
   | { type: ObsidianTargetType.OpenPath; path: string }
   | { type: ObsidianTargetType.DailyNote; vault: Vault }
-  | { type: ObsidianTargetType.DailyNoteAppend; vault: Vault; text: string; heading?: string }
+  | { type: ObsidianTargetType.DailyNoteAppend; vault: Vault; text: string; heading?: string; silent?: boolean }
   | { type: ObsidianTargetType.NewNote; vault: Vault; name: string; content?: string };
 
 export function getObsidianTarget(target: ObsidianTarget) {
@@ -320,7 +301,8 @@ export function getObsidianTarget(target: ObsidianTarget) {
         encodeURIComponent(target.text) +
         "&vault=" +
         encodeURIComponent(target.vault.name) +
-        headingParam
+        headingParam +
+        (target.silent ? "&openmode=silent" : "")
       );
     case ObsidianTargetType.NewNote:
       return (

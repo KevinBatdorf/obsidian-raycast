@@ -1,18 +1,19 @@
 import { List, getPreferenceValues, ActionPanel, Action } from "@raycast/api";
 import { useState, useMemo, useContext } from "react";
 
-import { SearchNotePreferences, NoteListProps } from "../../utils/interfaces";
+import { NoteListProps } from "../../utils/interfaces";
 import { MAX_RENDERED_NOTES } from "../../utils/constants";
 import { tagsForNotes } from "../../utils/yaml";
 import { NoteListItem } from "./NoteListItem";
 import { NoteListDropdown } from "./NoteListDropdown";
 import { filterNotes } from "../../utils/search";
 import { getObsidianTarget, NoteListContext, ObsidianTargetType } from "../../utils/utils";
+import { SearchNotePreferences } from "../../utils/preferences";
 
 export function NoteList(props: NoteListProps) {
-  const [dispatch, allNotes] = useContext(NoteListContext);
+  const [_, allNotes] = useContext(NoteListContext);
 
-  const { notes, vault, isLoading, title, searchArguments, action } = props;
+  const { notes, vault, title, searchArguments, action } = props;
 
   const pref = getPreferenceValues<SearchNotePreferences>();
 
@@ -32,7 +33,7 @@ export function NoteList(props: NoteListProps) {
         }}
       >
         <List.Item
-          title={"Create Note " + "'" + searchText + "'"}
+          title={`🗒️ Create Note "${searchText}"`}
           actions={
             <ActionPanel>
               <Action.Open

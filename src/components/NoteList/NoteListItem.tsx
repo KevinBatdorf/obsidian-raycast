@@ -2,7 +2,7 @@ import { List, ActionPanel, confirmAlert, Icon } from "@raycast/api";
 import React, { useContext, useState } from "react";
 import fs from "fs";
 
-import { Note, Vault, SearchNotePreferences } from "../../utils/interfaces";
+import { Note, Vault } from "../../utils/interfaces";
 import {
   readingTime,
   wordCount,
@@ -14,9 +14,10 @@ import {
   NoteListContext,
 } from "../../utils/utils";
 import { NoteAction } from "../../utils/constants";
-import { renewCache, updateNoteInCache } from "../../utils/cache";
+import { renewCache, updateNoteInCache } from "../../utils/data/cache";
 import { tagsForNotes, yamlPropertyForString } from "../../utils/yaml";
-import { NoteReducerActionType } from "../../utils/reducers";
+import { NoteReducerActionType } from "../../utils/data/reducers";
+import { SearchNotePreferences } from "../../utils/preferences";
 
 export function NoteListItem(props: {
   note: Note;
@@ -27,7 +28,7 @@ export function NoteListItem(props: {
 }) {
   const { note, vault, pref, action } = props;
   const [content, setContent] = useState(note.content);
-  const [dispatch, allNotes] = useContext(NoteListContext);
+  const [dispatch, _] = useContext(NoteListContext);
 
   const noteHasBeenMoved = !fs.existsSync(note.path);
 

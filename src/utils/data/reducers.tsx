@@ -1,6 +1,6 @@
 import { deleteNoteFromCache } from "./cache";
-import { Note, Vault } from "./interfaces";
-import { deleteNote } from "./utils";
+import { Note, Vault } from "../interfaces";
+import { deleteNote } from "../utils";
 
 export enum NoteReducerActionType {
   Set,

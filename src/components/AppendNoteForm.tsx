@@ -1,7 +1,8 @@
 import { ActionPanel, Form, Action, useNavigation, showToast, Toast, getPreferenceValues } from "@raycast/api";
 import fs from "fs";
 import { NoteAction } from "../utils/constants";
-import { Note, SearchNotePreferences } from "../utils/interfaces";
+import { Note } from "../utils/interfaces";
+import { SearchNotePreferences } from "../utils/preferences";
 import { applyTemplates } from "../utils/utils";
 
 interface FormValue {

@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useReducer, useState } from "react";
+import React, { useReducer } from "react";
 
 import { useNotes } from "../../utils/hooks";
 import { Note, Vault, SearchArguments } from "../../utils/interfaces";
 import { NoteList } from "./NoteList";
 import { NoteActions, OpenNoteActions } from "../../utils/actions";
 import { NoteAction } from "../../utils/constants";
-import { NoteReducer } from "../../utils/reducers";
+import { NoteReducer } from "../../utils/data/reducers";
 import { NoteListContext } from "../../utils/utils";
 
 export function NoteListObsidian(props: { vault: Vault; showTitle: boolean; searchArguments: SearchArguments }) {
@@ -17,7 +17,7 @@ export function NoteListObsidian(props: { vault: Vault; showTitle: boolean; sear
   return (
     <NoteListContext.Provider value={[dispatch, allNotes]}>
       <NoteList
-        title={showTitle ? "Search Note in " + vault.name : ""}
+        title={showTitle ? `Search Note in ${vault.name}` : ""}
         notes={currentViewNoteList}
         vault={vault}
         searchArguments={searchArguments}

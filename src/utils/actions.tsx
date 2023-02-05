@@ -4,12 +4,13 @@ import React from "react";
 
 import { AppendNoteForm } from "../components/AppendNoteForm";
 import { EditNote } from "../components/EditNote";
-import { SearchNotePreferences, Note, Vault } from "./interfaces";
+import { Note, Vault } from "./interfaces";
 
 import { NoteQuickLook } from "../components/NoteQuickLook";
 import { appendSelectedTextTo, getObsidianTarget, vaultPluginCheck, getCodeBlocks, ObsidianTargetType } from "./utils";
 import { NoteAction, ObsidianIconDynamicBold, PrimaryAction } from "./constants";
 import { NoteList } from "../components/NoteList/NoteList";
+import { SearchNotePreferences } from "./preferences";
 
 //--------------------------------------------------------------------------------
 // All actions for all commands should be defined here.

@@ -1,10 +1,10 @@
 import { Icon } from "@raycast/api";
 import path from "path";
 
-import { AUDIO_FILE_EXTENSIONS, VIDEO_FILE_EXTENSIONS } from "./constants";
-import { Note, Vault, Media } from "./interfaces";
-import { getNoteFileContent, getUserIgnoreFilters, prefExcludedFolders, walkFilesHelper } from "./utils";
-import { tagsForString } from "./yaml";
+import { AUDIO_FILE_EXTENSIONS, VIDEO_FILE_EXTENSIONS } from "../constants";
+import { Note, Vault, Media } from "../interfaces";
+import { getNoteFileContent, getUserIgnoreFilters, prefExcludedFolders, walkFilesHelper } from "../utils";
+import { tagsForString } from "../yaml";
 
 export class NoteLoader {
   vault: Vault;

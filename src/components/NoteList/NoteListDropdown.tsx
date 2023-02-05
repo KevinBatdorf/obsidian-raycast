@@ -2,7 +2,7 @@ import { SearchArguments } from "../../utils/interfaces";
 import { List } from "@raycast/api";
 import React, { useContext } from "react";
 import { NoteListContext } from "../../utils/utils";
-import { NoteReducerActionType } from "../../utils/reducers";
+import { NoteReducerActionType } from "../../utils/data/reducers";
 
 export function NoteListDropdown(props: { tags: string[]; searchArguments: SearchArguments }) {
   const [dispatch, allNotes] = useContext(NoteListContext);

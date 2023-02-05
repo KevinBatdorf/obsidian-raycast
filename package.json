@@ -180,6 +180,15 @@
           "title": "Name of heading in note in which to append",
           "required": false,
           "description": "If no heading is set, text will be appended to the end of the daily note"
+        },
+        {
+          "name": "silent",
+          "type": "checkbox",
+          "label": "Silent Mode",
+          "title": "Silent Mode",
+          "required": false,
+          "description": "Don't open daily note when appending to the daily note.",
+          "default": true
         }
       ]
     },
