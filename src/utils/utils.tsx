@@ -95,6 +95,45 @@ export function getUserIgnoreFilters(vault: Vault) {
   }
 }
 
+export function getStarredJSON(vault: Vault) {
+  const starredNotesPath = vault.path + "/.obsidian/starred.json";
+  if (!fs.existsSync(starredNotesPath)) {
+    return [];
+  } else {
+    return JSON.parse(fs.readFileSync(starredNotesPath, "utf-8"))["items"] || [];
+  }
+}
+
+export function writeToStarredJSON(vault: Vault, starredNotes: any) {
+  const starredNotesPath = vault.path + "/.obsidian/starred.json";
+  fs.writeFileSync(starredNotesPath, JSON.stringify({ items: starredNotes }));
+}
+
+export function getStarredNotePaths(vault: Vault) {
+  const starredNotes = getStarredJSON(vault);
+  return starredNotes.map((note: { type: string; title: string; path: string }) => note.path);
+}
+
+export function starNote(vault: Vault, note: Note) {
+  const starredNotes = getStarredJSON(vault);
+  const starredNote = {
+    type: "file",
+    title: note.title,
+    path: note.path.split(vault.path)[1].slice(1),
+  };
+  starredNotes.push(starredNote);
+  writeToStarredJSON(vault, starredNotes);
+}
+
+export function unstarNote(vault: Vault, note: Note) {
+  const starredNotes = getStarredJSON(vault);
+  const index = starredNotes.findIndex(
+    (starred: { type: string; title: string; path: string }) => starred.path === note.path.split(vault.path)[1].slice(1)
+  );
+  starredNotes.splice(index, 1);
+  writeToStarredJSON(vault, starredNotes);
+}
+
 function getVaultNameFromPath(vaultPath: string): string {
   const name = vaultPath
     .split(fsPath.sep)

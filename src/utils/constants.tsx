@@ -13,6 +13,8 @@ export enum NoteAction {
   Edit,
   Delete,
   Append,
+  Star,
+  Unstar,
 }
 
 export enum PrimaryAction {

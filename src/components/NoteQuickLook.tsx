@@ -1,20 +1,12 @@
-import { Detail, ActionPanel, useNavigation } from "@raycast/api";
+import { Detail, ActionPanel } from "@raycast/api";
 import { useEffect, useState } from "react";
 
 import { Note, Vault } from "../utils/interfaces";
 import { NoteActions, OpenNoteActions } from "../utils/actions";
-import { NoteAction } from "../utils/constants";
 import { filterContent, getNoteFileContent } from "../utils/utils";
 
-export function NoteQuickLook(props: {
-  showTitle: boolean;
-  note: Note | undefined;
-  notes: Note[];
-  vault: Vault;
-  actionCallback?: (action: NoteAction) => void;
-}) {
-  const { note, notes, showTitle, vault, actionCallback } = props;
-  const { pop } = useNavigation();
+export function NoteQuickLook(props: { showTitle: boolean; note: Note; notes: Note[]; vault: Vault }) {
+  const { note, notes, showTitle, vault } = props;
 
   let noteContent = note?.content;
   noteContent = filterContent(noteContent ?? "");
@@ -31,34 +23,18 @@ export function NoteQuickLook(props: {
 
   useEffect(reloadContent, [note]);
 
-  function quickLookActionCallback(action: NoteAction, value: any = undefined) {
-    if (actionCallback) {
-      actionCallback(action);
-    }
-    switch (+action) {
-      case NoteAction.Delete:
-        pop();
-        break;
-      case NoteAction.Edit:
-        reloadContent();
-        break;
-      case NoteAction.Append:
-        reloadContent();
-    }
-  }
+  const title = note.starred ? `⭐️ ${note.title}` : note.title;
 
   return (
     <Detail
       isLoading={note === undefined}
-      navigationTitle={showTitle ? note?.title : ""}
+      navigationTitle={showTitle ? title : ""}
       markdown={content}
       actions={
-        note ? (
-          <ActionPanel>
-            <OpenNoteActions note={note} notes={notes} vault={vault} actionCallback={quickLookActionCallback} />
-            <NoteActions note={note} notes={notes} vault={vault} actionCallback={quickLookActionCallback} />
-          </ActionPanel>
-        ) : null
+        <ActionPanel>
+          <OpenNoteActions note={note} notes={notes} vault={vault} />
+          <NoteActions note={note} notes={notes} vault={vault} />
+        </ActionPanel>
       }
     />
   );

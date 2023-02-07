@@ -1,5 +1,4 @@
 import { Image } from "@raycast/api";
-import { NoteAction } from "./constants";
 
 export interface Vault {
   name: string;
@@ -12,6 +11,7 @@ export interface Note {
   path: string;
   tags: string[];
   content: string;
+  starred: boolean;
 }
 
 export interface CodeBlock {
@@ -67,7 +67,7 @@ export interface NoteListProps {
   notes: Note[];
   isLoading?: boolean;
   searchArguments: SearchArguments;
-  action?: (note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => React.ReactFragment;
+  action?: (note: Note, vault: Vault) => React.ReactFragment;
   onDelete?: (note: Note, vault: Vault) => void;
   onSearchChange?: (search: string) => void;
 }

@@ -1,16 +1,26 @@
-import { Action, getPreferenceValues, Icon, Color, List, ActionPanel } from "@raycast/api";
+import { Action, getPreferenceValues, Icon, Color, List, ActionPanel, confirmAlert } from "@raycast/api";
 
-import React from "react";
+import React, { useContext } from "react";
 
 import { AppendNoteForm } from "../components/AppendNoteForm";
 import { EditNote } from "../components/EditNote";
 import { Note, Vault } from "./interfaces";
 
 import { NoteQuickLook } from "../components/NoteQuickLook";
-import { appendSelectedTextTo, getObsidianTarget, vaultPluginCheck, getCodeBlocks, ObsidianTargetType } from "./utils";
+import {
+  appendSelectedTextTo,
+  getObsidianTarget,
+  vaultPluginCheck,
+  getCodeBlocks,
+  ObsidianTargetType,
+  starNote,
+  unstarNote,
+  NoteListContext,
+} from "./utils";
 import { NoteAction, ObsidianIconDynamicBold, PrimaryAction } from "./constants";
 import { NoteList } from "../components/NoteList/NoteList";
 import { SearchNotePreferences } from "./preferences";
+import { NoteReducerActionType } from "./data/reducers";
 
 //--------------------------------------------------------------------------------
 // All actions for all commands should be defined here.
@@ -28,32 +38,37 @@ export function ShowPathInFinderAction(props: { path: string }) {
   );
 }
 
-export function EditNoteAction(props: { note: Note; vault: Vault; actionCallback: (action: NoteAction) => void }) {
-  const { note, vault, actionCallback } = props;
+export function EditNoteAction(props: { note: Note; vault: Vault }) {
+  const { note, vault } = props;
+  const [dispatch, _] = useContext(NoteListContext);
+
   return (
     <Action.Push
       title="Edit Note"
-      target={<EditNote note={note} vault={vault} actionCallback={actionCallback} />}
+      target={<EditNote note={note} vault={vault} dispatch={dispatch} />}
       shortcut={{ modifiers: ["opt"], key: "e" }}
       icon={Icon.Pencil}
     />
   );
 }
 
-export function AppendToNoteAction(props: { note: Note; actionCallback: (action: NoteAction) => void }) {
-  const { note, actionCallback } = props;
+export function AppendToNoteAction(props: { note: Note; vault: Vault }) {
+  const { note, vault } = props;
+  const [dispatch, _] = useContext(NoteListContext);
+
   return (
     <Action.Push
       title="Append to Note"
-      target={<AppendNoteForm note={note} actionCallback={actionCallback} />}
+      target={<AppendNoteForm note={note} vault={vault} dispatch={dispatch} />}
       shortcut={{ modifiers: ["opt"], key: "a" }}
       icon={Icon.Pencil}
     />
   );
 }
 
-export function AppendSelectedTextToNoteAction(props: { note: Note; actionCallback: (action: NoteAction) => void }) {
-  const { note, actionCallback } = props;
+export function AppendSelectedTextToNoteAction(props: { note: Note; vault: Vault }) {
+  const { note, vault } = props;
+  const [dispatch, _] = useContext(NoteListContext);
   return (
     <Action
       title="Append Selected Text to Note"
@@ -61,7 +76,7 @@ export function AppendSelectedTextToNoteAction(props: { note: Note; actionCallba
       onAction={async () => {
         const done = await appendSelectedTextTo(note);
         if (done) {
-          actionCallback(NoteAction.Append);
+          dispatch({ type: NoteReducerActionType.Update, payload: { note: note, vault: vault } });
         }
       }}
       icon={Icon.Pencil}
@@ -113,34 +128,65 @@ export function CopyObsidianURIAction(props: { note: Note }) {
   );
 }
 
-export function DeleteNoteAction(props: { actionCallback: (action: NoteAction) => void }) {
-  const { actionCallback } = props;
+export function DeleteNoteAction(props: { note: Note; vault: Vault }) {
+  const { note, vault } = props;
+  const [dispatch, _] = useContext(NoteListContext);
   return (
     <Action
       title="Delete Note"
       shortcut={{ modifiers: ["opt"], key: "d" }}
       onAction={async () => {
-        actionCallback(NoteAction.Delete);
+        const options = {
+          title: "Delete Note",
+          message: 'Are you sure you want to delete the note: "' + note.title + '"?',
+          icon: Icon.ExclamationMark,
+        };
+        if (await confirmAlert(options)) {
+          dispatch({ type: NoteReducerActionType.Delete, payload: { note: note, vault: vault } });
+        }
       }}
       icon={{ source: Icon.Trash, tintColor: Color.Red }}
     />
   );
 }
 
-export function QuickLookAction(props: {
-  note: Note;
-  notes: Note[];
-  vault: Vault;
-  actionCallback: (action: NoteAction) => void;
-}) {
-  const { note, notes, vault, actionCallback } = props;
+export function QuickLookAction(props: { note: Note; notes: Note[]; vault: Vault }) {
+  const { note, notes, vault } = props;
   return (
     <Action.Push
       title="Quick Look"
-      target={
-        <NoteQuickLook note={note} notes={notes} vault={vault} showTitle={true} actionCallback={actionCallback} />
-      }
+      target={<NoteQuickLook note={note} notes={notes} vault={vault} showTitle={true} />}
       icon={Icon.Eye}
+    />
+  );
+}
+
+export function StarNoteAction(props: { note: Note; vault: Vault }) {
+  const { note, vault } = props;
+  const [dispatch, _] = useContext(NoteListContext);
+  return (
+    <Action
+      title="Star Note"
+      shortcut={{ modifiers: ["opt"], key: "p" }}
+      onAction={() => {
+        dispatch({ type: NoteReducerActionType.Star, payload: { note: note, vault: vault } });
+      }}
+      icon={Icon.Star}
+    />
+  );
+}
+
+export function UnstarNoteAction(props: { note: Note; vault: Vault }) {
+  const { note, vault } = props;
+  const [dispatch, _] = useContext(NoteListContext);
+  return (
+    <Action
+      title="Unstar Note"
+      shortcut={{ modifiers: ["opt"], key: "p" }}
+      onAction={() => {
+        dispatch({ type: NoteReducerActionType.Unstar, payload: { note: note, vault: vault } });
+      }}
+      icon={Icon.Star}
     />
   );
 }
@@ -185,11 +231,11 @@ export function ShowMentioningNotesAction(props: { vault: Vault; str: string; no
         notes={filteredNotes}
         searchArguments={{ searchArgument: "", tagArgument: "" }}
         title={`${count} notes mentioning "${str}"`}
-        action={(note: Note, vault: Vault, actionCallback: (action: NoteAction) => void) => {
+        action={(note: Note, vault: Vault) => {
           return (
             <React.Fragment>
-              <OpenNoteActions note={note} notes={notes} vault={vault} actionCallback={actionCallback} />
-              <NoteActions note={note} notes={notes} vault={vault} actionCallback={actionCallback} />
+              <OpenNoteActions note={note} notes={notes} vault={vault} />
+              <NoteActions note={note} notes={notes} vault={vault} />
             </React.Fragment>
           );
         }}
@@ -243,43 +289,34 @@ export function CopyCodeAction(props: { note: Note }) {
   }
 }
 
-export function NoteActions(props: {
-  notes: Note[];
-  note: Note;
-  vault: Vault;
-  actionCallback: (action: NoteAction) => void;
-}) {
-  const { notes, note, vault, actionCallback } = props;
+export function NoteActions(props: { notes: Note[]; note: Note; vault: Vault }) {
+  const { notes, note, vault } = props;
 
   return (
     <React.Fragment>
       <ShowPathInFinderAction path={note.path} />
       <ShowMentioningNotesAction vault={vault} str={note.title} notes={notes} />
+      {note.starred ? <UnstarNoteAction note={note} vault={vault} /> : <StarNoteAction note={note} vault={vault} />}
       <CopyCodeAction note={note} />
-      <EditNoteAction note={note} vault={vault} actionCallback={actionCallback} />
-      <AppendToNoteAction note={note} actionCallback={actionCallback} />
-      <AppendSelectedTextToNoteAction note={note} actionCallback={actionCallback} />
+      <EditNoteAction note={note} vault={vault} />
+      <AppendToNoteAction note={note} vault={vault} />
+      <AppendSelectedTextToNoteAction note={note} vault={vault} />
       <CopyNoteAction note={note} />
       <PasteNoteAction note={note} />
       <CopyMarkdownLinkAction note={note} />
       <CopyObsidianURIAction note={note} />
-      <DeleteNoteAction actionCallback={actionCallback} />
+      <DeleteNoteAction note={note} vault={vault} />
     </React.Fragment>
   );
 }
 
-export function OpenNoteActions(props: {
-  note: Note;
-  notes: Note[];
-  vault: Vault;
-  actionCallback: (action: NoteAction) => void;
-}) {
-  const { note, notes, vault, actionCallback } = props;
+export function OpenNoteActions(props: { note: Note; notes: Note[]; vault: Vault }) {
+  const { note, notes, vault } = props;
   const { primaryAction } = getPreferenceValues<SearchNotePreferences>();
 
   const [vaultsWithPlugin, _] = vaultPluginCheck([vault], "obsidian-advanced-uri");
 
-  const quicklook = <QuickLookAction note={note} notes={notes} vault={vault} actionCallback={actionCallback} />;
+  const quicklook = <QuickLookAction note={note} notes={notes} vault={vault} />;
   const obsidian = <OpenPathInObsidianAction path={note.path} />;
   const obsidianNewPane = vaultsWithPlugin.includes(vault) ? (
     <OpenNoteInObsidianNewPaneAction note={note} vault={vault} />
