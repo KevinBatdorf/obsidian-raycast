@@ -18,7 +18,7 @@ This is a raycast extension with commands for the note taking and knowledge mana
 - [Create Note](https://github.com/marcjulianschwarz/obsidian-raycast#create-note)
 - [Daily Note](https://github.com/marcjulianschwarz/obsidian-raycast#daily-note)
 - [Append to Daily Note](https://github.com/marcjulianschwarz/obsidian-raycast#append-to-daily-note)
-- [Pinned Note](https://github.com/marcjulianschwarz/obsidian-raycast#pinned-notes)
+- [Starred Note](https://github.com/marcjulianschwarz/obsidian-raycast#starred-notes)
 - [Obsidian Menu Bar Item](https://github.com/marcjulianschwarz/obsidian-raycast#obsidian-menu-bar-item)
 
 ## Search Note
@@ -61,8 +61,8 @@ Depending on the primary action set in preferences, the keyboard shortcuts can b
 - `opt + v` will paste the notes content to the app you used before raycast
 - `opt + l` will copy a markdown link for the note to your clipboard
 - `opt + u` will copy the obsidian URI for the note to your clipboard (see: [Obsidian URI](https://help.obsidian.md/Advanced+topics/Using+obsidian+URI))
-- `opt + p` will pin an unpinned note
-- `opt + p` will unpin a pinned note
+- `opt + p` will star an unstarred note
+- `opt + p` will unstar a starred note
 
 The primary action (`enter`) can be changed in the extensions preferences.
 
@@ -132,20 +132,20 @@ This command will append text to the daily note from the selected vault. If a da
 
 It requires the community plugin [Advanced Obsidian URI](https://obsidian.md/plugins?id=obsidian-advanced-uri) and the core plugin "Daily notes" to be installed and enabled.
 
-## Pinned Notes
+## Starred Notes
 
-This command will open a list of your pinned notes. All actions and preferences from the `Search Note` command are available.
+This command will open a list of your starred notes. All actions and preferences from the `Search Note` command are available. Starring or unstarring a note will reflect in Obsidians starred notes. Starring a note in Obsidian will also reflect in Raycast.
 
 Additional actions:
 
-- `opt + r` will reset all pinned notes for the selected vault
+- `opt + r` will reset all starred notes for the selected vault
 
-<img width="1000" alt="Pinned Notes Command" src="https://user-images.githubusercontent.com/67844154/178248422-2668fad8-8936-490b-8cf1-1dea0793712a.png">
+<img width="1000" alt="Starred Notes Command" src="https://user-images.githubusercontent.com/67844154/178248422-2668fad8-8936-490b-8cf1-1dea0793712a.png">
 
 ## Obsidian Menu Bar Item
 
 Use this command to add a menu bar item to the top of the screen (Obsidian icon).
-Clicking it will reveal a list of your vaults. You can view your pinned notes, perform actions on them or open a daily note.
+Clicking it will reveal a list of your vaults. You can view your starred notes, perform actions on them or open a daily note.
 
 <img width="635" alt="Obsidian Menu Bar Item" src="https://user-images.githubusercontent.com/67844154/180802502-3c6243ae-e3f9-4ddc-95ba-f205dab46721.png">
 
@@ -185,7 +185,7 @@ Clicking it will reveal a list of your vaults. You can view your pinned notes, p
 - vault in which the Daily Note will be appended (if not set, you will be prompted to select a vault when the command is run)
 - heading in which the appended text will be placed (if not set, the text will be appended to the end of the note)
 
-### Pinned Notes
+### Starred Notes
 
 - hide YAML frontmatter in "Quick Look" and copy/paste
 - hide wikilinks in "Quick Look" and copy/paste
