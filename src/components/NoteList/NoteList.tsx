@@ -1,5 +1,5 @@
-import { List, getPreferenceValues, ActionPanel, Action } from "@raycast/api";
-import { useState, useMemo, useContext } from "react";
+import { List, getPreferenceValues, ActionPanel, Action, open } from "@raycast/api";
+import { useState, useMemo } from "react";
 
 import { NoteListProps } from "../../utils/interfaces";
 import { MAX_RENDERED_NOTES } from "../../utils/constants";
@@ -7,21 +7,26 @@ import { tagsForNotes } from "../../utils/yaml";
 import { NoteListItem } from "./NoteListItem";
 import { NoteListDropdown } from "./NoteListDropdown";
 import { filterNotes } from "../../utils/search";
-import { getObsidianTarget, NoteListContext, ObsidianTargetType } from "../../utils/utils";
+import { getObsidianTarget, ObsidianTargetType } from "../../utils/utils";
 import { SearchNotePreferences } from "../../utils/preferences";
+import { useNotesContext } from "../../utils/hooks";
 
 export function NoteList(props: NoteListProps) {
-  const [_, allNotes] = useContext(NoteListContext);
-
   const { notes, vault, title, searchArguments, action } = props;
 
   const pref = getPreferenceValues<SearchNotePreferences>();
-
+  const allNotes = useNotesContext();
   const [searchText, setSearchText] = useState(searchArguments.searchArgument ?? "");
   const list = useMemo(() => filterNotes(notes ?? [], searchText, pref.searchContent), [notes, searchText]);
   const _notes = list.slice(0, MAX_RENDERED_NOTES);
 
   const tags = tagsForNotes(allNotes);
+
+  function onNoteCreation() {
+    const target = getObsidianTarget({ type: ObsidianTargetType.NewNote, vault: vault, name: searchText });
+    open(target);
+    //TODO: maybe dispatch here. But what if the user cancels the creation in Obsidian or renames it there? Then the cache would be out of sync.
+  }
 
   const isNotesUndefined = notes === undefined;
   if (_notes.length == 0) {
@@ -36,10 +41,7 @@ export function NoteList(props: NoteListProps) {
           title={`🗒️ Create Note "${searchText}"`}
           actions={
             <ActionPanel>
-              <Action.Open
-                title="Create Note"
-                target={getObsidianTarget({ type: ObsidianTargetType.NewNote, vault: vault, name: searchText })}
-              />
+              <Action title="Create Note" onAction={onNoteCreation} />
             </ActionPanel>
           }
         />

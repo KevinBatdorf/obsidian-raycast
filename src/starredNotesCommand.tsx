@@ -18,13 +18,11 @@ export default function Command(props: { arguments: SearchArguments }) {
     return (
       <VaultSelection
         vaults={vaults}
-        target={(vault: Vault) => (
-          <NoteListObsidian vault={vault} showTitle={true} starred={false} searchArguments={props.arguments} />
-        )}
+        target={(vault: Vault) => <NoteListObsidian vault={vault} showTitle={true} starred={true} searchArguments={props.arguments} />}
       />
     );
   } else if (vaults.length == 1) {
-    return <NoteListObsidian vault={vaults[0]} showTitle={false} starred={false} searchArguments={props.arguments} />;
+    return <NoteListObsidian vault={vaults[0]} showTitle={false} starred={true} searchArguments={props.arguments} />;
   } else {
     noVaultPathsToast();
   }

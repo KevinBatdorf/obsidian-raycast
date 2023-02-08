@@ -1,26 +1,18 @@
 import { Action, getPreferenceValues, Icon, Color, List, ActionPanel, confirmAlert } from "@raycast/api";
 
-import React, { useContext } from "react";
+import React from "react";
 
 import { AppendNoteForm } from "../components/AppendNoteForm";
 import { EditNote } from "../components/EditNote";
 import { Note, Vault } from "./interfaces";
 
 import { NoteQuickLook } from "../components/NoteQuickLook";
-import {
-  appendSelectedTextTo,
-  getObsidianTarget,
-  vaultPluginCheck,
-  getCodeBlocks,
-  ObsidianTargetType,
-  starNote,
-  unstarNote,
-  NoteListContext,
-} from "./utils";
-import { NoteAction, ObsidianIconDynamicBold, PrimaryAction } from "./constants";
+import { appendSelectedTextTo, getObsidianTarget, vaultPluginCheck, getCodeBlocks, ObsidianTargetType } from "./utils";
+import { ObsidianIconDynamicBold, PrimaryAction } from "./constants";
 import { NoteList } from "../components/NoteList/NoteList";
 import { SearchNotePreferences } from "./preferences";
 import { NoteReducerActionType } from "./data/reducers";
+import { useNotesDispatchContext } from "./hooks";
 
 //--------------------------------------------------------------------------------
 // All actions for all commands should be defined here.
@@ -40,7 +32,7 @@ export function ShowPathInFinderAction(props: { path: string }) {
 
 export function EditNoteAction(props: { note: Note; vault: Vault }) {
   const { note, vault } = props;
-  const [dispatch, _] = useContext(NoteListContext);
+  const dispatch = useNotesDispatchContext();
 
   return (
     <Action.Push
@@ -54,7 +46,7 @@ export function EditNoteAction(props: { note: Note; vault: Vault }) {
 
 export function AppendToNoteAction(props: { note: Note; vault: Vault }) {
   const { note, vault } = props;
-  const [dispatch, _] = useContext(NoteListContext);
+  const dispatch = useNotesDispatchContext();
 
   return (
     <Action.Push
@@ -68,7 +60,7 @@ export function AppendToNoteAction(props: { note: Note; vault: Vault }) {
 
 export function AppendSelectedTextToNoteAction(props: { note: Note; vault: Vault }) {
   const { note, vault } = props;
-  const [dispatch, _] = useContext(NoteListContext);
+  const dispatch = useNotesDispatchContext();
   return (
     <Action
       title="Append Selected Text to Note"
@@ -130,7 +122,7 @@ export function CopyObsidianURIAction(props: { note: Note }) {
 
 export function DeleteNoteAction(props: { note: Note; vault: Vault }) {
   const { note, vault } = props;
-  const [dispatch, _] = useContext(NoteListContext);
+  const dispatch = useNotesDispatchContext();
   return (
     <Action
       title="Delete Note"
@@ -151,19 +143,13 @@ export function DeleteNoteAction(props: { note: Note; vault: Vault }) {
 }
 
 export function QuickLookAction(props: { note: Note; notes: Note[]; vault: Vault }) {
-  const { note, notes, vault } = props;
-  return (
-    <Action.Push
-      title="Quick Look"
-      target={<NoteQuickLook note={note} notes={notes} vault={vault} showTitle={true} />}
-      icon={Icon.Eye}
-    />
-  );
+  const { note } = props;
+  return <Action.Push title="Quick Look" target={<NoteQuickLook note={note} showTitle={true} />} icon={Icon.Eye} />;
 }
 
 export function StarNoteAction(props: { note: Note; vault: Vault }) {
   const { note, vault } = props;
-  const [dispatch, _] = useContext(NoteListContext);
+  const dispatch = useNotesDispatchContext();
   return (
     <Action
       title="Star Note"
@@ -178,7 +164,7 @@ export function StarNoteAction(props: { note: Note; vault: Vault }) {
 
 export function UnstarNoteAction(props: { note: Note; vault: Vault }) {
   const { note, vault } = props;
-  const [dispatch, _] = useContext(NoteListContext);
+  const dispatch = useNotesDispatchContext();
   return (
     <Action
       title="Unstar Note"

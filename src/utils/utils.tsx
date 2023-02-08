@@ -60,7 +60,7 @@ export function filterContent(content: string) {
   return content;
 }
 
-export function getNoteFileContent(path: string, filter = true) {
+export function getNoteFileContent(path: string, filter = false) {
   let content = "";
   content = fs.readFileSync(path, "utf8") as string;
   return filter ? filterContent(content) : content;
@@ -470,4 +470,5 @@ export function useMedia(vault: Vault) {
   return media;
 }
 
-export const NoteListContext = createContext([() => {}, []] as [(action: NoteReducerAction) => void, Note[]]);
+export const NotesContext = createContext([] as Note[]);
+export const NotesDispatchContext = createContext((() => {}) as (action: NoteReducerAction) => void);

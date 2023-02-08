@@ -139,6 +139,92 @@
       ]
     },
     {
+      "name": "starredNotesCommand",
+      "title": "Starred Notes",
+      "subtitle": "Obsidian",
+      "description": "Search, open, view, copy, paste and edit starred notes in Obsidian.",
+      "mode": "view",
+      "arguments": [
+        {
+          "name": "searchArgument",
+          "placeholder": "Note",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "tagArgument",
+          "placeholder": "Tag",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "preferences": [
+        {
+          "name": "appendTemplate",
+          "type": "textfield",
+          "title": "Template for Append action",
+          "required": false,
+          "description": "Specify a template for Append action (e.g. '- {content}')"
+        },
+        {
+          "name": "appendSelectedTemplate",
+          "type": "textfield",
+          "title": "Template for Append Selected Text action",
+          "required": false,
+          "description": "Specify a template for Append Selected Text action (e.g. '- {content}')"
+        },
+        {
+          "name": "showDetail",
+          "type": "checkbox",
+          "label": "Show Detail",
+          "title": "Show Detail",
+          "required": false,
+          "description": "Show the notes content in a detail view",
+          "default": true
+        },
+        {
+          "name": "showMetadata",
+          "type": "checkbox",
+          "label": "Show Metadata",
+          "title": "Show Metadata",
+          "required": false,
+          "description": "Show the notes metadata in a detail view (only works when Show Detail is enabled)",
+          "default": false
+        },
+        {
+          "name": "searchContent",
+          "type": "checkbox",
+          "label": "Search Content",
+          "title": "Search Content",
+          "required": false,
+          "description": "Use the content of notes for searching",
+          "default": false
+        },
+        {
+          "name": "primaryAction",
+          "type": "dropdown",
+          "title": "Primary Action",
+          "required": false,
+          "description": "Select a primary action to be executed on enter",
+          "defaultValue": "quicklook",
+          "data": [
+            {
+              "title": "Quick Look",
+              "value": "quicklook"
+            },
+            {
+              "title": "Open in Obsidian",
+              "value": "obsidian"
+            },
+            {
+              "title": "Open in new Pane",
+              "value": "newpane"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "openVaultCommand",
       "title": "Open Vault",
       "subtitle": "Obsidian",

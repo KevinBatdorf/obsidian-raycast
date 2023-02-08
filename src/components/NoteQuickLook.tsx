@@ -1,27 +1,9 @@
-import { Detail, ActionPanel } from "@raycast/api";
-import { useEffect, useState } from "react";
+import { Detail } from "@raycast/api";
+import { Note } from "../utils/interfaces";
+import { filterContent } from "../utils/utils";
 
-import { Note, Vault } from "../utils/interfaces";
-import { NoteActions, OpenNoteActions } from "../utils/actions";
-import { filterContent, getNoteFileContent } from "../utils/utils";
-
-export function NoteQuickLook(props: { showTitle: boolean; note: Note; notes: Note[]; vault: Vault }) {
-  const { note, notes, showTitle, vault } = props;
-
-  let noteContent = note?.content;
-  noteContent = filterContent(noteContent ?? "");
-
-  const [content, setContent] = useState(noteContent);
-
-  function reloadContent() {
-    if (note) {
-      const newContent = getNoteFileContent(note.path);
-      note.content = newContent;
-      setContent(newContent);
-    }
-  }
-
-  useEffect(reloadContent, [note]);
+export function NoteQuickLook(props: { showTitle: boolean; note: Note }) {
+  const { note, showTitle } = props;
 
   const title = note.starred ? `⭐️ ${note.title}` : note.title;
 
@@ -29,13 +11,7 @@ export function NoteQuickLook(props: { showTitle: boolean; note: Note; notes: No
     <Detail
       isLoading={note === undefined}
       navigationTitle={showTitle ? title : ""}
-      markdown={content}
-      actions={
-        <ActionPanel>
-          <OpenNoteActions note={note} notes={notes} vault={vault} />
-          <NoteActions note={note} notes={notes} vault={vault} />
-        </ActionPanel>
-      }
+      markdown={filterContent(note.content)}
     />
   );
 }

@@ -1,21 +1,11 @@
-import { List, ActionPanel, confirmAlert, Icon } from "@raycast/api";
-import React, { useContext } from "react";
+import { List, ActionPanel } from "@raycast/api";
+import React from "react";
 import fs from "fs";
 
 import { Note, Vault } from "../../utils/interfaces";
-import {
-  readingTime,
-  wordCount,
-  trimPath,
-  createdDateFor,
-  fileSizeFor,
-  filterContent,
-  NoteListContext,
-} from "../../utils/utils";
-import { NoteAction } from "../../utils/constants";
+import { readingTime, wordCount, trimPath, createdDateFor, fileSizeFor, filterContent } from "../../utils/utils";
 import { renewCache } from "../../utils/data/cache";
 import { yamlPropertyForString } from "../../utils/yaml";
-import { NoteReducerActionType } from "../../utils/data/reducers";
 import { SearchNotePreferences } from "../../utils/preferences";
 
 export function NoteListItem(props: {
