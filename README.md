@@ -23,7 +23,7 @@ This is a raycast extension with commands for the note taking and knowledge mana
 
 ## Search Note
 
-This command allows for quick access to all of your notes. By default you can search notes by title. Enabeling content search in the commands preferences allows you to search for notes by their content and title.
+This command allows for quick access to all of your notes. By default you can search notes by title. Enabeling content search in the commands preferences allows you to search for notes by their content and title. If there doesn't exist a note with the title you searched for you can create a new note with that title right from the command.
 Use the tag filter in the top right corner to filter notes based on their tags (both YAML frontmatter and inline tags).
 
 Enabeling `Show Detail` and `Show Metadata` in the extensions preferences will show a sidebar view with the following information:
@@ -63,6 +63,7 @@ Depending on the primary action set in preferences, the keyboard shortcuts can b
 - `opt + u` will copy the obsidian URI for the note to your clipboard (see: [Obsidian URI](https://help.obsidian.md/Advanced+topics/Using+obsidian+URI))
 - `opt + p` will star an unstarred note
 - `opt + p` will unstar a starred note
+- Reload Notes, will reload notes from the vault (useful if you have just created a new note)
 
 The primary action (`enter`) can be changed in the extensions preferences.
 
@@ -71,7 +72,7 @@ The primary action (`enter`) can be changed in the extensions preferences.
 
 ### Quick Look Action
 
-The Quick Look actions will open your note in Raycast itself. From here you can read the note or perform additional actions in the action bar (`cmd + k`).
+The Quick Look actions will open your note in Raycast itself.
 
 <img width="1000" alt="obsidian-5" src="https://user-images.githubusercontent.com/67844154/178248667-6b90bd65-0861-41e4-b68c-256f30d89d1d.png">
 
@@ -155,13 +156,13 @@ Clicking it will reveal a list of your vaults. You can view your starred notes, 
 
 - set path/paths to your preferred vault/vaults (comma separated).
   By default, vaults will be detected from `~/Library/Application Support/obsidian/obsidian.json`, which contains all vaults that have been opened with Obsidian before.
-
-### Search Note
-
-- exclude folders, files and paths so they dont show up in the search
+- exclude folders, files and paths so they dont show up in the search (comma separated). Files and Folders that were excluded in Obsidian itself will also be excluded here.
 - hide YAML frontmatter in "Quick Look" and copy/paste
 - hide wikilinks in "Quick Look" and copy/paste
 - hide LaTeX in "Quick Look" and copy/paste
+
+### Search Note
+
 - templates for append actions
 - show note content in detail view
 - show metadata about note in detail view
@@ -170,10 +171,11 @@ Clicking it will reveal a list of your vaults. You can view your starred notes, 
 
 ### Create Note
 
+- blank note, if enabled, will create a note without any content
+- open note on creation
 - default path where a new note will be created
 - default tag (will be selected by default in the tag picker)
 - list of tags to be suggested in the tag picker (comma separated)
-- open note on creation
 - default note name (if note name is empty)
 - default note content
 - fill form with default values
@@ -184,12 +186,10 @@ Clicking it will reveal a list of your vaults. You can view your starred notes, 
 - template for the appended text (e.g. could set to `- [ ] ` to create a checklist item)
 - vault in which the Daily Note will be appended (if not set, you will be prompted to select a vault when the command is run)
 - heading in which the appended text will be placed (if not set, the text will be appended to the end of the note)
+- silent mode, if enabled, will not open the note if it is currently not opened in an Obsidian tab or pane (Obsidian has to be running)
 
 ### Starred Notes
 
-- hide YAML frontmatter in "Quick Look" and copy/paste
-- hide wikilinks in "Quick Look" and copy/paste
-- hide LaTeX in "Quick Look" and copy/paste
 - templates for append actions
 - show note content in detail view
 - show metadata about note in detail view
@@ -198,10 +198,6 @@ Clicking it will reveal a list of your vaults. You can view your starred notes, 
 
 ### Random Note
 
-- exclude folders, files and paths so notes from them won't show up
-- hide YAML frontmatter in "Quick Look" and copy/paste
-- hide wikilinks in "Quick Look" and copy/paste
-- hide LaTeX in "Quick Look" and copy/paste
 - templates for append actions
 - select primary action (for `enter`)
 

@@ -18,7 +18,9 @@ export default function Command(props: { arguments: SearchArguments }) {
     return (
       <VaultSelection
         vaults={vaults}
-        target={(vault: Vault) => <NoteListObsidian vault={vault} showTitle={true} starred={true} searchArguments={props.arguments} />}
+        target={(vault: Vault) => (
+          <NoteListObsidian vault={vault} showTitle={true} starred={true} searchArguments={props.arguments} />
+        )}
       />
     );
   } else if (vaults.length == 1) {

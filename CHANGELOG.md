@@ -8,6 +8,9 @@
 - Add `Blank Note` preference to `Create Note` command which lets you create a blank note immediately
 - Add `Create Note` action to `Search Note` command which lets you create a new note from the search results if it doesn't exist yet
 - Remove `Pinned Notes` command
+- Add `Starred Notes` command which lists all starred notes of a vault
+- Update Raycast API to v1.47.0
+- Rewrote parts of the codebase to improve maintainability
 
 ## [Fix | Version 1.10.1] - 2022-11-29
 

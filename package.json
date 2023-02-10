@@ -480,7 +480,7 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.44.0",
+    "@raycast/api": "^1.47.0",
     "@types/uuid": "^8.3.4",
     "uuid": "^8.3.2",
     "yaml": "^2.1.1"
