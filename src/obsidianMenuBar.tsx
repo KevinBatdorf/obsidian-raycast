@@ -32,7 +32,7 @@ function StarredNotesVaultSelection(props: { vaults: Vault[] }) {
 }
 
 function DailyNoteVaultSelection(props: { vaults: Vault[] }) {
-  const [withPlugin, _] = vaultPluginCheck(props.vaults, "obsidian-advanced-uri");
+  const [withPlugin] = vaultPluginCheck(props.vaults, "obsidian-advanced-uri");
   return (
     <MenuBarExtra.Submenu title="Daily Note" key={"Daily Note"}>
       {withPlugin.map((vault) => (

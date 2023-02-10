@@ -15,7 +15,7 @@ export function MediaGrid(props: { vault: Vault; searchArguments: MediaSearchArg
   const { ready, media } = useMedia(vault);
   const [mediaList, setMediaList] = useState<Media[]>([]);
   const [allMedia, setAllMedia] = useState<Media[]>([]);
-  let [notes] = useNotes(vault);
+  const [notes] = useNotes(vault);
 
   useEffect(() => {
     if (ready) {

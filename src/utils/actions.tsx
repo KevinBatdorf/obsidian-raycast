@@ -300,7 +300,7 @@ export function OpenNoteActions(props: { note: Note; notes: Note[]; vault: Vault
   const { note, notes, vault } = props;
   const { primaryAction } = getPreferenceValues<SearchNotePreferences>();
 
-  const [vaultsWithPlugin, _] = vaultPluginCheck([vault], "obsidian-advanced-uri");
+  const [vaultsWithPlugin] = vaultPluginCheck([vault], "obsidian-advanced-uri");
 
   const quicklook = <QuickLookAction note={note} notes={notes} vault={vault} />;
   const obsidian = <OpenPathInObsidianAction path={note.path} />;

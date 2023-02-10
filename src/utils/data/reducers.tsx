@@ -55,17 +55,19 @@ export type NoteReducerAction =
 
 export function NoteReducer(notes: Note[], action: NoteReducerAction) {
   switch (action.type) {
-    case NoteReducerActionType.Set:
+    case NoteReducerActionType.Set: {
       console.log("REDUCER SET");
       return action.payload;
+    }
 
-    case NoteReducerActionType.Delete:
+    case NoteReducerActionType.Delete: {
       console.log("REDUCER DELETE");
       deleteNote(action.payload.note);
       deleteNoteFromCache(action.payload.vault, action.payload.note);
       return notes.filter((note) => note.path !== action.payload.note.path);
+    }
 
-    case NoteReducerActionType.Star:
+    case NoteReducerActionType.Star: {
       console.log("REDUCER STAR");
       starNote(action.payload.vault, action.payload.note);
       return notes.map((note) => {
@@ -75,8 +77,8 @@ export function NoteReducer(notes: Note[], action: NoteReducerAction) {
         }
         return note;
       });
-
-    case NoteReducerActionType.Unstar:
+    }
+    case NoteReducerActionType.Unstar: {
       console.log("REDUCER UNSTAR");
       unstarNote(action.payload.vault, action.payload.note);
       return notes.map((note) => {
@@ -86,8 +88,9 @@ export function NoteReducer(notes: Note[], action: NoteReducerAction) {
         }
         return note;
       });
+    }
 
-    case NoteReducerActionType.Update:
+    case NoteReducerActionType.Update: {
       console.log("REDUCER UPDATE");
       const newContent = getNoteFileContent(action.payload.note.path);
       console.log(newContent);
@@ -101,12 +104,14 @@ export function NoteReducer(notes: Note[], action: NoteReducerAction) {
         }
         return note;
       });
-
-    case NoteReducerActionType.Add:
+    }
+    case NoteReducerActionType.Add: {
       console.log("REDUCER ADD");
       updateNoteInCache(action.payload.vault, action.payload.note);
-
-    default:
+      return [...notes, action.payload.note];
+    }
+    default: {
       return notes;
+    }
   }
 }

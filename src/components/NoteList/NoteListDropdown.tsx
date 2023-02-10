@@ -1,6 +1,6 @@
 import { SearchArguments } from "../../utils/interfaces";
 import { List } from "@raycast/api";
-import React, { useContext } from "react";
+import React from "react";
 
 import { NoteReducerActionType } from "../../utils/data/reducers";
 import { useNotesContext, useNotesDispatchContext } from "../../utils/hooks";

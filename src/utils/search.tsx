@@ -1,5 +1,4 @@
-import { useNotes } from "./hooks";
-import { Media, Note, Vault } from "./interfaces";
+import { Media, Note } from "./interfaces";
 
 /**
  * Filters a list of notes according to the input search string. If the search string is empty, all notes are returned. It will match the notes title, path and content.
@@ -63,8 +62,6 @@ export function fuzzyFilter(notes: Note[], input: string) {
     return notes;
   }
   input = input.toLowerCase();
-
-  const tokens = tokenize(input);
 
   // TODO: weigh tokens before using them
 

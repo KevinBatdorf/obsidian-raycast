@@ -104,7 +104,7 @@ export function getStarredJSON(vault: Vault) {
   }
 }
 
-export function writeToStarredJSON(vault: Vault, starredNotes: any) {
+export function writeToStarredJSON(vault: Vault, starredNotes: Note[]) {
   const starredNotesPath = vault.path + "/.obsidian/starred.json";
   fs.writeFileSync(starredNotesPath, JSON.stringify({ items: starredNotes }));
 }
@@ -326,13 +326,16 @@ export type ObsidianTarget =
 
 export function getObsidianTarget(target: ObsidianTarget) {
   switch (target.type) {
-    case ObsidianTargetType.OpenVault:
+    case ObsidianTargetType.OpenVault: {
       return ObsidianTargetType.OpenVault + encodeURIComponent(target.vault.name);
-    case ObsidianTargetType.OpenPath:
+    }
+    case ObsidianTargetType.OpenPath: {
       return ObsidianTargetType.OpenPath + encodeURIComponent(target.path);
-    case ObsidianTargetType.DailyNote:
+    }
+    case ObsidianTargetType.DailyNote: {
       return ObsidianTargetType.DailyNote + encodeURIComponent(target.vault.name);
-    case ObsidianTargetType.DailyNoteAppend:
+    }
+    case ObsidianTargetType.DailyNoteAppend: {
       const headingParam = target.heading ? "&heading=" + encodeURIComponent(target.heading) : "";
       return (
         ObsidianTargetType.DailyNoteAppend +
@@ -343,7 +346,8 @@ export function getObsidianTarget(target: ObsidianTarget) {
         headingParam +
         (target.silent ? "&openmode=silent" : "")
       );
-    case ObsidianTargetType.NewNote:
+    }
+    case ObsidianTargetType.NewNote: {
       return (
         ObsidianTargetType.NewNote +
         encodeURIComponent(target.vault.name) +
@@ -352,6 +356,10 @@ export function getObsidianTarget(target: ObsidianTarget) {
         "&content=" +
         encodeURIComponent(target.content || "")
       );
+    }
+    default: {
+      return "";
+    }
   }
 }
 
@@ -471,4 +479,5 @@ export function useMedia(vault: Vault) {
 }
 
 export const NotesContext = createContext([] as Note[]);
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 export const NotesDispatchContext = createContext((() => {}) as (action: NoteReducerAction) => void);

@@ -1,6 +1,6 @@
 import { ActionPanel, Form, Action, useNavigation, showToast, Toast, getPreferenceValues } from "@raycast/api";
 import fs from "fs";
-import { NoteReducerActionType } from "../utils/data/reducers";
+import { NoteReducerAction, NoteReducerActionType } from "../utils/data/reducers";
 import { Note, Vault } from "../utils/interfaces";
 import { SearchNotePreferences } from "../utils/preferences";
 import { applyTemplates } from "../utils/utils";
@@ -9,11 +9,7 @@ interface FormValue {
   content: string;
 }
 
-export function AppendNoteForm(props: {
-  note: Note;
-  vault: Vault;
-  dispatch: (action: { type: NoteReducerActionType; payload: any }) => void;
-}) {
+export function AppendNoteForm(props: { note: Note; vault: Vault; dispatch: (action: NoteReducerAction) => void }) {
   const { note, vault, dispatch } = props;
   const { pop } = useNavigation();
 
