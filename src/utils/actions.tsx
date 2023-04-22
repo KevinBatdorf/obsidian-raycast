@@ -292,6 +292,7 @@ export function NoteActions(props: { notes: Note[]; note: Note; vault: Vault }) 
       <CopyMarkdownLinkAction note={note} />
       <CopyObsidianURIAction note={note} />
       <DeleteNoteAction note={note} vault={vault} />
+      <AppendTaskAction note={note} vault={vault} />
     </React.Fragment>
   );
 }
@@ -341,4 +342,18 @@ export function OpenNoteActions(props: { note: Note; notes: Note[]; vault: Vault
       </React.Fragment>
     );
   }
+}
+
+export function AppendTaskAction(props: { note: Note; vault: Vault }) {
+  const { note, vault } = props;
+  const dispatch = useNotesDispatchContext();
+
+  return (
+    <Action.Push
+      title="Append task"
+      target={<AppendNoteForm note={note} vault={vault} dispatch={dispatch} />}
+      shortcut={{ modifiers: ["opt"], key: "a" }}
+      icon={Icon.Pencil}
+    />
+  );
 }
