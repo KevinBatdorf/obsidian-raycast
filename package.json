@@ -9,7 +9,8 @@
     ],
     "contributes": [
         "iancanderson",
-        "mikejongbloet"
+        "mikejongbloet",
+        "sapoepsilon"
     ],
     "license": "MIT",
     "preferences": [{
