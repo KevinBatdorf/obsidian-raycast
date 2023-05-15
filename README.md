@@ -206,6 +206,10 @@ Clicking it will reveal a list of your vaults. You can view your starred notes, 
 - exclude folders, files and paths so they don't show up in the search
 - select image size (small, medium, large)
 
+## Previous Developer / Maintainer
+
+This extension was originally developed by [Marc Julian Schwarz](https://marc-julian.de/). As of 15th May 2023, Marc Julian is no longer maintaining this extension due to time constraints related to his university studies. This extension will now be further developed and maintained by [Kevin Batdorf](https://github.com/KevinBatdorf/). Thank you, for taking over this extension and keeping it alive for the community.
+
 ## Blog posts:
 
 - [First Update Raycast Obsidian Extension](https://www.marc-julian.de/2022/03/Obsidian%20Raycast%20Extension%20Update.html)
