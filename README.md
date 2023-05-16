@@ -4,22 +4,22 @@
 
 # Obsidian for Raycast
 
-This is a raycast extension with commands for the note taking and knowledge management app Obsidian. To use it, install the extension from the [Raycast Store](https://www.raycast.com/marcjulian/obsidian), open Raycast Search and type one of the following commands.
+This is a raycast extension with commands for the note taking and knowledge management app Obsidian. To use it, install the extension from the [Raycast Store](https://www.raycast.com/KevinBatdorf/obsidian), open Raycast Search and type one of the following commands.
 
 ## Overview
 
-- [Search Note](https://github.com/marcjulianschwarz/obsidian-raycast#search-note)
-  - [Actions for Search Note Command](https://github.com/marcjulianschwarz/obsidian-raycast#actions-for-search-note-command)
-  - [Quick Look Action](https://github.com/marcjulianschwarz/obsidian-raycast#quick-look-action)
-- [Search Media](https://github.com/marcjulianschwarz/obsidian-raycast#search-media)
-  - [Actions for Search Media Command](https://github.com/marcjulianschwarz/obsidian-raycast#actions-for-search-media-command)
-- [Random Notes](https://github.com/marcjulianschwarz/obsidian-raycast#random-note)
-- [Open Vault](https://github.com/marcjulianschwarz/obsidian-raycast#open-vault)
-- [Create Note](https://github.com/marcjulianschwarz/obsidian-raycast#create-note)
-- [Daily Note](https://github.com/marcjulianschwarz/obsidian-raycast#daily-note)
-- [Append to Daily Note](https://github.com/marcjulianschwarz/obsidian-raycast#append-to-daily-note)
-- [Starred Note](https://github.com/marcjulianschwarz/obsidian-raycast#starred-notes)
-- [Obsidian Menu Bar Item](https://github.com/marcjulianschwarz/obsidian-raycast#obsidian-menu-bar-item)
+- [Search Note](https://github.com/KevinBatdorf/obsidian-raycast#search-note)
+  - [Actions for Search Note Command](https://github.com/KevinBatdorf/obsidian-raycast#actions-for-search-note-command)
+  - [Quick Look Action](https://github.com/KevinBatdorf/obsidian-raycast#quick-look-action)
+- [Search Media](https://github.com/KevinBatdorf/obsidian-raycast#search-media)
+  - [Actions for Search Media Command](https://github.com/KevinBatdorf/obsidian-raycast#actions-for-search-media-command)
+- [Random Notes](https://github.com/KevinBatdorf/obsidian-raycast#random-note)
+- [Open Vault](https://github.com/KevinBatdorf/obsidian-raycast#open-vault)
+- [Create Note](https://github.com/KevinBatdorf/obsidian-raycast#create-note)
+- [Daily Note](https://github.com/KevinBatdorf/obsidian-raycast#daily-note)
+- [Append to Daily Note](https://github.com/KevinBatdorf/obsidian-raycast#append-to-daily-note)
+- [Starred Note](https://github.com/KevinBatdorf/obsidian-raycast#starred-notes)
+- [Obsidian Menu Bar Item](https://github.com/KevinBatdorf/obsidian-raycast#obsidian-menu-bar-item)
 
 ## Search Note
 
@@ -208,7 +208,7 @@ Clicking it will reveal a list of your vaults. You can view your starred notes, 
 
 ## Previous Developer / Maintainer
 
-This extension was originally developed by [Marc Julian Schwarz](https://marc-julian.de/). As of 15th May 2023, Marc Julian is no longer maintaining this extension due to time constraints related to his university studies. This extension will now be further developed and maintained by [Kevin Batdorf](https://github.com/KevinBatdorf/). Thank you, for taking over this extension and keeping it alive for the community.
+This extension was originally developed by [Marc Julian Schwarz](https://marc-julian.de/). As of 15th May 2023, Marc Julian is no longer maintaining this extension due to time constraints related to his university studies. This extension will now be further developed and maintained by [Kevin Batdorf](https://github.com/KevinBatdorf/). "Thank you for taking over this extension and keeping it alive for the community." -Marc Julian
 
 ## Blog posts:
 
@@ -217,7 +217,7 @@ This extension was originally developed by [Marc Julian Schwarz](https://marc-ju
 
 ## Contributions and Credits
 
-Thank you [macedotavares](https://forum.obsidian.md/t/big-sur-icon/8121?u=marcjulian) for letting me use your amazing Obsidian (Big Sur) icon.
+Thank you [macedotavares](https://forum.obsidian.md/t/big-sur-icon/8121) for letting me use your amazing Obsidian (Big Sur) icon.
 
 ## Disclaimer
 
