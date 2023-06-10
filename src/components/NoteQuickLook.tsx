@@ -5,7 +5,7 @@ import { filterContent } from "../utils/utils";
 export function NoteQuickLook(props: { showTitle: boolean; note: Note }) {
   const { note, showTitle } = props;
 
-  const title = note.starred ? `⭐️ ${note.title}` : note.title;
+  const title = note.bookmarked ? `🔖 ${note.title}` : note.title;
 
   return (
     <Detail

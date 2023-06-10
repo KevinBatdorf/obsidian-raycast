@@ -143,9 +143,9 @@
     },
     {
       "name": "starredNotesCommand",
-      "title": "Starred Notes",
+      "title": "Bookmarked Notes",
       "subtitle": "Obsidian",
-      "description": "Search, open, view, copy, paste and edit starred notes in Obsidian.",
+      "description": "Search, open, view, copy, paste and edit bookmarked notes in Obsidian.",
       "mode": "view",
       "arguments": [
         {

@@ -18,7 +18,7 @@ This is a raycast extension with commands for the note taking and knowledge mana
 - [Create Note](https://github.com/KevinBatdorf/obsidian-raycast#create-note)
 - [Daily Note](https://github.com/KevinBatdorf/obsidian-raycast#daily-note)
 - [Append to Daily Note](https://github.com/KevinBatdorf/obsidian-raycast#append-to-daily-note)
-- [Starred Note](https://github.com/KevinBatdorf/obsidian-raycast#starred-notes)
+- [Bookmarked Note](https://github.com/KevinBatdorf/obsidian-raycast#bookmarked-notes)
 - [Obsidian Menu Bar Item](https://github.com/KevinBatdorf/obsidian-raycast#obsidian-menu-bar-item)
 
 ## Search Note
@@ -61,8 +61,8 @@ Depending on the primary action set in preferences, the keyboard shortcuts can b
 - `opt + v` will paste the notes content to the app you used before raycast
 - `opt + l` will copy a markdown link for the note to your clipboard
 - `opt + u` will copy the obsidian URI for the note to your clipboard (see: [Obsidian URI](https://help.obsidian.md/Advanced+topics/Using+obsidian+URI))
-- `opt + p` will star an unstarred note
-- `opt + p` will unstar a starred note
+- `opt + p` will bookmark a note
+- `opt + p` will "unbookmark" a bookmarked note
 - Reload Notes, will reload notes from the vault (useful if you have just created a new note)
 
 The primary action (`enter`) can be changed in the extensions preferences.
@@ -133,20 +133,20 @@ This command will append text to the daily note from the selected vault. If a da
 
 It requires the community plugin [Advanced Obsidian URI](https://obsidian.md/plugins?id=obsidian-advanced-uri) and the core plugin "Daily notes" to be installed and enabled.
 
-## Starred Notes
+## Bookmarked Notes
 
-This command will open a list of your starred notes. All actions and preferences from the `Search Note` command are available. Starring or unstarring a note will reflect in Obsidians starred notes. Starring a note in Obsidian will also reflect in Raycast.
+This command will open a list of your bookmarked notes. All actions and preferences from the `Search Note` command are available. Bookmarking or unbookmarking a note will reflect in Obsidians Bookmarked notes. Bookmarking a note in Obsidian will also reflect in Raycast.
 
 Additional actions:
 
-- `opt + r` will reset all starred notes for the selected vault
+- `opt + r` will reset all bookmarked notes for the selected vault
 
-<img width="1000" alt="Starred Notes Command" src="https://user-images.githubusercontent.com/67844154/178248422-2668fad8-8936-490b-8cf1-1dea0793712a.png">
+<img width="1000" alt="Bookmarked Notes Command" src="https://user-images.githubusercontent.com/67844154/178248422-2668fad8-8936-490b-8cf1-1dea0793712a.png">
 
 ## Obsidian Menu Bar Item
 
 Use this command to add a menu bar item to the top of the screen (Obsidian icon).
-Clicking it will reveal a list of your vaults. You can view your starred notes, perform actions on them or open a daily note.
+Clicking it will reveal a list of your vaults. You can view your bookmarked notes, perform actions on them or open a daily note.
 
 <img width="635" alt="Obsidian Menu Bar Item" src="https://user-images.githubusercontent.com/67844154/180802502-3c6243ae-e3f9-4ddc-95ba-f205dab46721.png">
 
@@ -188,7 +188,7 @@ Clicking it will reveal a list of your vaults. You can view your starred notes, 
 - heading in which the appended text will be placed (if not set, the text will be appended to the end of the note)
 - silent mode, if enabled, will not open the note if it is currently not opened in an Obsidian tab or pane (Obsidian has to be running)
 
-### Starred Notes
+### Bookmarked Notes
 
 - templates for append actions
 - show note content in detail view
