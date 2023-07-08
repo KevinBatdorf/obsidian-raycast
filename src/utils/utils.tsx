@@ -252,15 +252,15 @@ export async function getClipboardContent() {
 }
 
 async function ISO8601_week_no(dt: Date) {
-  const tdt = new Date(dt.valueOf());
+  const tdt = new Date(dt.getTime());
   const dayn = (dt.getDay() + 6) % 7;
   tdt.setDate(tdt.getDate() - dayn + 3);
-  const firstThursday = tdt.valueOf();
+  const firstThursday = tdt.getTime();
   tdt.setMonth(0, 1);
   if (tdt.getDay() !== 4) {
-    tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
+    tdt.setMonth(0, 1 + ((4 - tdt.getDay() + 7) % 7));
   }
-  return 1 + Math.ceil((firstThursday - tdt) / 604800000);
+  return 1 + Math.ceil((firstThursday - tdt.getTime()) / 604800000);
 }
 
 export async function applyTemplates(content: string) {
