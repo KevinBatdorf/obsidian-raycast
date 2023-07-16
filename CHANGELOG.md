@@ -1,5 +1,6 @@
 # Obsidian Changelog
 
+- Fixes and issue where tags as objects woudl crash the plugin
 ## [Add week placeholder] - 2023-07-14
 
 - Adds a {week} template placeholder (thanks @adamadamsmusic)
