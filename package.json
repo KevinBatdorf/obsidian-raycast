@@ -136,8 +136,12 @@
               "value": "obsidian"
             },
             {
-              "title": "Open in new Pane",
+              "title": "Open in new Obsidian tab",
               "value": "newpane"
+            },
+            {
+              "title": "Open in default app",
+              "value": "defaultapp"
             }
           ]
         }
@@ -222,8 +226,12 @@
               "value": "obsidian"
             },
             {
-              "title": "Open in new Pane",
+              "title": "Open in new Obsidian tab",
               "value": "newpane"
+            },
+            {
+              "title": "Open in default app",
+              "value": "defaultapp"
             }
           ]
         }
@@ -416,8 +424,12 @@
               "value": "obsidian"
             },
             {
-              "title": "Open in new Pane",
+              "title": "Open in new Obsidian tab",
               "value": "newpane"
+            },
+            {
+              "title": "Open in default app",
+              "value": "defaultapp"
             }
           ]
         }
