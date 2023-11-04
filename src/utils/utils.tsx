@@ -275,9 +275,8 @@ export async function applyTemplates(content: string, template = "") {
   const clipboard = await getClipboardContent();
 
   const preprocessed = template.includes("{content}")
-    ? template
-    : // If the append template does not have {content} then add it to the end
-      template + content;
+    ? template // Has {content} e.g. | {hour}:{minute} | {content} |
+    : template + content; // Does not have {content}, then add it to the end
   return preprocessed
     .replaceAll("{content}", content)
     .replaceAll("{time}", date.toLocaleTimeString())
