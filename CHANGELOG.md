@@ -3,6 +3,7 @@
 ## [New features and bugfixes] - 2023-10-12
 - Adds extension setting to open note in default application
 - Adds quick actions to the Random Note command
+- Adds support for using {content} in templates
 
 ## [Update search starting sort] - 2023-10-12
 

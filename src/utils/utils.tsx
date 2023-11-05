@@ -68,8 +68,9 @@ export function getNoteFileContent(path: string, filter = false) {
 
 export function vaultPluginCheck(vaults: Vault[], plugin: string) {
   const vaultsWithoutPlugin: Vault[] = [];
+  const { configFileName } = getPreferenceValues();
   vaults = vaults.filter((vault: Vault) => {
-    const communityPluginsPath = vault.path + "/.obsidian/community-plugins.json";
+    const communityPluginsPath = `${vault.path}/${configFileName}/community-plugins.json`;
     if (!fs.existsSync(communityPluginsPath)) {
       vaultsWithoutPlugin.push(vault);
     } else {
@@ -86,7 +87,8 @@ export function vaultPluginCheck(vaults: Vault[], plugin: string) {
 }
 
 export function getUserIgnoreFilters(vault: Vault) {
-  const appJSONPath = vault.path + "/.obsidian/app.json";
+  const { configFileName } = getPreferenceValues();
+  const appJSONPath = `${vault.path}/${configFileName}/app.json`;
   if (!fs.existsSync(appJSONPath)) {
     return [];
   } else {
@@ -96,7 +98,8 @@ export function getUserIgnoreFilters(vault: Vault) {
 }
 
 export function getBookmarkedJSON(vault: Vault) {
-  const bookmarkedNotesPath = vault.path + "/.obsidian/bookmarks.json";
+  const { configFileName } = getPreferenceValues();
+  const bookmarkedNotesPath = `${vault.path}/${configFileName}/bookmarks.json`;
   if (!fs.existsSync(bookmarkedNotesPath)) {
     return [];
   } else {
@@ -105,7 +108,8 @@ export function getBookmarkedJSON(vault: Vault) {
 }
 
 export function writeToBookmarkedJSON(vault: Vault, bookmarkedNotes: Note[]) {
-  const bookmarkedNotesPath = vault.path + "/.obsidian/bookmarks.json";
+  const { configFileName } = getPreferenceValues();
+  const bookmarkedNotesPath = `${vault.path}/${configFileName}/bookmarks.json`;
   fs.writeFileSync(bookmarkedNotesPath, JSON.stringify({ items: bookmarkedNotes }));
 }
 
@@ -425,12 +429,16 @@ function validFile(file: string, includes: string[]) {
 
 export function walkFilesHelper(dirPath: string, exFolders: string[], fileEndings: string[], arrayOfFiles: string[]) {
   const files = fs.readdirSync(dirPath);
+  const { configFileName } = getPreferenceValues();
 
   arrayOfFiles = arrayOfFiles || [];
 
   for (const file of files) {
     const next = fs.statSync(dirPath + "/" + file);
-    if (next.isDirectory() && validFile(file, [".git", ".obsidian", ".trash", ".excalidraw", ".mobile"])) {
+    if (
+      next.isDirectory() &&
+      validFile(file, [".git", ".obsidian", ".trash", ".excalidraw", ".mobile", configFileName])
+    ) {
       arrayOfFiles = walkFilesHelper(dirPath + "/" + file, exFolders, fileEndings, arrayOfFiles);
     } else {
       if (
@@ -438,6 +446,7 @@ export function walkFilesHelper(dirPath: string, exFolders: string[], fileEnding
         file !== ".md" &&
         !file.includes(".excalidraw") &&
         !dirPath.includes(".obsidian") &&
+        !dirPath.includes(configFileName) &&
         validFolder(dirPath, exFolders)
       ) {
         arrayOfFiles.push(path.join(dirPath, "/", file));
