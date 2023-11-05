@@ -70,7 +70,8 @@ export function vaultPluginCheck(vaults: Vault[], plugin: string) {
   const vaultsWithoutPlugin: Vault[] = [];
   const { configFileName } = getPreferenceValues();
   vaults = vaults.filter((vault: Vault) => {
-    const communityPluginsPath = `${vault.path}/${configFileName}/community-plugins.json`;
+    const communityPluginsPath = `${vault.path}/${configFileName || ".obsidian"}/community-plugins.json`;
+    console.log(communityPluginsPath, fs.existsSync(communityPluginsPath));
     if (!fs.existsSync(communityPluginsPath)) {
       vaultsWithoutPlugin.push(vault);
     } else {
@@ -88,7 +89,7 @@ export function vaultPluginCheck(vaults: Vault[], plugin: string) {
 
 export function getUserIgnoreFilters(vault: Vault) {
   const { configFileName } = getPreferenceValues();
-  const appJSONPath = `${vault.path}/${configFileName}/app.json`;
+  const appJSONPath = `${vault.path}/${configFileName || ".obsidian"}/app.json`;
   if (!fs.existsSync(appJSONPath)) {
     return [];
   } else {
@@ -99,7 +100,7 @@ export function getUserIgnoreFilters(vault: Vault) {
 
 export function getBookmarkedJSON(vault: Vault) {
   const { configFileName } = getPreferenceValues();
-  const bookmarkedNotesPath = `${vault.path}/${configFileName}/bookmarks.json`;
+  const bookmarkedNotesPath = `${vault.path}/${configFileName || ".obsidian"}/bookmarks.json`;
   if (!fs.existsSync(bookmarkedNotesPath)) {
     return [];
   } else {
@@ -109,7 +110,7 @@ export function getBookmarkedJSON(vault: Vault) {
 
 export function writeToBookmarkedJSON(vault: Vault, bookmarkedNotes: Note[]) {
   const { configFileName } = getPreferenceValues();
-  const bookmarkedNotesPath = `${vault.path}/${configFileName}/bookmarks.json`;
+  const bookmarkedNotesPath = `${vault.path}/${configFileName || ".obsidian"}/bookmarks.json`;
   fs.writeFileSync(bookmarkedNotesPath, JSON.stringify({ items: bookmarkedNotes }));
 }
 
@@ -420,7 +421,7 @@ export function isNote(note: Note | undefined): note is Note {
 
 function validFile(file: string, includes: string[]) {
   for (const include of includes) {
-    if (file.includes(include)) {
+    if (include && file.includes(include)) {
       return false;
     }
   }
