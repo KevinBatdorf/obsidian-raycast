@@ -6,7 +6,7 @@ import { renewCache } from "../utils/data/cache";
 
 export function NoteQuickLook(props: { showTitle: boolean; note: Note; vault: Vault; allNotes: Note[] }) {
   const { note, showTitle, allNotes, vault } = props;
-  //   console.log({ note, showTitle, allNotes, vault });
+
   return (
     <Detail
       isLoading={note === undefined}

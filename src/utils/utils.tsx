@@ -432,6 +432,7 @@ export function walkFilesHelper(dirPath: string, exFolders: string[], fileEnding
   const { configFileName } = getPreferenceValues();
 
   arrayOfFiles = arrayOfFiles || [];
+
   for (const file of files) {
     const next = fs.statSync(dirPath + "/" + file);
     if (

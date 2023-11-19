@@ -169,7 +169,7 @@ export function OpenInDefaultAppAction(props: { note: Note; notes: Note[]; vault
     getDefaultApplication(note.path)
       .then((app) => setDefaultApp(app.name))
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         setDefaultApp("");
       });
   }, [note.path]);
