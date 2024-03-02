@@ -98,17 +98,25 @@ export function getUserIgnoreFilters(vault: Vault) {
   }
 }
 
+type BookmarkEntry = { type: string; title: string; path: string; items?: BookmarkEntry[] };
+const flattenBookmarks = function* (BookmarkEntry: BookmarkEntry[]): Generator<BookmarkEntry> {
+  for (const item of BookmarkEntry) {
+    if (item.type === "file") yield item;
+    if (item.type === "group" && item.items) yield* flattenBookmarks(item.items);
+  }
+};
+
 export function getBookmarkedJSON(vault: Vault) {
   const { configFileName } = getPreferenceValues();
   const bookmarkedNotesPath = `${vault.path}/${configFileName || ".obsidian"}/bookmarks.json`;
   if (!fs.existsSync(bookmarkedNotesPath)) {
     return [];
-  } else {
-    return JSON.parse(fs.readFileSync(bookmarkedNotesPath, "utf-8"))["items"] || [];
   }
+  const data = JSON.parse(fs.readFileSync(bookmarkedNotesPath, "utf-8"));
+  return Array.from(flattenBookmarks(data.items));
 }
 
-export function writeToBookmarkedJSON(vault: Vault, bookmarkedNotes: Note[]) {
+export function writeToBookmarkedJSON(vault: Vault, bookmarkedNotes: BookmarkEntry[]) {
   const { configFileName } = getPreferenceValues();
   const bookmarkedNotesPath = `${vault.path}/${configFileName || ".obsidian"}/bookmarks.json`;
   fs.writeFileSync(bookmarkedNotesPath, JSON.stringify({ items: bookmarkedNotes }));
