@@ -1,5 +1,8 @@
 # Obsidian Changelog
 
+## [Prepend to Daily Note] - 2025-02-01
+- Adds prepend option to Append to Daily Note
+
 ## [Bug fixes] - 2025-01-28
 - Fixes locale bug on Append Task command
 - Fixes issue where tags were being converted to lowercase
